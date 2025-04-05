@@ -4,14 +4,14 @@ import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
 
-function ProtectedRoute({ children }) {
-    const [isAuthorized, setIsAuthorized] = useState(null);
-
-    useEffect(() => {
-        auth().catch(() => {
-            setIsAuthorized(false);
-        })
-    }, [])
+function ProtectedRoute({children}){
+ const [isAuthorized, setIsAuthorized] = useState(null);
+ 
+ useEffect(() => {
+    auth().catch(()=>{
+        setIsAuthorized(false);
+    })
+ },[])
 
     const refreshToken = async () => {
 
@@ -40,28 +40,28 @@ function ProtectedRoute({ children }) {
     //  check if the token is expired or not
     const auth = async () => {
         const token = localStorage.getItem(ACCESS_TOKEN);
+        console.log("token from protected route",token)
         if (!token) {
-            isAuthorized(false);
+            setIsAuthorized(false);
             return;
         }
         const decoded = jwtDecode(token);
         const tokenExpiration = decoded.exp;
         const now = Date.now() / 1000;
-        if (tokenExpiration < now) {
+        console.log("token expiration", tokenExpiration)
+        if (tokenExpiration < now ) {
             // token is expired
             await refreshToken();
         } else {
-            isAuthorized(true);
+            setIsAuthorized(true);
         }
     }
 
-    if (isAuthorized === null) {
-        return (
-        <div>
-            loading...
-        </div>
-        )
-    }
-    return isAuthorized ? children : <Navigate to="/login" />;
+ if (isAuthorized === null){
+    return <div>
+        loading...
+    </div>
+ }
+ return isAuthorized ? children : <Navigate to="/login" />;
 }
 export default ProtectedRoute;
