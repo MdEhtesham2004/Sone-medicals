@@ -8,7 +8,7 @@ function ProtectedRoute({children}){
  const [isAuthorized, setIsAuthorized] = useState(null);
  
  useEffect(() => {
-    auth().cateh(()=>{
+    auth().catch(()=>{
         setIsAuthorized(false);
     })
  },[])
@@ -40,24 +40,25 @@ if (res.status === 200){
 //  check if the token is expired or not
  const auth = async () => {
         const token = localStorage.getItem(ACCESS_TOKEN);
+        console.log("token from protected route",token)
         if (!token) {
-            isAuthorized(false);
+            setIsAuthorized(false);
             return;
         }
         const decoded = jwtDecode(token);
         const tokenExpiration = decoded.exp;
         const now = Date.now() / 1000;
+        console.log("token expiration", tokenExpiration)
         if (tokenExpiration < now ) {
             // token is expired
             await refreshToken();
         } else {
-            isAuthorized(true);
+            setIsAuthorized(true);
         }
     }
 
  if (isAuthorized === null){
-    return 
-    <div>
+    return <div>
         loading...
     </div>
  }
