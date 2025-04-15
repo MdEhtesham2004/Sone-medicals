@@ -1,0 +1,13 @@
+.swiper-pagination-bullet {
+    background: #d1fae5; /* light green */
+    opacity: 1;
+    transition: background 0.3s;
+  }
+  
+  .swiper-pagination-bullet-active {
+    background: #059669 !important; /* emerald-600 */
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  

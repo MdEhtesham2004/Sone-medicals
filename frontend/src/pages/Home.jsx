@@ -1,7 +1,32 @@
+import {
+    Header, 
+    Logo,
+    Hero,
+    Button,
+    Features,
+    Categories,
+    BestSellers,
+    Testimonals,
+    Contact,
+    FAQSection,
+    Footer,
+    WhatsappBtn,} from '../components/index'
+    import '../styles/index.css';
+
 function Home(){
-    return <div>
-        <h1>This is Home page </h1>
-    </div>
+    return (
+        <>
+        <Header />
+        <Hero />
+        <Features />
+        <BestSellers />
+        <Categories />
+        <Testimonals />
+        <FAQSection />
+        <Contact />
+        <Footer />
+        </>
+    )
 
 }
 

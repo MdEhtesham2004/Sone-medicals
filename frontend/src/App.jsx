@@ -5,6 +5,9 @@ import Register from './pages/Register'
 import NotFound from './pages/NotFound'
 import Home from './pages/Home'
 import ProtectedRoute from './components/ProtectedRoute'
+import Company from './pages/Company.jsx'
+     
+
 
 function Logout() {
   localStorage.clear();
@@ -20,8 +23,9 @@ function RegisterAndLogout() {
 function App() {
 
   return (
+<>
 
-    <BrowserRouter>
+<BrowserRouter>
     <Routes>
       <Route path="/" element={ <ProtectedRoute>
         <Home/>
@@ -37,7 +41,11 @@ function App() {
       </Routes>
     </BrowserRouter>
 
+    <Company/>
 
+        
+        
+</>
   )
 }
 
