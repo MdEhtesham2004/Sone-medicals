@@ -6,6 +6,7 @@ import NotFound from './pages/NotFound'
 import Home from './pages/Home'
 import ProtectedRoute from './components/ProtectedRoute'
 import Company from './pages/Company.jsx'
+import Design from './pages/Design.jsx'
      
 
 
@@ -41,7 +42,8 @@ function App() {
       </Routes>
     </BrowserRouter>
 
-    <Company/>
+    {/* <Company/> */}
+    <Design/>
 
         
         
