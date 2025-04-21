@@ -66,7 +66,7 @@ class MedicineDetailsSerializerSimple(serializers.ModelSerializer):
     class Meta:
         model = MedicineDetails
         fields = '__all__'
-
+    
 
 
 class AdminLoginSerializer(serializers.ModelSerializer):
