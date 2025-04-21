@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated,AllowAny
 from .serializers import UserSerializer,NoteSerializer
 from .models import Note
 from rest_framework import viewsets
-from .models import Company, Medicine, AdminLogin, Customer, Bill, CompanyBank
+from .models import Company, Medicine, AdminLogin, Customer, Bill
 from .serializers import *
 
 #done 
@@ -49,6 +49,7 @@ from django.shortcuts import get_object_or_404
 #done 
 class CompanyViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]  # Only authenticated users can access this view
+    serializer_class = MedicineSerializer
 
     def list(self,request):
         company = Company.objects.all()
@@ -62,7 +63,7 @@ class CompanyViewSet(viewsets.ModelViewSet):
     
     def create(self, request):
         serializer = CompanySerializer(data=request.data,context={'request':request})
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             response_dict = {
                 'error': False,
@@ -95,79 +96,34 @@ class CompanyViewSet(viewsets.ModelViewSet):
                 'message': 'Error in Updating Company Data'
             }
         return Response(response_dict)    
+    
+
+    def destroy(self,request,pk=None):
+        queryset = Company.objects.get(id=pk)
+        company = get_object_or_404(Company, id=pk)
+        company.delete()
+        response_dict = {
+            'error': False,
+            'message': 'Company Data Deleted Successfully'
+        }
+        return Response(response_dict)
+
+     
+    def retrieve(self, request, pk=None):
+        queryset = Company.objects.all()
+        medicine  = get_object_or_404(queryset, pk=pk)
+        serializer =CompanySerializer(medicine, context={'request': request})
+        serialize_data = serializer.data 
+
+        return Response({"error": False, "message": "Single Medicine Details Feteched", "data": serialize_data})
+    
+
+
+
 company_list = CompanyViewSet.as_view({'get':'list'})
 company_create = CompanyViewSet.as_view({'post':'create'})
 company_update = CompanyViewSet.as_view({'put':'update'})
 company_delete = CompanyViewSet.as_view({'delete':'destroy'})
-
-#done 
-class CompanyBankViewSet(viewsets.ModelViewSet):
-
-    permission_classes = [IsAuthenticated]
-
-
-
-    def create(self, request):
-
-        serializer = CompanyBankSerializer(data=request.data,context={'request':request})
-        
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            response_dict = {
-                'error': False,
-                'message': 'Company Bank Data Saved Successfully'
-            }
-        else:
-            response_dict = {
-                'error': True,
-                'message': 'Error in Saving Company Bank Data'
-            }
-        return Response(response_dict)
-    
-    
-    def list(self,request):
-
-        company = CompanyBank.objects.all()
-        serializer = CompanyBankSerializer(company,many=True,context={'request':request})
-        response_dict = {
-            'error':False,
-            'message':'All Company Bank List List Data',
-            'data':serializer.data
-        }
-        return Response(response_dict)
-    
-    
-    def retrieve(self, request, pk=None):
-
-        queryset = CompanyBank.objects.all()
-        company_bank = get_object_or_404(queryset, pk=pk)
-        serializer =CompanyBankSerializer(company_bank, context={'request': request})
-        return Response({"error": False, "message": "Single Company Bank Details Feteched", "data": serializer.data})
-    
-    def update(self,request,pk=None):
-
-        queryset = CompanyBank.objects.all()
-        company_bank = get_object_or_404(queryset, pk=pk)
-        serializer = CompanyBankSerializer(company_bank,data=request.data,context={'request':request})
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            response_dict = {
-                'error': False,
-                'message': 'Company Bank Data Updated Successfully'
-            }
-        else:
-            response_dict = {
-                'error': True,
-                'message': 'Error in Updating Company Bank Data'
-            }
-        return Response(response_dict)
-
-
-
-company_bank_list = CompanyBankViewSet.as_view({'get':'list'})
-company_bank_create = CompanyBankViewSet.as_view({'post':'create'})
-company_bank_create = CompanyBankViewSet.as_view({'put':'update'})
-
 #done 
 class CompanyNameViewSet(generics.ListAPIView):
     serializer_class = CompanySerializer
@@ -179,7 +135,11 @@ class CompanyNameViewSet(generics.ListAPIView):
 
 
 
-
+class MedicineByNameViewSet(generics.ListAPIView):
+    serializer_class = MedicineSerializer
+    def get_queryset(self):
+        name = self.kwargs["name"]
+        return Medicine.objects.filter(name=name)
 
 
 #done 
@@ -191,24 +151,10 @@ class MedicineViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
 
-        serializer = MedicineSerializer(data=request.data,context={'request':request})
+        serializer = MedicineSerializer(data=request.data, context={'request':request})
         
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            #adding and saving id to medical details table 
-            #access the latest saved medicine ID from serializer
-            medicine_id = serializer.data.get('id')
-
-            medicines_details_list=[]
-            for medicine_detail in request.data['medicine_details']:
-                #adding medicine id to each medicine detail which will work for medical details as well 
-                medicine_detail['medicine'] = medicine_id
-                medicines_details_list.append(medicine_detail)
-
-
-            serializer2 = MedicineDetailsSerializer(data=medicines_details_list,many=True,context={'request':request})
-            serializer2.is_valid(raise_exception=True)
-            serializer2.save()
 
             response_dict = {
                 'error': False,
@@ -228,19 +174,11 @@ class MedicineViewSet(viewsets.ModelViewSet):
         serializer = MedicineSerializer(company,many=True,context={'request':request})
 
         # adding medicine details to each medicine in the list
-        medicine_data = serializer.data 
-        newmedicinelist = []
-
-        for medicine in medicine_data:
-            medicine_details = MedicineDetails.objects.filter(medicine=medicine['id'])
-            medicine_details_serializer = MedicineDetailsSerializerSimple(medicine_details, many=True,context={'request':request})
-            medicine['medicine_details'] = medicine_details_serializer.data
-            newmedicinelist.append(medicine)
 
         response_dict = {
             'error':False,
             'message':'All Medicine List Data',
-            'data':newmedicinelist
+            'data':serializer.data 
         }
         return Response(response_dict)
     
@@ -251,11 +189,6 @@ class MedicineViewSet(viewsets.ModelViewSet):
         medicine  = get_object_or_404(queryset, pk=pk)
         serializer =MedicineSerializer(medicine, context={'request': request})
         serialize_data = serializer.data 
-        
-        medicine_details = MedicineDetails.objects.filter(medicine=serialize_data['id'])
-        medicine_details_serializer = MedicineDetailsSerializerSimple(medicine_details, many=True,context={'request':request})
-        serialize_data['medicine_details'] = medicine_details_serializer.data
-
 
         return Response({"error": False, "message": "Single Medicine Details Feteched", "data": serialize_data})
     
@@ -279,17 +212,18 @@ class MedicineViewSet(viewsets.ModelViewSet):
 
 
 
-
-
-
-
-
-
-#done
-class MedicineDetailsViewSet(viewsets.ModelViewSet):
-    queryset = MedicineDetails.objects.all()
-    serializer_class = MedicineDetailsSerializer
-
+    
+    def delete(self,request,pk=None):
+        queryset = Medicine.objects.get(id=pk)
+        company = get_object_or_404(Medicine, id=pk)
+        company.delete()
+       
+        response_dict = {
+            'error': False,
+            'message': 'Medicine Data Deleted Successfully'
+        }
+        
+        return Response(response_dict)
 
 
 
@@ -315,10 +249,6 @@ class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
-class CompanyAccountViewSet(viewsets.ModelViewSet):
-    queryset = CompanyAccount.objects.all()
-    serializer_class = CompanyAccountSerializer
-
 
 
 
@@ -326,4 +256,120 @@ class CompanyAccountViewSet(viewsets.ModelViewSet):
 class BillViewSet(viewsets.ModelViewSet):
     queryset = Bill.objects.all()
     serializer_class = BillSerializer
+
+
+class BillDetailsViewSet(viewsets.ModelViewSet):
+    queryset=BillDetails.objects.all()
+    serializer_class=BillDetailsSerializer
+
+class GenerateBillViewSet(viewsets.ModelViewSet):    
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request):
+        try:
+            # 1. Save customer data
+            customer_serializer = CustomerSerializer(data=request.data, context={'request': request})
+            customer_serializer.is_valid(raise_exception=True)
+            customer = customer_serializer.save()  # This returns the saved instance
+            customer_id = customer.id
+
+            # 2. Save bill data
+            bill_data = {
+                'customer_id': customer_id
+                # Add more bill fields if needed (e.g., date, total, etc.)
+            }
+
+            bill_serializer = BillSerializer(data=bill_data, context={'request': request})
+            bill_serializer.is_valid(raise_exception=True)
+            bill = bill_serializer.save()
+            bill_id = bill.id
+
+            # 3. Save bill details (medicine list)
+            medicine_data_list = []
+            for medicine_details in request.data.get("medicine_details", []):
+                medicine_data = {
+                    "medicine_id": medicine_details["id"],
+                    "bill_id": bill_id,
+                    "qty": medicine_details["qty"]
+                }
+                medicine_data_list.append(medicine_data)
+
+            bill_details_serializer = BillDetailsSerializer(data=medicine_data_list, many=True, context={'request': request})
+            bill_details_serializer.is_valid(raise_exception=True)
+            bill_details_serializer.save()
+
+            # 4. Success response
+            response_dict = {
+                "error": False,
+                "message": "Bill Generated Successfully!",
+                "bill_id": bill_id
+            }
+
+        except Exception as e:
+            print("Error while generating bill:", str(e))  # For debugging
+            response_dict = {
+                "error": True,
+                "message": "Error while generating the bill!",
+                "details": str(e)
+            }
+
+        return Response(response_dict)
+
+    def list(self,request):
+
+        company = Medicine.objects.all()
+        serializer = MedicineSerializer(company,many=True,context={'request':request})
+
+        # adding medicine details to each medicine in the list
+
+        response_dict = {
+            'error':False,
+            'message':'All Medicine List Data',
+            'data':serializer.data 
+        }
+        return Response(response_dict)
+    
+    
+    def retrieve(self, request, pk=None):
+
+        queryset = Medicine.objects.all()
+        medicine  = get_object_or_404(queryset, pk=pk)
+        serializer =MedicineSerializer(medicine, context={'request': request})
+        serialize_data = serializer.data 
+
+        return Response({"error": False, "message": "Single Medicine Details Feteched", "data": serialize_data})
+    
+    def update(self,request,pk=None):
+
+        queryset = Medicine.objects.all()
+        medicine = get_object_or_404(queryset, pk=pk)
+        serializer = MedicineSerializer(medicine,data=request.data,context={'request':request})
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            response_dict = {
+                'error': False,
+                'message': 'Medicine Data Updated Successfully'
+            }
+        else:
+            response_dict = {
+                'error': True,
+                'message': 'Error in Updating Medicine Data'
+            }
+        return Response(response_dict)
+
+
+
+    
+    def delete(self,request,pk=None):
+        queryset = Medicine.objects.get(id=pk)
+        company = get_object_or_404(Medicine, id=pk)
+        company.delete()
+       
+        response_dict = {
+            'error': False,
+            'message': 'Medicine Data Deleted Successfully'
+        }
+        
+        return Response(response_dict)
+
 

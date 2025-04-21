@@ -1,10 +1,14 @@
 import react from 'react'
-import { BrowserRouter ,Routes,Route,Navigate} from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import NotFound from './pages/NotFound'
 import Home from './pages/Home'
 import ProtectedRoute from './components/ProtectedRoute'
+import Company from './pages/Company.jsx'
+import Design from './pages/Design.jsx'
+     
+
 
 
 function Logout() {
@@ -19,12 +23,14 @@ function RegisterAndLogout() {
 }
 
 function App() {
-  
+
   return (
-    
-    <BrowserRouter>
+<>
+
+<BrowserRouter>
     <Routes>
-      <Route path="/" element={ <ProtectedRoute>
+      <Route path="/" element={ 
+        <ProtectedRoute>
         <Home/>
       </ProtectedRoute>
       } />
@@ -33,13 +39,17 @@ function App() {
       <Route path="/logout" element={<ProtectedRoute>
         {<Logout/>}
         </ProtectedRoute>
-      } />
-      <Route path="*" element={<NotFound/>} />
-      
-    </Routes>
+        } />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </BrowserRouter>
-    
 
+    {/* <Company/> */}
+    {/* <Design/> */}
+
+        
+        
+</>
   )
 }
 

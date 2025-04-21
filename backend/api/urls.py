@@ -6,8 +6,9 @@ from .views import *
 
 router = DefaultRouter()
 router.register('company', CompanyViewSet,basename='company')
-router.register('companybank', CompanyBankViewSet,basename='companybank')
 router.register('medicine', MedicineViewSet,basename='medicine')
+router.register('generatebill', GenerateBillViewSet,basename='generatebill')
+router.register('billdetails',BillDetailsViewSet,basename='billdetails')
 
  
 
@@ -16,11 +17,9 @@ router.register('admins', AdminLoginViewSet)
 router.register('customers', CustomerViewSet)
 router.register('bills', BillViewSet)
 
-# New ViewSets
-router.register('medicine-details', MedicineDetailsViewSet)
+
 router.register('employees', EmployeeViewSet)
 
-router.register('company-accounts', CompanyAccountViewSet)
 router.register('employee-banks',EmployeeBankViewSet)
 
 
@@ -31,6 +30,7 @@ urlpatterns = [
     path('notes/delete/<int:pk>/', views.NoteDelete.as_view(), name='delete-note'),  # Add this line for deleting notes
     path('medical/', include(router.urls)),
     path('companybyname/<str:name>', CompanyNameViewSet.as_view(), name='companybyname'),
+    path('medicinebyname/<str:name>', MedicineByNameViewSet.as_view(), name='medicinebyname'),
 ]
 
 
