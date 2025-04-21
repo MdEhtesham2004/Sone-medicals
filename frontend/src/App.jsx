@@ -28,7 +28,8 @@ function App() {
 
 <BrowserRouter>
     <Routes>
-      <Route path="/" element={ <ProtectedRoute>
+      <Route path="/" element={ 
+        <ProtectedRoute>
         <Home/>
       </ProtectedRoute>
       } />
@@ -43,7 +44,7 @@ function App() {
     </BrowserRouter>
 
     {/* <Company/> */}
-    <Design/>
+    {/* <Design/> */}
 
         
         

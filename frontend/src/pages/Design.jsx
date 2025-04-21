@@ -43,7 +43,7 @@ const Design = () => {
           </button>
           <button onClick={() => setActiveComponent('visitors')}
            className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2">
-            ➕ {sidebarOpen && 'BillP'}
+            ➕ {sidebarOpen && 'Bill'}
           </button>
         </div>
       </div>

@@ -1,8 +1,14 @@
 import React from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import Logo from "./Logo";
 
 const Footer = () => {
+  const navigate = useNavigate();
+
+  const handleLoginClick = () =>{
+    navigate('/login')
+  }
   return (
     <footer className="bg-green-700 text-white py-8">
       <div className="max-w-6xl mx-auto px-6">
@@ -35,6 +41,8 @@ const Footer = () => {
           <p className="text-lg">&copy; {new Date().getFullYear()} Sonee Medical And General Store . <br /> All Rights Reserved.</p>
         </div>
       </div>
+      <button onClick={handleLoginClick}>Login</button><br />
+      <button>Register</button>
     </footer>
   );
 };
