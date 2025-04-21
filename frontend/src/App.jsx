@@ -6,6 +6,7 @@ import NotFound from './pages/NotFound'
 import Home from './pages/Home'
 import ProtectedRoute from './components/ProtectedRoute'
 
+
 function Logout() {
   localStorage.clear();
   alert("Logged out successfully");
@@ -34,6 +35,7 @@ function App() {
         </ProtectedRoute>
       } />
       <Route path="*" element={<NotFound/>} />
+      
     </Routes>
     </BrowserRouter>
     
