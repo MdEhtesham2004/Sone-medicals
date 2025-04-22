@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from rest_framework import generics
+from rest_framework import generics,status
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from .serializers import UserSerializer,NoteSerializer
 from .models import Note
@@ -313,61 +313,26 @@ class GenerateBillViewSet(viewsets.ModelViewSet):
 
         return Response(response_dict)
 
-    def list(self,request):
 
-        company = Medicine.objects.all()
-        serializer = MedicineSerializer(company,many=True,context={'request':request})
 
-        # adding medicine details to each medicine in the list
+class CreateMedicineWithCompanyViewSet(viewsets.ModelViewSet):
+    queryset = Medicine.objects.all()
+    serializer_class = MedicineSerializer
 
-        response_dict = {
-            'error':False,
-            'message':'All Medicine List Data',
-            'data':serializer.data 
-        }
-        return Response(response_dict)
-    
-    
-    def retrieve(self, request, pk=None):
+    def create_with_company(self, request, company_id=None):
+        # 1. Get the company from the database using the ID passed via URL
+        company = get_object_or_404(Company, id=company_id)
 
-        queryset = Medicine.objects.all()
-        medicine  = get_object_or_404(queryset, pk=pk)
-        serializer =MedicineSerializer(medicine, context={'request': request})
-        serialize_data = serializer.data 
+        # 2. Copy the incoming POST data (name, description, price, etc.)
+        data = request.data.copy()
 
-        return Response({"error": False, "message": "Single Medicine Details Feteched", "data": serialize_data})
-    
-    def update(self,request,pk=None):
+        # 3. Add the company ID to the data so that it gets linked properly
+        data['company'] = company.id
 
-        queryset = Medicine.objects.all()
-        medicine = get_object_or_404(queryset, pk=pk)
-        serializer = MedicineSerializer(medicine,data=request.data,context={'request':request})
-        if serializer.is_valid(raise_exception=True):
+        # 4. Validate and save using serializer
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
             serializer.save()
-            response_dict = {
-                'error': False,
-                'message': 'Medicine Data Updated Successfully'
-            }
-        else:
-            response_dict = {
-                'error': True,
-                'message': 'Error in Updating Medicine Data'
-            }
-        return Response(response_dict)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
-
-    
-    def delete(self,request,pk=None):
-        queryset = Medicine.objects.get(id=pk)
-        company = get_object_or_404(Medicine, id=pk)
-        company.delete()
-       
-        response_dict = {
-            'error': False,
-            'message': 'Medicine Data Deleted Successfully'
-        }
-        
-        return Response(response_dict)
-
-
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

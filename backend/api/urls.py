@@ -31,6 +31,10 @@ urlpatterns = [
     path('medical/', include(router.urls)),
     path('companybyname/<str:name>', CompanyNameViewSet.as_view(), name='companybyname'),
     path('medicinebyname/<str:name>', MedicineByNameViewSet.as_view(), name='medicinebyname'),
+    path(
+        'makemedicinedetailsviacompany/<int:company_id>/',
+        CreateMedicineWithCompanyViewSet.as_view({'post': 'create_with_company'})
+    ),
 ]
 
 
