@@ -20,57 +20,34 @@ class AdminLogin(models.Model):
     last_login = models.DateTimeField(null=True, blank=True)
     added_on = models.DateTimeField(auto_now_add=True)
 
+
+#done 
 class Company(models.Model):
     name = models.CharField(max_length=100)
-    license_no = models.CharField(max_length=100)
+    license_no = models.CharField(max_length=100,null=True, blank=True)
     address = models.TextField()
     contact_no = models.CharField(max_length=15)
-    description = models.TextField(blank=True)
     added_on = models.DateTimeField(auto_now_add=True)
     gst_no = models.CharField(max_length=15, blank=True, null=True)
-    # invoice_no = models.CharField(max_length=15, blank=True, null=True)
-    # invoice_date = models.DateField(blank=True, null=True)
+    bill_photo = models.ImageField(upload_to='company_bills/', blank=True, null=True)
     
 
+#done 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
-    medical_type = models.CharField(max_length=50)
-    buy_price = models.DecimalField(max_digits=10, decimal_places=2)
-    sell_price = models.DecimalField(max_digits=10, decimal_places=2)
-    c_gst = models.DecimalField(max_digits=5, decimal_places=2)
-    s_gst = models.DecimalField(max_digits=5, decimal_places=2)
+    schedule_type = models.CharField(max_length=50, choices=[('yes','no')])
+    mrp = models.DecimalField(max_digits=10, decimal_places=2)
+    rate = models.DecimalField(max_digits=10, decimal_places=2)
+    pack = models.IntegerField()
+    c_gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
+    s_gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
     batch_no = models.CharField(max_length=100)
-    shelf_no = models.CharField(max_length=100)
     exp_date = models.DateField()
     mfg_date = models.DateField()
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    description = models.TextField(blank=True)
     in_stock_total = models.IntegerField()
     qty_in_strip = models.IntegerField()
     added_on = models.DateTimeField(auto_now_add=True)
-
-class MedicineDetails(models.Model):
-    medicine = models.ForeignKey('Medicine', on_delete=models.CASCADE)
-    salt_name = models.CharField(max_length=255)
-    salt_qty_type = models.CharField(max_length=100)
-    description = models.TextField()
-    added_on = models.DateTimeField(auto_now_add=True)
-
-
-class CompanyAccount(models.Model):
-    company = models.ForeignKey('Company', on_delete=models.CASCADE)
-    transaction_type = models.CharField(max_length=100)
-    transaction_amt = models.FloatField()
-    transaction_date = models.DateField()
-    payment_mode = models.CharField(max_length=100)
-
-class CompanyBank(models.Model):
-    id = models.AutoField(primary_key=True)
-    bank_account_no = models.CharField(max_length=50)
-    ifsc = models.CharField(max_length=20)
-    company = models.ForeignKey('Company', on_delete=models.CASCADE)
-    added_on = models.DateTimeField(auto_now_add=True)
-
 
 class Employee(models.Model):
     name = models.CharField(max_length=255)
@@ -96,13 +73,6 @@ class Customer(models.Model):
     contact = models.CharField(max_length=15)
     added_on = models.DateTimeField(auto_now_add=True)
 
-class CustomerRequest(models.Model):
-    customer_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=15)
-    medicine_details = models.TextField()
-    status = models.CharField(max_length=100)
-    request_date = models.DateTimeField(auto_now_add=True)
-
 
 class Bill(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -113,3 +83,14 @@ class BillDetails(models.Model):
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
     qty = models.IntegerField()
     added_on = models.DateTimeField(auto_now_add=True)
+
+
+
+
+class CustomerRequest(models.Model):
+    customer_name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=15)
+    medicine_details = models.TextField()
+    status = models.CharField(max_length=100)
+    request_date = models.DateTimeField(auto_now_add=True)
+

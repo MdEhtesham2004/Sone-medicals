@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Note,Company, Medicine, AdminLogin, Customer, Bill, BillDetails, MedicineDetails, Employee, EmployeeSalary, CompanyAccount, CompanyBank, EmployeeBank, CustomerRequest
+from .models import Note,Company, Medicine, AdminLogin, Customer, Bill, BillDetails, Employee, EmployeeSalary, EmployeeBank, CustomerRequest
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
@@ -30,45 +30,19 @@ class CompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = '__all__'
 
-#done    
-class CompanyBankSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CompanyBank
-        fields = '__all__'
-
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response['company'] = CompanySerializer(instance.company).data
-        return response
 #done     
 class MedicineSerializer(serializers.ModelSerializer):
+    company_details = CompanySerializer(source='company', read_only=True)  # 'company' is the ForeignKey field
+
     class Meta:
         model = Medicine
-        fields = '__all__'
-    
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response['company'] = CompanySerializer(instance.company).data
-        return response
-
-#done 
-class MedicineDetailsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MedicineDetails
-        fields = '__all__'
-
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response['medicine'] = MedicineSerializer(instance.medicine).data
-        return response
-
-class MedicineDetailsSerializerSimple(serializers.ModelSerializer):
-    class Meta:
-        model = MedicineDetails
-        fields = '__all__'
-
-
-
+        fields = [
+            'id', 'name', 'schedule_type', 'mrp', 'rate', 'pack', 
+            'c_gst', 's_gst', 'batch_no', 'exp_date', 'mfg_date', 
+            'company', 'in_stock_total', 
+            'qty_in_strip', 'added_on','company_details'
+        ]
+   
 class AdminLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdminLogin
@@ -82,9 +56,13 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 #done 
 class BillSerializer(serializers.ModelSerializer):
+    # customer = CustomerSerializer(read_only=True)
+    # medicine = MedicineSerializer(read_only=True)
+
     class Meta:
         model = Bill
         fields = '__all__'
+        # fields = ['id', 'customer','medicine', 'added_on']
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
@@ -92,9 +70,20 @@ class BillSerializer(serializers.ModelSerializer):
         return response
 
 class BillDetailsSerializer(serializers.ModelSerializer):
+    # bill = BillSerializer(read_only=True)
+    # medicine = MedicineSerializer(read_only=True)
     class Meta:
         model = BillDetails
+        # fields = ['id', 'bill', 'medicine', 'qty', 'added_on']
         fields = '__all__'
+    
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['bill'] = BillSerializer(instance.bill).data
+        response['medicine'] = MedicineSerializer(instance.medicine).data
+        # response['customer'] = CustomerSerializer(instance.bill.customer).data
+        return response    
+
 
 
 #done 
@@ -102,17 +91,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = '__all__'
-
-#done 
-class CompanyAccountSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CompanyAccount
-        fields = '__all__'
-    
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response['company'] = CustomerSerializer(instance.customer).data
-        return response
 
 
 #done 
@@ -133,3 +111,4 @@ class CustomerRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerRequest
         fields = '__all__'
+

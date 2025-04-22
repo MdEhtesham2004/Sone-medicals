@@ -1,13 +1,12 @@
 # === Python backend ===
-**/_pycache_/
-*/.py[cod]
-*/.pyo
-*/.pyd
+**/__pycache__/
+**/*.py[cod]
+**/*.pyo
+**/*.pyd
 backend/env/
 backend/.env
 backend/db.sqlite3
 env/
-mkenv/
 
 # === Node.js frontend ===
 frontend/node_modules/
