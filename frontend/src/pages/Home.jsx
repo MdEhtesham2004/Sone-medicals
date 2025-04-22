@@ -10,7 +10,7 @@ function Home(){
     //       .catch((err) => console.error('Fetch error:', err));
     //   }, []);
     return (
-        <>
+        <>   
         <Design />
         </>
     )

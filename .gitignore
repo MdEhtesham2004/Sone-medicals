@@ -1,0 +1,28 @@
+# === Python backend ===
+**/_pycache_/
+*/.py[cod]
+*/.pyo
+*/.pyd
+backend/env/
+backend/.env
+backend/db.sqlite3
+env/
+mkenv/
+
+# === Node.js frontend ===
+frontend/node_modules/
+frontend/.env
+frontend/build/
+frontend/dist/
+
+# === IDEs & OS files ===
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# === Logs ===
+*.log
+
+# === General env files ===
+.env
