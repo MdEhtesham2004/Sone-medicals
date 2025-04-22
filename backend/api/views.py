@@ -275,7 +275,7 @@ class GenerateBillViewSet(viewsets.ModelViewSet):
 
             # 2. Save bill data
             bill_data = {
-                'customer_id': customer_id
+                'customer': customer_id
                 # Add more bill fields if needed (e.g., date, total, etc.)
             }
 
@@ -288,14 +288,14 @@ class GenerateBillViewSet(viewsets.ModelViewSet):
             medicine_data_list = []
             for medicine_details in request.data.get("medicine_details", []):
                 medicine_data = {
-                    "medicine_id": medicine_details["id"],
-                    "bill_id": bill_id,
+                    "medicine": medicine_details["id"],
+                    "bill": bill_id,
                     "qty": medicine_details["qty"]
                 }
                 medicine_data_list.append(medicine_data)
 
             bill_details_serializer = BillDetailsSerializer(data=medicine_data_list, many=True, context={'request': request})
-            bill_details_serializer.is_valid(raise_exception=True)
+            bill_details_serializer.is_valid()
             bill_details_serializer.save()
 
             # 4. Success response
@@ -304,13 +304,11 @@ class GenerateBillViewSet(viewsets.ModelViewSet):
                 "message": "Bill Generated Successfully!",
                 "bill_id": bill_id
             }
-
-        except Exception as e:
-            print("Error while generating bill:", str(e))  # For debugging
+        except:
+            print("Error while generating bill:")  # For debugging
             response_dict = {
                 "error": True,
-                "message": "Error while generating the bill!",
-                "details": str(e)
+                "message": "Error while generating the bill!"
             }
 
         return Response(response_dict)

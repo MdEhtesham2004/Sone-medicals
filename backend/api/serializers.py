@@ -56,25 +56,33 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 #done 
 class BillSerializer(serializers.ModelSerializer):
-    customer = CustomerSerializer(read_only=True)
-    medicine = MedicineSerializer(read_only=True)
+    # customer = CustomerSerializer(read_only=True)
+    # medicine = MedicineSerializer(read_only=True)
 
     class Meta:
         model = Bill
-        # fields = '__all__'
-        fields = ['id', 'customer','medicine', 'added_on']
+        fields = '__all__'
+        # fields = ['id', 'customer','medicine', 'added_on']
 
-    # def to_representation(self, instance):
-    #     response = super().to_representation(instance)
-    #     response['customer'] = CustomerSerializer(instance.customer).data
-    #     return response
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['customer'] = CustomerSerializer(instance.customer).data
+        return response
 
 class BillDetailsSerializer(serializers.ModelSerializer):
-    bill = BillSerializer(read_only=True)
-    medicine = MedicineSerializer(read_only=True)
+    # bill = BillSerializer(read_only=True)
+    # medicine = MedicineSerializer(read_only=True)
     class Meta:
         model = BillDetails
-        fields = ['id', 'bill', 'medicine', 'qty', 'added_on']
+        # fields = ['id', 'bill', 'medicine', 'qty', 'added_on']
+        fields = '__all__'
+    
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['bill'] = BillSerializer(instance.bill).data
+        response['medicine'] = MedicineSerializer(instance.medicine).data
+        # response['customer'] = CustomerSerializer(instance.bill.customer).data
+        return response    
 
 
 
