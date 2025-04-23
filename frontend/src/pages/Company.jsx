@@ -72,19 +72,6 @@ const Company = () => {
     setEditId(company.id);
   };
 
-  // const handleDelete = async (id) => {
-  //   const confirmDelete = window.confirm("Are you sure you want to delete this company?");
-  //   if (!confirmDelete) return;
-
-  //   try {
-  //     await api.delete(`/api/medical/company/${id}/`);
-  //     setCompanies(prev => prev.filter(company => company.id !== id));
-  //     toast.success("Company deleted successfully!");
-  //   } catch (err) {
-  //     console.error("Error deleting company:", err);
-  //     toast.error("Failed to delete company.");
-  //   }
-  // };
   const handleDelete = (id) => {
     confirmAlert({
       title: 'Confirm Delete',
@@ -120,7 +107,8 @@ const Company = () => {
         <textarea name="address" placeholder="Address" value={formData.address} onChange={handleChange} className="border border-gray-400 rounded px-3 py-2 w-full h-20" />
         <textarea name="description" placeholder="Description" value={formData.description} onChange={handleChange} className="border border-gray-400 rounded px-3 py-2 w-full h-20" />
         <div className="md:col-span-2 flex justify-center mt-2">
-          <button type="submit" className="w-[20%] bg-green-600 text-white font-bold py-2 px-3 rounded hover:bg-green-700">
+          <button type="submit" className="w-[20%] md:w-[40%] cursor-pointer bg-green-600 text-white font-bold py-2 px-3 
+          rounded hover:bg-green-700">
             {editId ? 'Update Agency' : 'Add Agency '}
           </button>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Dashboard, Tasks, Tickets, Comments, Visitors, } from '../components2';
 import Company from './Company';
+import Medicines from './Medicines.jsx'
 
 const Design = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -9,7 +10,7 @@ const Design = () => {
   const renderComponent = () => {
     switch (activeComponent) {
       case 'Company': return <Company />;
-      case 'tickets': return <Tickets />;
+      case 'Medicines': return <Medicines />;
       case 'comments': return <Comments />;
       case 'visitors': return <Visitors />;
       default: return <Dashboard />;
@@ -32,6 +33,10 @@ const Design = () => {
           <button onClick={() => setActiveComponent('Company')}
            className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2">
             📋 {sidebarOpen && 'Company'}
+          </button>
+          <button onClick={() => setActiveComponent('Medicines')} 
+          className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2">
+            ❓ {sidebarOpen && 'Medicines'}
           </button>
           <button onClick={() => setActiveComponent('tickets')} 
           className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2">
