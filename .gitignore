@@ -7,7 +7,7 @@ backend/env/
 backend/.env
 backend/db.sqlite3
 env/
-mkenv/
+mkenv2/
 
 # === Node.js frontend ===
 frontend/node_modules/

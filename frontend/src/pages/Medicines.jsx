@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import api from '../api.js'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Medicines() {
 
@@ -25,35 +27,39 @@ function Medicines() {
 
 
   const handleSubmit = (e) => {
+
     e.preventDefault();
 
-    api.post('/api/makemedicinedetailsviacompany/1/', formData)
+    const CompanyID = formData.company
+
+    api.post(`/api/makemedicinedetailsviacompany/${CompanyID}/`, formData)
       .then((res) => {
         console.log("Medicine added:", res.data);
-      
+        toast.success("Medicine added successfully!");
       })
       .catch((err) => {
         console.error("Error adding medicine:", err);
+        toast.error("Error adding medicine. Please try again.");
       });
 
-      // setFormData({
-      //   name: '',
-      //   schedule_type: '',
-      //   mrp: '',
-      //   rate: '',
-      //   pack: '',
-      //   c_gst: '',
-      //   s_gst: '',
-      //   batch_no: '',
-      //   exp_date: '',
-      //   mfg_date: '',
-      //   company: '',
-      //   in_stock_total: '',
-      //   qty_in_strip: '',
-      // });
+    setFormData({
+      name: '',
+      schedule_type: '',
+      mrp: '',
+      rate: '',
+      pack: '',
+      c_gst: '',
+      s_gst: '',
+      batch_no: '',
+      exp_date: '',
+      mfg_date: '',
+      company: '',
+      in_stock_total: '',
+      qty_in_strip: '',
+    });
 
 
-      console.log(formData)
+    console.log(formData)
 
 
   }
@@ -63,17 +69,17 @@ function Medicines() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  useEffect(() => {
-    api.get('/api/makemedicinedetailsviacompany/1/')
-    .then((res) => (res.data))
-    .then((data) => {
-      Setmedicines(data.data)
-      console.log(data.data)
-    })
-    .catch((err) => {
-      console.error("Error fetching medicines:", err);
-    })
-  },[])
+  // useEffect(() => {
+  //   api.get('/api/medical/medicine')
+  //   .then((res) => (res.data))
+  //   .then((data) => {
+  //     Setmedicines(data.data)
+  //     console.log(data.data)
+  //   })
+  //   .catch((err) => {
+  //     console.error("Error fetching medicines:", err);
+  //   })
+  // },[])
 
 
 
@@ -86,6 +92,7 @@ function Medicines() {
       })
       .catch((err) => {
         console.error("Error fetching options in Medicines:", err);
+        toast.error("Failed to fetch Agencies options.");
       })
   }, [])
 
@@ -105,14 +112,17 @@ function Medicines() {
           className="border border-gray-400 rounded px-3 py-2 w-full"
           required
         />
-        <input
-          type='text'
+        <select
           name='schedule_type'
-          placeholder='Enter Schedule Type '
           value={formData.schedule_type}
           onChange={handleChange}
-          className="border border-gray-400 rounded px-3 py-2 w-full"
-        />
+          className="border p-2 rounded"
+        >
+          <option value="">-- Select Schedule Type --</option>
+          <option value="yes">YES</option>
+          <option value="no">NO</option>
+
+        </select>
         <input
           type='Number'
           name='mrp'
@@ -169,7 +179,7 @@ function Medicines() {
           required
         />
         <input
-          type='text'
+          type='date'
           name='exp_date'
           placeholder='Enter Exp Date'
           value={formData.exp_date}
@@ -178,7 +188,7 @@ function Medicines() {
           required
         />
         <input
-          type='text'
+          type='date'
           name='mfg_date'
           placeholder='Enter Mfg Date'
           value={formData.mfg_date}
@@ -193,7 +203,7 @@ function Medicines() {
           className="border p-2 rounded"
         >
 
-          <option value="">-- Select an option --</option>
+          <option value="">-- Select The Agency Source --</option>
           {options.map((opt) => (
             <option key={opt.id} value={opt.id}>
               {opt.name}
@@ -281,64 +291,65 @@ function Medicines() {
         </table>
       </div> */}
 
-<div className="overflow-x-auto border rounded shadow-md p-4 bg-white">
-  <table className="w-full text-left border-collapse">
-    <thead className="bg-gray-100 text-gray-800">
-      <tr>
-        <th className="p-3">Name</th>
-        <th className="p-3">MFG Date</th>
-        <th className="p-3">EXP Date</th>
-        <th className="p-3">Batch No</th>
-        <th className="p-3">Schedule Type</th>
-        <th className="p-3">MRP</th>
-        <th className="p-3">Rate</th>
-        <th className="p-3">Pack</th>
-        <th className="p-3">C_GST</th>
-        <th className="p-3">S_GST</th>
-        <th className="p-3">Company</th>
-        <th className="p-3">In Stock Total</th>
-        <th className="p-3">Qty In Strip</th>
-        <th className="p-3">Added On</th>
-        <th className="p-3">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {medicines.map((med, idx) => (
-        <tr key={idx} className="border-t hover:bg-gray-50">
-          <td className="p-3">{med.name}</td>
-          <td className="p-3">{med.mfg_date}</td>
-          <td className="p-3">{med.exp_date}</td>
-          <td className="p-3">{med.batch_no}</td>
-          <td className="p-3">{med.schedule_type}</td>
-          <td className="p-3">{med.mrp}</td>
-          <td className="p-3">{med.rate}</td>
-          <td className="p-3">{med.pack}</td>
-          <td className="p-3">{med.c_gst}</td>
-          <td className="p-3">{med.s_gst}</td>
-          <td className="p-3">{med.company}</td>
-          <td className="p-3">{med.in_stock_total}</td>
-          <td className="p-3">{med.qty_in_strip}</td>
-          <td className="p-3">{med.added_on}</td>
-          <td className="p-3 space-x-2">
-            <button
-              onClick={() => handleEdit(med.id)}
-              className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => handleDelete(med.id)}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded"
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+      <div className="overflow-x-auto border rounded shadow-md p-4 bg-white">
+        <table className="w-full text-left border-collapse">
+          <thead className="bg-gray-100 text-gray-800">
+            <tr>
+              <th className="p-3">Name</th>
+              <th className="p-3">MFG Date</th>
+              <th className="p-3">EXP Date</th>
+              <th className="p-3">Batch No</th>
+              <th className="p-3">Schedule Type</th>
+              <th className="p-3">MRP</th>
+              <th className="p-3">Rate</th>
+              <th className="p-3">Pack</th>
+              <th className="p-3">C_GST</th>
+              <th className="p-3">S_GST</th>
+              <th className="p-3">Company</th>
+              {/* <th className="p-3">In Stock Total</th> */}
+              <th className="p-3">Qty In Strip</th>
+              <th className="p-3">Added On</th>
+              <th className="p-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {medicines.map((med, idx) => (
+              <tr key={idx} className="border-t hover:bg-gray-50">
+                <td className="p-3">{med.name}</td>
+                <td className="p-3">{med.mfg_date}</td>
+                <td className="p-3">{med.exp_date}</td>
+                <td className="p-3">{med.batch_no}</td>
+                <td className="p-3">{med.schedule_type}</td>
+                <td className="p-3">{med.mrp}</td>
+                <td className="p-3">{med.rate}</td>
+                <td className="p-3">{med.pack}</td>
+                <td className="p-3">{med.c_gst}</td>
+                <td className="p-3">{med.s_gst}</td>
+                <td className="p-3">{med.company}</td>
+                {/* <td className="p-3">{med.in_stock_total}</td> */}
+                <td className="p-3">{med.qty_in_strip}</td>
+                <td className="p-3">{med.added_on}</td>
+                <td className="p-3 space-x-2">
+                  <button
+                    onClick={() => handleEdit(med.id)}
+                    className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(med.id)}
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} pauseOnHover theme="colored" />
 
     </div >
   )

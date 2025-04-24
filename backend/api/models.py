@@ -35,7 +35,7 @@ class Company(models.Model):
 #done 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
-    schedule_type = models.CharField(max_length=50, choices=[('yes','no')])
+    schedule_type = models.CharField(max_length=50, choices=[('yes','yes'), ('no','no')])
     mrp = models.DecimalField(max_digits=10, decimal_places=2)
     rate = models.DecimalField(max_digits=10, decimal_places=2)
     pack = models.IntegerField()
