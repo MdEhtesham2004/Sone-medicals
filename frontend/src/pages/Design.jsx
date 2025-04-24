@@ -32,15 +32,15 @@ const Design = () => {
         <div className="mt-6 flex flex-col space-y-4 px-4">
           <button onClick={() => setActiveComponent('Company')}
            className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2">
-            📋 {sidebarOpen && 'Company'}
+            📋 {sidebarOpen && 'Manage Company'}
           </button>
           <button onClick={() => setActiveComponent('Medicines')} 
           className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2">
-            ❓ {sidebarOpen && 'Medicines'}
+            ❓ {sidebarOpen && 'Manage Medicines'}
           </button>
           <button onClick={() => setActiveComponent('tickets')} 
           className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2">
-            ❓ {sidebarOpen && 'Employees'}
+            ❓ {sidebarOpen && 'Manage Bills'}
           </button>
           <button onClick={() => setActiveComponent('comments')} 
           className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2">

@@ -27,7 +27,9 @@ function Medicines() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    api.post('/api/makemedicinedetailsviacompany/1/', formData)
+    const companyId = formData.company;
+
+    api.post(`/api/makemedicinedetailsviacompany/${companyId}/`, formData)
       .then((res) => {
         console.log("Medicine added:", res.data);
       
@@ -64,7 +66,7 @@ function Medicines() {
   }
 
   useEffect(() => {
-    api.get('/api/makemedicinedetailsviacompany/1/')
+    api.get('/api/medical/medicine/')
     .then((res) => (res.data))
     .then((data) => {
       Setmedicines(data.data)

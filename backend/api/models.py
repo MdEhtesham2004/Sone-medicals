@@ -35,7 +35,8 @@ class Company(models.Model):
 #done 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
-    schedule_type = models.CharField(max_length=50, choices=[('yes','no')])
+    schedule_type = models.CharField(max_length=50) #" pass yes or no "
+    source = models.CharField(max_length=50 ) # pass existing or company
     mrp = models.DecimalField(max_digits=10, decimal_places=2)
     rate = models.DecimalField(max_digits=10, decimal_places=2)
     pack = models.IntegerField()
@@ -44,7 +45,7 @@ class Medicine(models.Model):
     batch_no = models.CharField(max_length=100)
     exp_date = models.DateField()
     mfg_date = models.DateField()
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE,null=True, blank=True)
     in_stock_total = models.IntegerField()
     qty_in_strip = models.IntegerField()
     added_on = models.DateTimeField(auto_now_add=True)

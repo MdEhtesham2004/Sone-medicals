@@ -35,6 +35,10 @@ urlpatterns = [
         'makemedicinedetailsviacompany/<int:company_id>/',
         CreateMedicineWithCompanyViewSet.as_view({'post': 'create_with_company'})
     ),
+    path(
+        'makemedicinedetailsviacompany/',
+        CreateMedicineWithCompanyViewSet.as_view({'post': 'create_with_company'})
+    ),
 ]
 
 
