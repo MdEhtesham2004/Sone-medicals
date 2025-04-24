@@ -30,9 +30,9 @@ function Medicines() {
 
     e.preventDefault();
 
-    const CompanyID = formData.company
+    const companyId = formData.company;
 
-    api.post(`/api/makemedicinedetailsviacompany/${CompanyID}/`, formData)
+    api.post(`/api/makemedicinedetailsviacompany/${companyId}/`, formData)
       .then((res) => {
         console.log("Medicine added:", res.data);
         toast.success("Medicine added successfully!");
@@ -69,17 +69,17 @@ function Medicines() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  // useEffect(() => {
-  //   api.get('/api/medical/medicine')
-  //   .then((res) => (res.data))
-  //   .then((data) => {
-  //     Setmedicines(data.data)
-  //     console.log(data.data)
-  //   })
-  //   .catch((err) => {
-  //     console.error("Error fetching medicines:", err);
-  //   })
-  // },[])
+  useEffect(() => {
+    api.get('/api/medical/medicine/')
+    .then((res) => (res.data))
+    .then((data) => {
+      Setmedicines(data.data)
+      console.log(data.data)
+    })
+    .catch((err) => {
+      console.error("Error fetching medicines:", err);
+    })
+  },[])
 
 
 

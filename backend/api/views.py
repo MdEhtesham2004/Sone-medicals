@@ -314,25 +314,33 @@ class GenerateBillViewSet(viewsets.ModelViewSet):
         return Response(response_dict)
 
 
-
 class CreateMedicineWithCompanyViewSet(viewsets.ModelViewSet):
     queryset = Medicine.objects.all()
     serializer_class = MedicineSerializer
 
     def create_with_company(self, request, company_id=None):
-        # 1. Get the company from the database using the ID passed via URL
-        company = get_object_or_404(Company, id=company_id)
+        # If company_id is provided, associate the medicine with the company
+        if company_id is not None:
+            # 1. Get the company from the database using the ID passed via URL
+            company = get_object_or_404(Company, id=company_id)
 
-        # 2. Copy the incoming POST data (name, description, price, etc.)
-        data = request.data.copy()
+            # 2. Copy the incoming POST data (name, description, price, etc.)
+            data = request.data.copy()
 
-        # 3. Add the company ID to the data so that it gets linked properly
-        data['company'] = company.id
+            # 3. Add the company ID to the data so that it gets linked properly
+            data['company'] = company.id
 
-        # 4. Validate and save using serializer
-        serializer = self.get_serializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # 4. Validate and save using serializer
+            serializer = self.get_serializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # If no company_id is provided, save the data without associating it with a company
+        else:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
