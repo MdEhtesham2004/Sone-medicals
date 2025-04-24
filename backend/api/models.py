@@ -45,7 +45,6 @@ class Medicine(models.Model):
     exp_date = models.DateField()
     mfg_date = models.DateField()
     company = models.ForeignKey(Company, on_delete=models.CASCADE,null=True, blank=True)
-    in_stock_total = models.IntegerField()
     qty_in_strip = models.IntegerField()
     added_on = models.DateTimeField(auto_now_add=True)
 
@@ -93,4 +92,15 @@ class CustomerRequest(models.Model):
     medicine_details = models.TextField()
     status = models.CharField(max_length=100)
     request_date = models.DateTimeField(auto_now_add=True)
+
+
+class MedicineStock(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    schedule_type = models.CharField(max_length=50)
+    in_stock_total = models.IntegerField(default=0)
+    mrp = models.DecimalField(max_digits=10, decimal_places=2)
+    rate = models.DecimalField(max_digits=10, decimal_places=2)    
+    added_on = models.DateTimeField(auto_now_add=True)
+
+
 

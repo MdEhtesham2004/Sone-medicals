@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Note,Company, Medicine, AdminLogin, Customer, Bill, BillDetails, Employee, EmployeeSalary, EmployeeBank, CustomerRequest
+from .models import Note,Company, Medicine, AdminLogin, Customer, Bill, BillDetails, Employee, EmployeeSalary, EmployeeBank, CustomerRequest,MedicineStock
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
@@ -39,8 +39,7 @@ class MedicineSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'schedule_type', 'mrp', 'rate', 'pack', 
             'c_gst', 's_gst', 'batch_no', 'exp_date', 'mfg_date', 
-            'company', 'in_stock_total', 
-            'qty_in_strip', 'added_on','company_details'
+            'company',  'qty_in_strip', 'added_on','company_details'
         ]
    
 class AdminLoginSerializer(serializers.ModelSerializer):
@@ -112,3 +111,11 @@ class CustomerRequestSerializer(serializers.ModelSerializer):
         model = CustomerRequest
         fields = '__all__'
 
+
+
+
+
+class MedicineStockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicineStock
+        fields = ['id', 'name', 'schedule_type', 'in_stock_total', 'mrp', 'rate']

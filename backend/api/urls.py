@@ -21,6 +21,7 @@ router.register('bills', BillViewSet)
 router.register('employees', EmployeeViewSet)
 
 router.register('employee-banks',EmployeeBankViewSet)
+router.register('MedicineStockDetails', MedicineStockViewSet, basename='medicinestock')
 
 
 
@@ -38,7 +39,7 @@ urlpatterns = [
     path(
         'makemedicinedetailsviacompany/',
         CreateMedicineWithCompanyViewSet.as_view({'post': 'create_with_company'})
-    ),
+    )
 ]
 
 

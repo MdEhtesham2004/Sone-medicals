@@ -344,3 +344,25 @@ class CreateMedicineWithCompanyViewSet(viewsets.ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+        
+
+
+class MedicineStockViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = MedicineStock.objects.all()
+    serializer_class = MedicineStockSerializer
+
+    def list(self, request):
+        queryset = MedicineStock.objects.all()
+        serializer = MedicineStockSerializer(queryset, many=True, context={'request': request})
+        response_dict = {
+            'error': False,
+            'message': 'All Medicine Stock List Data',
+            'data': serializer.data
+        }
+        return Response(response_dict)
+    
+medicine_list = MedicineStockViewSet.as_view({'get':'list'})
+medicine_create = MedicineStockViewSet.as_view({'post':'create'})
+medicine_update = MedicineStockViewSet.as_view({'put':'update'})
+medicine_delete = MedicineStockViewSet.as_view({'delete':'destroy'})
