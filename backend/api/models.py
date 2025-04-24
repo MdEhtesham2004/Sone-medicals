@@ -36,10 +36,9 @@ class Company(models.Model):
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
     schedule_type = models.CharField(max_length=50) #" pass yes or no "
-    source = models.CharField(max_length=50 ) # pass existing or company
     mrp = models.DecimalField(max_digits=10, decimal_places=2)
     rate = models.DecimalField(max_digits=10, decimal_places=2)
-    pack = models.IntegerField()
+    pack = models.IntegerField()    
     c_gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
     s_gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
     batch_no = models.CharField(max_length=100)
