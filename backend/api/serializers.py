@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Note,Company, Medicine, AdminLogin, Customer, Bill, BillDetails, Employee, EmployeeSalary, EmployeeBank, CustomerRequest
+from .models import Note,Company, Medicine, AdminLogin, Customer, Bill, BillDetails, Employee, EmployeeSalary, EmployeeBank, CustomerRequest,MedicineStock
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
@@ -39,9 +39,18 @@ class MedicineSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'schedule_type', 'mrp', 'rate', 'pack', 
             'c_gst', 's_gst', 'batch_no', 'exp_date', 'mfg_date', 
-            'company', 'in_stock_total', 
-            'qty_in_strip', 'added_on','company_details'
+            'company',  'qty_in_strip', 'gst',"amt_aftr_gst", 'added_on','company_details'
         ]
+    def create(self, validated_data):
+        rate = validated_data.get('rate', 0)
+        gst = validated_data.get('gst', 0)
+        sub_gst  = gst / 2 #cgst and sgst are equal
+        amt_aftr_gst = rate + (rate * gst / 100)
+        validated_data['amt_aftr_gst'] = round(amt_aftr_gst, 2)
+        validated_data['c_gst'] = round(sub_gst, 2)
+        validated_data['s_gst'] = round(sub_gst, 2)
+
+        return super().create(validated_data)
    
 class AdminLoginSerializer(serializers.ModelSerializer):
     class Meta:
@@ -111,4 +120,13 @@ class CustomerRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerRequest
         fields = '__all__'
+
+
+
+
+
+class MedicineStockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicineStock
+        fields = ['id', 'name', 'schedule_type', 'in_stock_total', 'mrp', 'rate']
 

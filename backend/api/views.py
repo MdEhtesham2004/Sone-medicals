@@ -150,9 +150,8 @@ class MedicineViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request):
-
         serializer = MedicineSerializer(data=request.data, context={'request':request})
-        
+
         if serializer.is_valid(raise_exception=True):
             serializer.save()
 
@@ -279,7 +278,7 @@ class GenerateBillViewSet(viewsets.ModelViewSet):
                 # Add more bill fields if needed (e.g., date, total, etc.)
             }
 
-            bill_serializer = BillSerializer(data=bill_data, context={'request': request})
+            bill_serializer = BillSerializer(data=bill_data,context={'request': request})
             bill_serializer.is_valid(raise_exception=True)
             bill = bill_serializer.save()
             bill_id = bill.id
@@ -295,8 +294,10 @@ class GenerateBillViewSet(viewsets.ModelViewSet):
                 medicine_data_list.append(medicine_data)
 
             bill_details_serializer = BillDetailsSerializer(data=medicine_data_list, many=True, context={'request': request})
-            bill_details_serializer.is_valid()
+            bill_details_serializer.is_valid(raise_exception=True)
             bill_details_serializer.save()
+            print("Medicine Data List:", medicine_data_list)
+    
 
             # 4. Success response
             response_dict = {
@@ -304,11 +305,11 @@ class GenerateBillViewSet(viewsets.ModelViewSet):
                 "message": "Bill Generated Successfully!",
                 "bill_id": bill_id
             }
-        except:
-            print("Error while generating bill:")  # For debugging
+        except Exception as e:
+            print("Error while generating bill:", str(e))  # Shows actual Python error
             response_dict = {
                 "error": True,
-                "message": "Error while generating the bill!"
+                "message": f"Error while generating the bill: {str(e)}"
             }
 
         return Response(response_dict)
@@ -329,6 +330,7 @@ class CreateMedicineWithCompanyViewSet(viewsets.ModelViewSet):
 
             # 3. Add the company ID to the data so that it gets linked properly
             data['company'] = company.id
+            data['amt_after_gst'] = data['mrp'] + (data['mrp'] * data['gst'] / 100)  # Calculate amount after GST
 
             # 4. Validate and save using serializer
             serializer = self.get_serializer(data=data)
@@ -344,3 +346,25 @@ class CreateMedicineWithCompanyViewSet(viewsets.ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+        
+
+
+class MedicineStockViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = MedicineStock.objects.all()
+    serializer_class = MedicineStockSerializer
+
+    def list(self, request):
+        queryset = MedicineStock.objects.all()
+        serializer = MedicineStockSerializer(queryset, many=True, context={'request': request})
+        response_dict = {
+            'error': False,
+            'message': 'All Medicine Stock List Data',
+            'data': serializer.data
+        }
+        return Response(response_dict)
+    
+medicine_list = MedicineStockViewSet.as_view({'get':'list'})
+medicine_create = MedicineStockViewSet.as_view({'post':'create'})
+medicine_update = MedicineStockViewSet.as_view({'put':'update'})
+medicine_delete = MedicineStockViewSet.as_view({'delete':'destroy'})

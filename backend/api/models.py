@@ -41,11 +41,12 @@ class Medicine(models.Model):
     pack = models.IntegerField()    
     c_gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
     s_gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
+    gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
+    amt_aftr_gst = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
     batch_no = models.CharField(max_length=100)
     exp_date = models.DateField()
     mfg_date = models.DateField()
     company = models.ForeignKey(Company, on_delete=models.CASCADE,null=True, blank=True)
-    in_stock_total = models.IntegerField()
     qty_in_strip = models.IntegerField()
     added_on = models.DateTimeField(auto_now_add=True)
 
@@ -78,6 +79,7 @@ class Bill(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     added_on = models.DateTimeField(auto_now_add=True)
 
+
 class BillDetails(models.Model):
     bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
@@ -93,4 +95,15 @@ class CustomerRequest(models.Model):
     medicine_details = models.TextField()
     status = models.CharField(max_length=100)
     request_date = models.DateTimeField(auto_now_add=True)
+
+
+class MedicineStock(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    schedule_type = models.CharField(max_length=50)
+    in_stock_total = models.IntegerField(default=0)
+    mrp = models.DecimalField(max_digits=10, decimal_places=2)
+    rate = models.DecimalField(max_digits=10, decimal_places=2)  
+    added_on = models.DateTimeField(auto_now_add=True)
+
+
 
