@@ -107,3 +107,35 @@ class MedicineStock(models.Model):
 
 
 
+
+class MedicineStockHistory(models.Model):
+    medicine = models.ForeignKey(MedicineStock, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    transaction_type = models.CharField(max_length=10, choices=[('IN', 'In'), ('OUT', 'Out')])
+    transaction_date = models.DateTimeField(auto_now_add=True)
+
+
+
+
+class CustomerCredit(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.TextField()
+    contact = models.CharField(max_length=15)
+    description = models.TextField()
+    payment_status = models.CharField(max_length=100, choices=[('Paid', 'Paid'), ('Pending', 'Pending')])
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_type = models.CharField(max_length=100, choices=[('Cash', 'Cash'), ('Credit', 'Credit')])
+    added_on = models.DateTimeField(auto_now_add=True)
+
+
+class CustomerCreditConnect(models.Model):
+    customer_credit = models.ForeignKey(CustomerCredit, on_delete=models.CASCADE)
+    added_on = models.DateTimeField(auto_now_add=True)
+
+
+class CustomerCreditDetails(models.Model):
+    customer_credit = models.ForeignKey(CustomerCreditConnect, on_delete=models.CASCADE)
+    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    added_on = models.DateTimeField(auto_now_add=True)
+
