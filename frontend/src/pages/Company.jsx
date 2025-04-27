@@ -120,7 +120,7 @@ const Company = () => {
             <table className="w-full text-left border-collapse">
               <thead className="bg-gray-100 text-gray-800">
                 <tr>
-                  <th className="p-3">ID</th>
+                  {/* <th className="p-3">ID</th> */}
                   <th className="p-3">Name</th>
                   <th className="p-3">License</th>
                   <th className="p-3">GST</th>
@@ -131,20 +131,24 @@ const Company = () => {
               </thead>
               <tbody>
                 <tr className="border-t">
-                  <td className="p-3">{company.id}</td>
+                  {/* <td className="p-3">{company.id}</td> */}
                   <td className="p-3">{company.name}</td>
                   <td className="p-3">{company.license_no}</td>
                   <td className="p-3">{company.gst_no}</td>
                   <td className="p-3">{company.contact_no}</td>
                   <td className="p-3">{company.address}</td>
                   <td className="p-3 space-x-2">
-                    <button className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded" onClick={() => handleEdit(company)}>Edit</button>
+                    
+                    <button className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded" 
+                    onClick={() => handleEdit(company)}>Edit</button>
                     {editId === company.id && (
-                      <button onClick={() => { setEditId(null); resetForm(); }} className="bg-gray-500 text-white font-bold py-1 px-3 rounded hover:bg-gray-600">
+                      <button onClick={() => { setEditId(null); resetForm(); }} 
+                      className="bg-gray-500 text-white font-bold py-1 px-3 rounded hover:bg-gray-600">
                         Cancel
                       </button>
                     )}
-                    <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded" onClick={() => handleDelete(company.id)} disabled={editId === company.id}>
+                    <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded"
+                     onClick={() => handleDelete(company.id)} disabled={editId === company.id}>
                       Delete
                     </button>
                   </td>

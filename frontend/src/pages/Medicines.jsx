@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react'
 import api from '../api.js'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 function Medicines() {
 
   const [options, setOptions] = useState([])
   const [medicines, Setmedicines] = useState([])
+  const [editId, setEditId] = useState(null)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -25,23 +28,55 @@ function Medicines() {
     added_on: '',
   })
 
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
 
-    const companyId = formData.company;
+    try {
+      if (editId) {
+        const res = await api.put(`/api/medical/medicine/${editId}/`, formData)
+        Setmedicines(prev => prev.map((med) => med.id === editId ? res.data : med));
+        setEditId(null);
+        toast.success("Medicine updated successfully!");
 
-    api.post(`/api/makemedicinedetailsviacompany/${companyId}/`, formData)
-      .then((res) => {
-        console.log("Medicine added:", res.data);
+      } else {
+
+        const companyId = formData.company;
+
+        const res = await api.post(`/api/makemedicinedetailsviacompany/${companyId}/`, formData)
+        Setmedicines(prev => [...prev, res.data]);
         toast.success("Medicine added successfully!");
-      })
-      .catch((err) => {
-        console.error("Error adding medicine:", err);
-        toast.error("Error adding medicine. Please try again.");
-      });
+      }
+      resetForm();
+      fetchMedicines();
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+      toast.error("Failed to add medicine. Please try again.");
+    }
+  }
 
+  const handleEdit = (med) => {
+    setFormData({
+      name: med.name || '',
+      schedule_type: med.schedule_type || '',
+      mrp: med.mrp || '',
+      rate: med.rate || '',
+      pack: med.pack || '',
+      c_gst: med.c_gst || '',
+      s_gst: med.s_gst || '',
+      batch_no: med.batch_no || '',
+      exp_date: med.exp_date || '',
+      mfg_date: med.mfg_date || '',
+      company: med.company || '',
+      in_stock_total: med.in_stock_total || '',
+      qty_in_strip: med.qty_in_strip || '',
+      added_on: med.added_on || '',
+    });
+    setEditId(med.id);
+  };
+
+
+  const resetForm = () => {
     setFormData({
       name: '',
       schedule_type: '',
@@ -57,11 +92,16 @@ function Medicines() {
       in_stock_total: '',
       qty_in_strip: '',
     });
+  }
 
-
-    console.log(formData)
-
-
+  const fetchMedicines = async () => {
+    try {
+      const response = await api.get('/api/medical/medicine/');
+      Setmedicines(response.data.data);
+    } catch (error) {
+      console.error("Error fetching medicines:", error);
+      toast.error("Failed to fetch medicines. Please try again.");
+    }
   }
 
   const handleChange = (e) => {
@@ -69,32 +109,62 @@ function Medicines() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+
+  //Function to list Medicines Details
   useEffect(() => {
     api.get('/api/medical/medicine/')
-    .then((res) => (res.data))
-    .then((data) => {
-      Setmedicines(data.data)
-      console.log(data.data)
-    })
-    .catch((err) => {
-      console.error("Error fetching medicines:", err);
-    })
-  },[])
+      .then((res) => (res.data))
+      .then((data) => {
+        Setmedicines(data.data)
+        // console.log(data.data)
+      })
+      .catch((err) => {
+        console.error("Error fetching medicines:", err);
+      })
+  }, [])
 
 
+
+  //function to list Agencies in Options 
 
   useEffect(() => {
     api.get('/api/medical/company/')
       .then((res) => (res.data))
       .then((data) => {
         setOptions(data.data)
-        console.log(data.data)
+        // console.log(data.data)
       })
       .catch((err) => {
         console.error("Error fetching options in Medicines:", err);
         toast.error("Failed to fetch Agencies options.");
       })
   }, [])
+
+  const handleDelete = (id) => {
+    const med = medicines.find(m => m.id === id);
+    confirmAlert(
+      {
+        title: 'Confirm to Delete',
+        message: `Are you sure you want to  delete this medicine ${med?.name} ?`,
+        buttons: [
+          {
+            label: 'Yes',
+            onClick: async () => {
+              await api.delete(`/api/medical/medicine/${id}/`);
+              Setmedicines(prev => prev.filter(med => med.id !== id))
+              toast.success(`Medicine ${med?.name} deleted!`);
+            },
+          },
+          {
+            label: 'No',
+            onClick: () => toast.info('Delete cancelled!')
+          }
+
+        ]
+      });
+  }
+
+
 
 
   return (
@@ -233,63 +303,11 @@ function Medicines() {
         <div className="md:col-span-2 flex justify-center mt-2">
           <button type='submit' className="flex items-center justify-center bg-green-600 text-white font-bold py-2 px-3 
          shadow-lg cursor-pointer transition-all duration-200 rounded hover:bg-green-700">
-            Add Medicine
+            {editId ? 'Update Medicine' : 'Add Medicine '}
           </button>
         </div>
 
       </form >
-
-
-      {/* <div>
-        <table className='overflow-x-auto border rounded shadow-md p-4 bg-white w-full'>
-          <thead className='bg-gray-100 text-gray-800'>
-            <tr>
-              <td>name</td>
-              <td>mfg_date</td> 
-              <td>exp_date</td>
-              <td>batch_no</td>
-              <td>schedule_type</td>
-              <td>mrp</td>
-              <td>rate</td>
-              <td>pack</td>
-              <td>c_gst</td>
-              <td>s_gst</td>
-              <td>company</td>
-              <td>in_stock_total</td>
-              <td>qty_in_strip</td>
-              <td>added_on</td>
-              <td>Actions</td>  
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-            {medicines.map((med) => (
-              <tr key={med.id}>
-                <td>{med.name}</td>
-                <td>{med.mfg_date}</td>
-                <td>{med.exp_date}</td>
-                <td>{med.batch_no}</td>
-                <td>{med.schedule_type}</td>
-                <td>{med.mrp}</td>
-                <td>{med.rate}</td>
-                <td>{med.pack}</td>
-                <td>{med.c_gst}</td>
-                <td>{med.s_gst}</td>
-                <td>{med.company}</td>
-                <td>{med.in_stock_total}</td>
-                <td>{med.qty_in_strip}</td>
-                <td>{med.added_on}</td>
-                <td>
-                  <button onClick={() => handleEdit(med.id)}>Edit</button>
-                  <button onClick={() => handleDelete(med.id)}>Delete</button>
-                </td> 
-              </tr>
-            ))}
-            </tbody>
-        </table>
-      </div> */}
 
       <div className="overflow-x-auto border rounded shadow-md p-4 bg-white">
         <table className="w-full text-left border-collapse">
@@ -299,16 +317,16 @@ function Medicines() {
               <th className="p-3">MFG Date</th>
               <th className="p-3">EXP Date</th>
               <th className="p-3">Batch No</th>
-              <th className="p-3">Schedule Type</th>
+              <th className="p-3">SCH</th>
               <th className="p-3">MRP</th>
               <th className="p-3">Rate</th>
               <th className="p-3">Pack</th>
               <th className="p-3">C_GST</th>
               <th className="p-3">S_GST</th>
-              <th className="p-3">Company</th>
+              <th className="p-3">Agency</th>
               {/* <th className="p-3">In Stock Total</th> */}
               <th className="p-3">Qty In Strip</th>
-              <th className="p-3">Added On</th>
+              {/* <th className="p-3">Added On</th> */}
               <th className="p-3">Actions</th>
             </tr>
           </thead>
@@ -325,20 +343,30 @@ function Medicines() {
                 <td className="p-3">{med.pack}</td>
                 <td className="p-3">{med.c_gst}</td>
                 <td className="p-3">{med.s_gst}</td>
-                <td className="p-3">{med.company}</td>
+                <td className="p-3">{med.company_details.name}</td>
                 {/* <td className="p-3">{med.in_stock_total}</td> */}
                 <td className="p-3">{med.qty_in_strip}</td>
-                <td className="p-3">{med.added_on}</td>
+                {/* <td className="p-3">{med.added_on}</td> */}
                 <td className="p-3 space-x-2">
                   <button
-                    onClick={() => handleEdit(med.id)}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded"
+                    onClick={() => handleEdit(med)}
+                    className="bg-yellow-400 hover:bg-yellow-500
+                    cursor-pointer text-white font-bold py-1 px-3 rounded"
                   >
                     Edit
                   </button>
+                  {editId === med.id && (
+                    <button
+                      onClick={() => { setEditId(null); resetForm(); }}
+                      className="bg-gray-500 text-white cursor-pointer font-bold py-1 px-3 rounded hover:bg-gray-600"
+                    >
+                      Cancel
+                    </button>
+                  )}
+
                   <button
                     onClick={() => handleDelete(med.id)}
-                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded"
+                    className="bg-red-500 hover:bg-red-600 cursor-pointer text-white font-bold py-1 px-3 rounded"
                   >
                     Delete
                   </button>

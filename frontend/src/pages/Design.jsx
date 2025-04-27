@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Dashboard, Tasks, Tickets, Comments, Visitors, } from '../components2';
 import Company from './Company';
 import Medicines from './Medicines.jsx'
+import Bill from './Bill.jsx';
 import { FaBriefcaseMedical, FaPills, FaHome, FaUserTie, FaCreditCard } from 'react-icons/fa';
 import { MdReceiptLong } from 'react-icons/md';
 
@@ -17,7 +18,7 @@ const Design = () => {
       case 'Company': return <Company />;
       case 'Medicines': return <Medicines />;
       case 'comments': return <Comments />;
-      case 'visitors': return <Visitors />;
+      case 'Bill': return <Bill />;
       default: return <Dashboard />;
     }
   };
@@ -56,7 +57,7 @@ const Design = () => {
             <FaPills />
             {sidebarOpen && 'Add Medicines'}
           </button>
-          <button onClick={() => setActiveComponent('visitors')}
+          <button onClick={() => setActiveComponent('Bill')}
             className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2 cursor-pointer">
             <MdReceiptLong /> {sidebarOpen && 'Generate Bill'}
           </button>
