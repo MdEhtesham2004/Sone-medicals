@@ -115,11 +115,11 @@ class EmployeeBankSerializer(serializers.ModelSerializer):
         return response
 
 
-#done 
-class CustomerRequestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomerRequest
-        fields = '__all__'
+# #done 
+# class CustomerRequestSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CustomerRequest
+#         fields = '__all__'
 
 
 
@@ -157,11 +157,27 @@ class CustomerCreditDetailsSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
     
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        # Using the CustomerCreditSerializer to represent the 'customer' field
+        response['customer'] = CustomerConnectSerializer(instance.customer_credit).data
+        # Using the MedicineSerializer to represent the 'medicine' field
+        response['medicine'] = MedicineSerializer(instance.medicine).data
+        # response['customer'] = CustomerSerializer(instance.bill.customer).data
+        return response    
+
+    
 
 
 class CustomerConnectSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerCreditConnect
         fields = '__all__'  
+
+    def to_representation(self, instance):  
+        response = super().to_representation(instance)
+        # Using the CustomerCreditSerializer to represent the 'customer' field
+        response['customer'] = CustomerCreditSerializer(instance.customer_credit).data
+        return response
 
         
