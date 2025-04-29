@@ -4,6 +4,9 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import Select from 'react-select';
+
+
 
 function Medicines() {
 
@@ -19,6 +22,8 @@ function Medicines() {
     pack: '',
     c_gst: '',
     s_gst: '',
+    gst:'',
+    amt_aftr_gst:'',
     batch_no: '',
     exp_date: '',
     mfg_date: '',
@@ -85,6 +90,8 @@ function Medicines() {
       pack: '',
       c_gst: '',
       s_gst: '',
+      gst:'',
+      amt_aftr_gst:'',
       batch_no: '',
       exp_date: '',
       mfg_date: '',
@@ -222,7 +229,7 @@ function Medicines() {
           required
         />
         <input
-          type='text'
+          type='Number'
           name='c_gst'
           placeholder='Enter C_GST'
           value={formData.c_gst}
@@ -231,13 +238,29 @@ function Medicines() {
 
         />
         <input
-          type='text'
+          type='Number'
           name='s_gst'
           placeholder='Enter S_GST'
           value={formData.s_gst}
           onChange={handleChange}
           className="border border-gray-400 rounded px-3 py-2 w-full"
 
+        />
+        <input
+         type="Number"
+        name='gst'
+        placeholder='Enter GST '
+        value={formData.gst}
+        onChange={handleChange}
+        className='border border-gray-400 rounded px-3 py-2 w-full'
+        />
+        <input
+         type="Number"
+        name='amt_aftr_gst'
+        placeholder='Enter amt_aftr_gst '
+        value={formData.amt_aftr_gst}
+        onChange={handleChange}
+        className='border border-gray-400 rounded px-3 py-2 w-full'
         />
         <input
           type='text'
@@ -266,7 +289,7 @@ function Medicines() {
           className="border border-gray-400 rounded px-3 py-2 w-full"
           required
         />
-        <select
+       {/* <select
           name="company"
           value={formData.company}
           onChange={handleChange}
@@ -279,7 +302,20 @@ function Medicines() {
               {opt.name}
             </option>
           ))}
-        </select>
+        </select>*/}
+        <Select
+  options={options.map((opt) => ({ value: opt.id, label: opt.name }))}
+  value={options
+    .map((opt) => ({ value: opt.id, label: opt.name }))
+    .find((option) => option.value === formData.company) || null}
+  onChange={(selectedOption) =>
+    setFormData((prev) => ({ ...prev, company: selectedOption?.value || '' }))
+  }
+  isClearable
+  isSearchable
+  placeholder="-- Select or Search Agency Source --"
+  className="w-full"
+/>
 
         <input
           type='Number'
@@ -377,7 +413,7 @@ function Medicines() {
         </table>
       </div>
 
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} pauseOnHover theme="colored" />
+<ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} pauseOnHover theme="colored" />
 
     </div >
   )
