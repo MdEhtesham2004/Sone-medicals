@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Note,Company, Medicine, AdminLogin, Customer, Bill, BillDetails, Employee, EmployeeSalary, EmployeeBank, CustomerRequest,MedicineStock
+from .models import * 
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
@@ -115,11 +115,11 @@ class EmployeeBankSerializer(serializers.ModelSerializer):
         return response
 
 
-#done 
-class CustomerRequestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomerRequest
-        fields = '__all__'
+# #done 
+# class CustomerRequestSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CustomerRequest
+#         fields = '__all__'
 
 
 
@@ -130,3 +130,54 @@ class MedicineStockSerializer(serializers.ModelSerializer):
         model = MedicineStock
         fields = ['id', 'name', 'schedule_type', 'in_stock_total', 'mrp', 'rate']
 
+
+class MedicineStockHistorySerializer(serializers.ModelSerializer):
+    # Using the MedicineStockSerializer to represent the 'medicine' field
+    medicine = MedicineStockSerializer(read_only=True)
+
+    class Meta:
+        model = MedicineStockHistory
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        # We can keep this as it is, because the medicine field is already serialized using MedicineStockSerializer
+        response = super().to_representation(instance)
+        return response
+
+class CustomerCreditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerCredit
+        fields = '__all__'
+
+
+
+class CustomerCreditDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerCreditDetails
+        fields = '__all__'
+        
+    
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        # Using the CustomerCreditSerializer to represent the 'customer' field
+        response['customer'] = CustomerConnectSerializer(instance.customer_credit).data
+        # Using the MedicineSerializer to represent the 'medicine' field
+        response['medicine'] = MedicineSerializer(instance.medicine).data
+        # response['customer'] = CustomerSerializer(instance.bill.customer).data
+        return response    
+
+    
+
+
+class CustomerConnectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerCreditConnect
+        fields = '__all__'  
+
+    def to_representation(self, instance):  
+        response = super().to_representation(instance)
+        # Using the CustomerCreditSerializer to represent the 'customer' field
+        response['customer'] = CustomerCreditSerializer(instance.customer_credit).data
+        return response
+
+        

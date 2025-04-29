@@ -7,6 +7,23 @@ from .models import Note
 from rest_framework import viewsets
 from .models import Company, Medicine, AdminLogin, Customer, Bill
 from .serializers import *
+from django.db import transaction
+
+
+
+def create_stock_history_for_medicine(medicine, transaction_type='IN'):
+    try:
+        medicine_stock = MedicineStock.objects.get(name=medicine.name)
+    except MedicineStock.DoesNotExist:
+        medicine_stock = None
+
+    if medicine_stock:
+        MedicineStockHistory.objects.create(
+            medicine=medicine_stock,
+            quantity=medicine.qty_in_strip,
+            transaction_type=transaction_type
+        )
+
 
 #done 
 class CreateUserView(generics.CreateAPIView):
@@ -141,19 +158,26 @@ class MedicineByNameViewSet(generics.ListAPIView):
         name = self.kwargs["name"]
         return Medicine.objects.filter(name=name)
 
-
-#done 
 class MedicineViewSet(viewsets.ModelViewSet):
     queryset = Medicine.objects.all()
     serializer_class = MedicineSerializer
-    
     permission_classes = [IsAuthenticated]
 
     def create(self, request):
-        serializer = MedicineSerializer(data=request.data, context={'request':request})
+        serializer = MedicineSerializer(data=request.data, context={'request': request})
 
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
+            medicine = serializer.save()  # Save medicine and get the object back
+
+            # Find related MedicineStock
+            try:
+                medicine_stock = MedicineStock.objects.get(name=medicine.name)
+            except MedicineStock.DoesNotExist:
+                medicine_stock = None
+
+            if medicine_stock:
+                # Create Stock History record
+                create_stock_history_for_medicine(medicine)
 
             response_dict = {
                 'error': False,
@@ -164,9 +188,8 @@ class MedicineViewSet(viewsets.ModelViewSet):
                 'error': True,
                 'message': 'Error in Saving Medicine Data'
             }
-        return Response(response_dict)
-    
-    
+
+        return Response(response_dict)    
     def list(self,request):
 
         company = Medicine.objects.all()
@@ -260,31 +283,29 @@ class BillViewSet(viewsets.ModelViewSet):
 class BillDetailsViewSet(viewsets.ModelViewSet):
     queryset=BillDetails.objects.all()
     serializer_class=BillDetailsSerializer
-
-class GenerateBillViewSet(viewsets.ModelViewSet):    
+class GenerateBillViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request):
         try:
-            # 1. Save customer data
+            # 1. Save customer
             customer_serializer = CustomerSerializer(data=request.data, context={'request': request})
             customer_serializer.is_valid(raise_exception=True)
-            customer = customer_serializer.save()  # This returns the saved instance
+            customer = customer_serializer.save()
             customer_id = customer.id
 
-            # 2. Save bill data
+            # 2. Save bill
             bill_data = {
                 'customer': customer_id
-                # Add more bill fields if needed (e.g., date, total, etc.)
             }
-
-            bill_serializer = BillSerializer(data=bill_data,context={'request': request})
+            bill_serializer = BillSerializer(data=bill_data, context={'request': request})
             bill_serializer.is_valid(raise_exception=True)
             bill = bill_serializer.save()
             bill_id = bill.id
 
-            # 3. Save bill details (medicine list)
+            # 3. Save bill details
             medicine_data_list = []
+            total_amount = 0  # Initialize total amount for the bill
             for medicine_details in request.data.get("medicine_details", []):
                 medicine_data = {
                     "medicine": medicine_details["id"],
@@ -293,20 +314,75 @@ class GenerateBillViewSet(viewsets.ModelViewSet):
                 }
                 medicine_data_list.append(medicine_data)
 
+                # Get the medicine object and calculate total price
+                medicine = Medicine.objects.get(id=medicine_details["id"])
+                medicine_price = medicine.rate
+                qty = int(medicine_details["qty"])
+                total_amount += medicine_price * qty
+
+            # Save bill details
             bill_details_serializer = BillDetailsSerializer(data=medicine_data_list, many=True, context={'request': request})
             bill_details_serializer.is_valid(raise_exception=True)
             bill_details_serializer.save()
-            print("Medicine Data List:", medicine_data_list)
-    
 
-            # 4. Success response
+            print("Medicine Data List:", medicine_data_list)
+
+            # 4. Deduct from MedicineStock + Save in MedicineStockHistory
+            for medicine_item in medicine_data_list:
+                # Get the medicine from Medicine table
+                medicine = Medicine.objects.get(id=medicine_item['medicine'])
+
+                # Get the stock for that medicine
+                try:
+                    medicine_stock = MedicineStock.objects.get(name=medicine.name)
+                except MedicineStock.DoesNotExist:
+                    raise ValueError(f"No stock entry found for medicine: {medicine.name}")
+
+                qty_requested = int(medicine_item['qty'])
+
+                # Check stock availability
+                if medicine_stock.in_stock_total < qty_requested:
+                    response_dict = {
+                        "error": True,
+                        "message": f"Not enough stock for {medicine_stock.name}! Available: {medicine_stock.in_stock_total}, Requested: {qty_requested}"
+                    }
+                    return Response(response_dict)
+
+                # Deduct stock
+                medicine_stock.in_stock_total -= qty_requested
+                medicine_stock.save()
+
+                # Create stock history entry
+                MedicineStockHistory.objects.create(
+                    medicine=medicine_stock,
+                    quantity=qty_requested,
+                    transaction_type='OUT'
+                )
+
+            # 5. Success - Show the printout of the bill
+            print(f"\n----- Bill Printout -----")
+            print(f"Customer Name: {customer.name}")
+            print(f"Customer Address: {customer.address}")
+            print(f"Customer Contact: {customer.contact}")
+            print(f"Bill ID: {bill_id}")
+            print(f"Medicine Details:")
+            for medicine_item in medicine_data_list:
+                medicine = Medicine.objects.get(id=medicine_item['medicine'])
+                print(f"- {medicine.name}, Quantity: {medicine_item['qty']}, Rate: {medicine.rate}, Total: {medicine.rate * int(medicine_item['qty'])}")
+
+            print(f"Total Bill Amount: {total_amount}")
+            print(f"-------------------------")
+
+            # Respond with success
             response_dict = {
                 "error": False,
                 "message": "Bill Generated Successfully!",
-                "bill_id": bill_id
+                "bill_id": bill_id,
+                "total_amount": total_amount  # Include the total bill amount in the response
             }
+
         except Exception as e:
-            print("Error while generating bill:", str(e))  # Shows actual Python error
+            print("Error while generating bill:", str(e))
             response_dict = {
                 "error": True,
                 "message": f"Error while generating the bill: {str(e)}"
@@ -314,39 +390,35 @@ class GenerateBillViewSet(viewsets.ModelViewSet):
 
         return Response(response_dict)
 
-
 class CreateMedicineWithCompanyViewSet(viewsets.ModelViewSet):
     queryset = Medicine.objects.all()
     serializer_class = MedicineSerializer
 
     def create_with_company(self, request, company_id=None):
-        # If company_id is provided, associate the medicine with the company
         if company_id is not None:
-            # 1. Get the company from the database using the ID passed via URL
             company = get_object_or_404(Company, id=company_id)
-
-            # 2. Copy the incoming POST data (name, description, price, etc.)
             data = request.data.copy()
 
-            # 3. Add the company ID to the data so that it gets linked properly
             data['company'] = company.id
-            data['amt_after_gst'] = data['mrp'] + (data['mrp'] * data['gst'] / 100)  # Calculate amount after GST
+            data['amt_after_gst'] = int(data['mrp']) + (int(data['mrp']) * int(data['gst']) / 100)
 
-            # 4. Validate and save using serializer
             serializer = self.get_serializer(data=data)
             if serializer.is_valid():
-                serializer.save()
+                medicine = serializer.save()
+                create_stock_history_for_medicine(medicine)  # ✨ clean!
+
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # If no company_id is provided, save the data without associating it with a company
         else:
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                medicine = serializer.save()
+                create_stock_history_for_medicine(medicine)  # ✨ clean!
+
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
-        
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class MedicineStockViewSet(viewsets.ModelViewSet):
@@ -368,3 +440,233 @@ medicine_list = MedicineStockViewSet.as_view({'get':'list'})
 medicine_create = MedicineStockViewSet.as_view({'post':'create'})
 medicine_update = MedicineStockViewSet.as_view({'put':'update'})
 medicine_delete = MedicineStockViewSet.as_view({'delete':'destroy'})
+
+
+class MedicineStockHistoryViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = MedicineStockHistory.objects.all()
+    serializer_class = MedicineStockHistorySerializer
+
+    def list(self, request):
+        queryset = MedicineStockHistory.objects.all()
+        serializer = MedicineStockHistorySerializer(queryset, many=True, context={'request': request})
+        response_dict = {
+            'error': False,
+            'message': 'All Medicine Stock History List Data',
+            'data': serializer.data
+        }
+        return Response(response_dict)
+
+
+class CustomerCreditViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = CustomerCredit.objects.all()
+    serializer_class = CustomerCreditSerializer
+
+    def list(self, request):
+        queryset = CustomerCredit.objects.all()
+        serializer = CustomerCreditSerializer(queryset, many=True, context={'request': request})
+        response_dict = {
+            'error': False,
+            'message': 'All Customer Credit List Data',
+            'data': serializer.data
+        }
+        return Response(response_dict)
+    
+    def create(self, request):
+        serializer = CustomerCreditSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            response_dict = {
+                'error': False,
+                'message': 'Customer Credit Data Saved Successfully'
+            }
+        else:
+            response_dict = {
+                'error': True,
+                'message': 'Error in Saving Customer Credit Data'
+            }
+        return Response(response_dict)
+   
+   
+    def update(self,request,pk=None):
+
+        queryset = CustomerCredit.objects.all()
+        medicine = get_object_or_404(queryset, pk=pk)
+        serializer = CustomerCreditSerializer(medicine,data=request.data,context={'request':request})
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            response_dict = {
+                'error': False,
+                'message': 'Customer Credit Data Updated Successfully'
+            }
+        else:
+            response_dict = {
+                'error': True,
+                'message': 'Error in Updating Customer Credit  Data'
+            }
+        return Response(response_dict)
+
+
+    def delete(self,request,pk=None):
+        queryset = CustomerCredit.objects.get(id=pk)
+        company = get_object_or_404(CustomerCredit, id=pk)
+        company.delete()
+       
+        response_dict = {
+            'error': False,
+            'message': 'Customer Credit Data Deleted Successfully'
+        }
+        
+        return Response(response_dict)
+    
+
+
+    
+    
+
+
+
+class CustomerCreditDetailsViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = CustomerCreditDetails.objects.all()
+    serializer_class = CustomerCreditDetailsSerializer
+
+    def list(self, request):
+        queryset = CustomerCreditDetails.objects.all()
+        serializer = CustomerCreditDetailsSerializer(queryset, many=True, context={'request': request})
+        response_dict = {
+            'error': False,
+            'message': 'All Customer Credit Details List Data',
+            'data': serializer.data
+        }
+        return Response(response_dict)
+    
+     
+    def create(self, request):
+        serializer = CustomerCreditDetailsSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            response_dict = {
+                'error': False,
+                'message': ' Customer Credit Details Saved Successfully'
+            }
+        else:
+            response_dict = {
+                'error': True,
+                'message': 'Error in Saving Customer Credit Details Data'
+            }
+        return Response(response_dict)
+   
+   
+    def update(self,request,pk=None):
+
+        queryset = CustomerCreditDetails.objects.all()
+        medicine = get_object_or_404(queryset, pk=pk)
+        serializer = CustomerCreditDetailsSerializer(medicine,data=request.data,context={'request':request})
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            response_dict = {
+                'error': False,
+                'message': 'Customer Credit Details  Updated Successfully'
+            }
+        else:
+            response_dict = {
+                'error': True,
+                'message': 'Error in Updating Customer Credit Details '
+            }
+        return Response(response_dict)
+
+    def delete(self,request,pk=None):
+        queryset = CustomerCreditDetails.objects.get(id=pk)
+        company = get_object_or_404(CustomerCreditDetails, id=pk)
+        company.delete()
+       
+        response_dict = {
+            'error': False,
+            'message': 'Customer Credit Details Data Deleted Successfully'
+        }
+        
+        return Response(response_dict)
+
+class ManageCustomerCreditViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+
+
+    def list(self, request):
+        queryset = CustomerCredit.objects.all()
+        serializer = CustomerCreditSerializer(queryset, many=True, context={'request': request})
+        response_dict = {
+            'error': False,
+            'message': 'All Manage Customer Credit List Data',
+            'data': serializer.data
+        }
+        return Response(response_dict)
+    
+    def create(self, request):
+        # Step 1: Extract the necessary data from the request
+        customer_data = request.data.get('customer_credit')
+        customer_credit_details = request.data.get('customer_credit_details')
+
+        final_total_amount = 0
+        total_amount = 0
+
+        # Validate and fetch the medicine data
+        for item in customer_credit_details:
+            try:
+                medicine = Medicine.objects.get(id=item['medicine'])
+            except Medicine.DoesNotExist:
+                raise ValidationError(f"Medicine with ID {item['medicine']} does not exist.")
+            
+            medicine_price = medicine.mrp
+            quantity = int(item['quantity'])
+            total_amount += medicine_price * quantity
+            final_total_amount += medicine_price * quantity
+
+            print(f"Medicine: {medicine.name}, Price: {medicine_price}, Quantity: {quantity}, Total: {medicine_price * quantity}")
+        
+        print("Total Amount List:", final_total_amount)
+
+        customer_data['amount'] = final_total_amount
+
+        # Step 2: Serialize and create the CustomerCredit
+        serializer = CustomerCreditSerializer(data=customer_data, context={'request': request})
+        if serializer.is_valid(raise_exception=True):
+            customer_credit = serializer.save()
+            customer_credit_id = customer_credit.id
+
+            # Step 3: Serialize and create CustomerConnect
+            connect_data = {"customer_credit": customer_credit_id}
+            serializer2 = CustomerConnectSerializer(data=connect_data, context={'request': request})
+            if serializer2.is_valid(raise_exception=True):
+                connect = serializer2.save()
+
+            customer_update_details = []
+            # Step 4: Prepare the customer credit details for saving
+            for item in customer_credit_details:
+                item['customer_credit'] = connect.id
+                customer_update_details.append(item)
+
+            # Step 5: Save the customer credit details using transaction.atomic
+            try:
+                with transaction.atomic():
+                    # Serialize and save CustomerCreditDetails
+                    serializer3 = CustomerCreditDetailsSerializer(data=customer_update_details, many=True, context={'request': request})
+                    if serializer3.is_valid(raise_exception=True):
+                        serializer3.save()
+                    else:
+                        raise ValueError("Error in saving customer credit details")
+
+                response_dict = {
+                    'error': False,
+                    'message': 'Customer Credit Data Saved Successfully'
+                }
+            except Exception as e:
+                response_dict = {
+                    'error': True,
+                    'message': f"Error in Saving Customer Credit Data: {str(e)}"
+                }
+
+            return Response(response_dict)
+        
+        return Response({"error": True, "message": "Invalid Customer Data"})

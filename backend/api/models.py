@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
-
+from decimal import Decimal
 
 class Note(models.Model):
     title = models.CharField(max_length=255)
@@ -77,24 +77,52 @@ class Customer(models.Model):
 
 class Bill(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     added_on = models.DateTimeField(auto_now_add=True)
+
+    def update_total(self):
+        total = sum(detail.total_price for detail in self.billdetails_set.all())
+        self.total_amount = total
+        self.save()
 
 
 class BillDetails(models.Model):
     bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
     qty = models.IntegerField()
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     added_on = models.DateTimeField(auto_now_add=True)
 
 
+    def save(self, *args, **kwargs):
+        self.total_price = Decimal(self.qty) * self.medicine.rate
+        super().save(*args, **kwargs)
+        self.bill.update_total()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        self.bill.update_total()
 
 
-class CustomerRequest(models.Model):
-    customer_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=15)
-    medicine_details = models.TextField()
-    status = models.CharField(max_length=100)
-    request_date = models.DateTimeField(auto_now_add=True)
+
+
+# class CustomerRequest(models.Model):
+#     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True, blank=True)
+#     phone = models.CharField(max_length=15)
+#     Address = models.TextField(null=True, blank=True)
+#     medicine_details = models.ForeignKey(Medicine, on_delete=models.CASCADE)
+#     quantity = models.IntegerField()
+#     prescription = models.ImageField(upload_to='prescriptions/', null=True, blank=True)
+#     request_status = models.CharField(max_length=20, choices=[
+#         ('Pending', 'Pending'),
+#         ('Approved', 'Approved'),
+#         ('Rejected', 'Rejected')
+#     ], default='Pending')
+#     requested_on = models.DateTimeField(auto_now_add=True)
+
+#     def __str__(self):
+#         return f"{self.customer.name} - {self.medicine_name}"
+
 
 
 class MedicineStock(models.Model):
@@ -106,4 +134,36 @@ class MedicineStock(models.Model):
     added_on = models.DateTimeField(auto_now_add=True)
 
 
+
+
+class MedicineStockHistory(models.Model):
+    medicine = models.ForeignKey(MedicineStock, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    transaction_type = models.CharField(max_length=10, choices=[('IN', 'In'), ('OUT', 'Out')])
+    transaction_date = models.DateTimeField(auto_now_add=True)
+
+
+
+
+class CustomerCredit(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.TextField()
+    contact = models.CharField(max_length=15)
+    description = models.TextField()
+    payment_status = models.CharField(max_length=100, choices=[('Paid', 'Paid'), ('Pending', 'Pending')])
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_type = models.CharField(max_length=100, choices=[('Cash', 'Cash'), ('Credit', 'Credit')])
+    added_on = models.DateTimeField(auto_now_add=True)
+
+
+class CustomerCreditConnect(models.Model):
+    customer_credit = models.ForeignKey(CustomerCredit, on_delete=models.CASCADE)
+    added_on = models.DateTimeField(auto_now_add=True)
+
+
+class CustomerCreditDetails(models.Model):
+    customer_credit = models.ForeignKey(CustomerCreditConnect, on_delete=models.CASCADE)
+    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    added_on = models.DateTimeField(auto_now_add=True)
 

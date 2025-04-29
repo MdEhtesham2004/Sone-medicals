@@ -22,6 +22,11 @@ router.register('employees', EmployeeViewSet)
 
 router.register('employee-banks',EmployeeBankViewSet)
 router.register('MedicineStockDetails', MedicineStockViewSet, basename='medicinestock')
+router.register('MedicineStockHistory', MedicineStockHistoryViewSet, basename='MedicineStockHistory')
+router.register('ManageCustomerCredit', ManageCustomerCreditViewSet, basename='ManageCustomerCredit')
+router.register('CustomerCredit', CustomerCreditViewSet, basename='CustomerCredit')
+router.register('CustomerCreditDetails', CustomerCreditDetailsViewSet, basename='CustomerCreditDetails')
+
 
 
 
