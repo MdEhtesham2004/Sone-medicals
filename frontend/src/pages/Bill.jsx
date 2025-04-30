@@ -2,8 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '../api';
+// import './Billprint.css'
+import { useNavigate } from "react-router-dom";
 
 const Bill = () => {
+    const navigate = useNavigate();
   const [customer, setCustomer] = useState({ name: "", address: "", phone: "", billId: "" });
   const [medicineRows, setMedicineRows] = useState([createNewRow(1)]);
   const billRef = useRef();
@@ -19,6 +22,14 @@ const Bill = () => {
         console.error("Error fetching medicines:", err);
       });
   }, []);
+
+  useEffect(()=>{
+    api.post('Api/generatebill/')
+    .then((res)=>res.data)
+    .then((data)=>{
+      console.log(data)
+    })
+  },[])
 
   function createNewRow(srNo) {
     return {
@@ -199,7 +210,7 @@ const Bill = () => {
 
       {medicineRows.map((row, index) => (
         <div key={index} className="grid grid-cols-12 gap-2 items-start mb-3 relative">
-          <input type="text" value={row.srNo} disabled className="border-b py-1 text-sm " />
+          <input type="text" value={row.srNo} disabled className="border-b py-1 text-sm w-6 " />
           <div className="relative col-span-1">
             <input
               type="text"
@@ -254,7 +265,7 @@ const Bill = () => {
               </>
             ) : (
               <>
-                <button onClick={() => startEdit(index)} className="bg-yellow-400 text-white text-xs px-2 py-1 rounded">Edit</button>
+                <button onClick={() => startEdit(index)} className="bg-yellow-400 text-white text-xs px-2 py-1 rounded no-print">Edit</button>
                 <button onClick={() => handleRemoveRow(index)} className="bg-red-500 text-white text-xs px-2 py-1 rounded">Delete</button>
               </>
             )}
@@ -274,7 +285,10 @@ const Bill = () => {
       </button>
 
       <ToastContainer position="top-right" autoClose={1000} hideProgressBar={false} pauseOnHover theme="colored" />
+    
     </div>
+    
+
   );
 };
 

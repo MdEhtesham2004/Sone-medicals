@@ -23,7 +23,7 @@ function Medicines() {
     c_gst: '',
     s_gst: '',
     gst:'',
-    amt_aftr_gst:'',
+    // amt_aftr_gst:'',
     batch_no: '',
     exp_date: '',
     mfg_date: '',
@@ -91,7 +91,7 @@ function Medicines() {
       c_gst: '',
       s_gst: '',
       gst:'',
-      amt_aftr_gst:'',
+      // amt_aftr_gst:'',
       batch_no: '',
       exp_date: '',
       mfg_date: '',
@@ -254,14 +254,14 @@ function Medicines() {
         onChange={handleChange}
         className='border border-gray-400 rounded px-3 py-2 w-full'
         />
-        <input
+        {/* <input
          type="Number"
         name='amt_aftr_gst'
         placeholder='Enter amt_aftr_gst '
         value={formData.amt_aftr_gst}
         onChange={handleChange}
         className='border border-gray-400 rounded px-3 py-2 w-full'
-        />
+        /> */}
         <input
           type='text'
           name='batch_no'

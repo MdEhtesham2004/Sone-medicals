@@ -5,6 +5,7 @@ import Medicines from './Medicines.jsx'
 import Bill from './Bill.jsx';
 import { FaBriefcaseMedical, FaPills, FaHome, FaUserTie, FaCreditCard } from 'react-icons/fa';
 import { MdReceiptLong } from 'react-icons/md';
+import PreviewBill from './PreviewBill.jsx';
 
 
 
@@ -17,7 +18,7 @@ const Design = () => {
     switch (activeComponent) {
       case 'Company': return <Company />;
       case 'Medicines': return <Medicines />;
-      case 'comments': return <Comments />;
+      case 'PreviewBill': return <PreviewBill />;
       case 'Bill': return <Bill />;
       default: return <Dashboard />;
     }
@@ -62,9 +63,9 @@ const Design = () => {
             <MdReceiptLong /> {sidebarOpen && 'Generate Bill'}
           </button>
 
-          <button onClick={() => setActiveComponent('tickets')}
+          <button onClick={() => setActiveComponent('PreviewBill')}
             className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2 cursor-pointer">
-            <FaUserTie /> {sidebarOpen && 'Employees'}
+            <FaUserTie /> {sidebarOpen && 'PreviewBill'}
           </button>
           <button onClick={() => setActiveComponent('comments')}
             className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2 cursor-pointer">

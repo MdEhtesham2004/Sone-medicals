@@ -6,7 +6,9 @@ import NotFound from './pages/NotFound'
 import Home from './pages/Home'
 import ProtectedRoute from './components/ProtectedRoute'
 import Company from './pages/Company.jsx'
-import Design from './pages/Design.jsx'
+import Design from './pages/Design.jsx'   
+import Bill from './pages/Bill.jsx'
+import PreviewBill from './pages/PreviewBill.jsx'
      
 
 
@@ -36,6 +38,14 @@ function App() {
       } />
       <Route path="/login" element={<Login/>} />
       <Route path="/register" element={<RegisterAndLogout/>} />
+      <Route path="/Bill" element={<ProtectedRoute>
+        {<Bill/>}
+        </ProtectedRoute>
+        } />
+      <Route path="/PreviewBill" element={<ProtectedRoute>
+        {<PreviewBill/>}
+        </ProtectedRoute>
+        } />
       <Route path="/logout" element={<ProtectedRoute>
         {<Logout/>}
         </ProtectedRoute>
