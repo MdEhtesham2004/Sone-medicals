@@ -1,7 +1,6 @@
 
 import Design from './Design';
     import '../styles/index.css';
-
 function Home(){
     // useEffect(() => {
     //     fetch('http://127.0.0.1:8000/api/medical/company')
