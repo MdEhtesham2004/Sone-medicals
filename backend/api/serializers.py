@@ -144,29 +144,23 @@ class MedicineStockHistorySerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         return response
 
+
+
 class CustomerCreditSerializer(serializers.ModelSerializer):
+    credit_details = serializers.SerializerMethodField()
+
     class Meta:
         model = CustomerCredit
         fields = '__all__'
 
-
-
-class CustomerCreditDetailsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomerCreditDetails
-        fields = '__all__'
-        
-    
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        # Using the CustomerCreditSerializer to represent the 'customer' field
-        response['customer'] = CustomerConnectSerializer(instance.customer_credit).data
-        # Using the MedicineSerializer to represent the 'medicine' field
-        response['medicine'] = MedicineSerializer(instance.medicine).data
-        # response['customer'] = CustomerSerializer(instance.bill.customer).data
-        return response    
-
-    
+    def get_credit_details(self, obj):
+        # Get the related CustomerCreditConnect
+        connect = CustomerCreditConnect.objects.filter(customer_credit=obj).first()
+        if connect:
+            # Get related CustomerCreditDetails
+            details = CustomerCreditDetails.objects.filter(customer_credit=connect)
+            return CustomerCreditDetailsSerializer(details, many=True).data
+        return []
 
 
 class CustomerConnectSerializer(serializers.ModelSerializer):
@@ -174,10 +168,14 @@ class CustomerConnectSerializer(serializers.ModelSerializer):
         model = CustomerCreditConnect
         fields = '__all__'  
 
-    def to_representation(self, instance):  
-        response = super().to_representation(instance)
-        # Using the CustomerCreditSerializer to represent the 'customer' field
-        response['customer'] = CustomerCreditSerializer(instance.customer_credit).data
-        return response
+
+class CustomerCreditDetailsSerializer(serializers.ModelSerializer):
+    medicine = MedicineSerializer(read_only=True)
+
+    class Meta:
+        model = CustomerCreditDetails
+        fields = ['medicine', 'quantity']
 
         
+
+

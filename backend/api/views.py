@@ -8,6 +8,8 @@ from rest_framework import viewsets
 from .models import Company, Medicine, AdminLogin, Customer, Bill
 from .serializers import *
 from django.db import transaction
+from rest_framework.views import APIView
+from rest_framework import status
 
 
 
@@ -283,6 +285,8 @@ class BillViewSet(viewsets.ModelViewSet):
 class BillDetailsViewSet(viewsets.ModelViewSet):
     queryset=BillDetails.objects.all()
     serializer_class=BillDetailsSerializer
+
+
 class GenerateBillViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
@@ -589,9 +593,9 @@ class CustomerCreditDetailsViewSet(viewsets.ModelViewSet):
         
         return Response(response_dict)
 
+
 class ManageCustomerCreditViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-
 
     def list(self, request):
         queryset = CustomerCredit.objects.all()
@@ -602,71 +606,141 @@ class ManageCustomerCreditViewSet(viewsets.ModelViewSet):
             'data': serializer.data
         }
         return Response(response_dict)
-    
+
     def create(self, request):
-        # Step 1: Extract the necessary data from the request
+        # Step 1: Extract data from the request
         customer_data = request.data.get('customer_credit')
-        customer_credit_details = request.data.get('customer_credit_details')
+        customer_credit_details = request.data.get('customer_credit_details', [])
 
+        if not customer_credit_details:
+            return Response({
+                'error': True,
+                'message': 'customer_credit_details is required.'
+            }, status=400)
+
+        # Step 2: Calculate the total amount
         final_total_amount = 0
-        total_amount = 0
-
-        # Validate and fetch the medicine data
         for item in customer_credit_details:
             try:
                 medicine = Medicine.objects.get(id=item['medicine'])
             except Medicine.DoesNotExist:
-                raise ValidationError(f"Medicine with ID {item['medicine']} does not exist.")
+                return Response({
+                    'error': True,
+                    'message': f"Medicine with ID {item['medicine']} does not exist."
+                }, status=400)
             
             medicine_price = medicine.mrp
-            quantity = int(item['quantity'])
-            total_amount += medicine_price * quantity
-            final_total_amount += medicine_price * quantity
-
-            print(f"Medicine: {medicine.name}, Price: {medicine_price}, Quantity: {quantity}, Total: {medicine_price * quantity}")
+            quantity = item['quantity']
+            total = medicine_price * quantity
+            final_total_amount += total
         
-        print("Total Amount List:", final_total_amount)
-
         customer_data['amount'] = final_total_amount
 
-        # Step 2: Serialize and create the CustomerCredit
+        # Step 3: Create the CustomerCredit record
         serializer = CustomerCreditSerializer(data=customer_data, context={'request': request})
         if serializer.is_valid(raise_exception=True):
             customer_credit = serializer.save()
             customer_credit_id = customer_credit.id
 
-            # Step 3: Serialize and create CustomerConnect
+            # Step 4: Create CustomerCreditConnect
             connect_data = {"customer_credit": customer_credit_id}
             serializer2 = CustomerConnectSerializer(data=connect_data, context={'request': request})
             if serializer2.is_valid(raise_exception=True):
                 connect = serializer2.save()
 
-            customer_update_details = []
-            # Step 4: Prepare the customer credit details for saving
-            for item in customer_credit_details:
-                item['customer_credit'] = connect.id
-                customer_update_details.append(item)
-
-            # Step 5: Save the customer credit details using transaction.atomic
+            # Step 5: Create CustomerCreditDetails (Medicine Details)
+            customer_update_details = [
+                {**item, 'customer_credit': connect.id} for item in customer_credit_details
+            ]
+            
             try:
                 with transaction.atomic():
-                    # Serialize and save CustomerCreditDetails
                     serializer3 = CustomerCreditDetailsSerializer(data=customer_update_details, many=True, context={'request': request})
                     if serializer3.is_valid(raise_exception=True):
                         serializer3.save()
-                    else:
-                        raise ValueError("Error in saving customer credit details")
 
                 response_dict = {
                     'error': False,
                     'message': 'Customer Credit Data Saved Successfully'
                 }
+                return Response(response_dict)
+
             except Exception as e:
                 response_dict = {
                     'error': True,
                     'message': f"Error in Saving Customer Credit Data: {str(e)}"
                 }
+                return Response(response_dict)
 
-            return Response(response_dict)
-        
-        return Response({"error": True, "message": "Invalid Customer Data"})
+        return Response({"error": True, "message": "Invalid Customer Data"}, status=400)
+
+
+class ShowAllCustomerCreditViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        """Returns all customer credit records with nested medicine details."""
+        queryset = CustomerCredit.objects.all()
+        serializer = CustomerCreditSerializer(queryset, many=True, context={'request': request})
+        response_dict = {
+            'error': False,
+            'message': 'All Customer Credit List Data',
+            'data': serializer.data
+        }
+        return Response(response_dict)
+
+
+from rest_framework.views import APIView
+
+class CustomerBillSummary(APIView):
+    def get(self, request, customer_id=None):
+        if customer_id:
+            try:
+                # Fetch the customer by ID
+                customer = Customer.objects.get(id=customer_id)
+            except Customer.DoesNotExist:
+                return Response({'error': 'Customer not found'}, status=status.HTTP_404_NOT_FOUND)
+
+            # Get all BillDetails for this specific customer
+            bill_details = BillDetails.objects.select_related('bill', 'medicine').filter(bill__customer=customer)
+
+            # Extract unique bills and medicines from the BillDetails
+            bills = list({bd.bill for bd in bill_details})
+            medicines = list({bd.medicine for bd in bill_details})
+
+            # Serialize the data
+            bill_data = BillSerializer(bills, many=True).data
+            medicine_data = MedicineSerializer(medicines, many=True).data
+
+            # Prepare the response with customer details
+            result = {
+                "customer": CustomerSerializer(customer).data,  # Include all customer details
+                "customer_bill": bill_data,
+                "customer_medicines": medicine_data,
+            }
+            return Response(result, status=status.HTTP_200_OK)
+
+        # If no customer_id, return summaries for all customers
+        customers = Customer.objects.all()
+        all_data = []
+
+        for customer in customers:
+            bill_details = BillDetails.objects.select_related('bill', 'medicine').filter(bill__customer=customer)
+
+            # Extract unique bills and medicines
+            bills = list({bd.bill for bd in bill_details})
+            medicines = list({bd.medicine for bd in bill_details})
+
+            # Serialize the data
+            bill_data = BillSerializer(bills, many=True).data
+            medicine_data = MedicineSerializer(medicines, many=True).data
+
+            # Prepare the summary for this customer
+            customer_summary = {
+                "customer": CustomerSerializer(customer).data,  # Include all customer details
+                "customer_bill": bill_data,
+                "customer_medicines": medicine_data,
+            }
+            all_data.append(customer_summary)
+
+        return Response(all_data, status=status.HTTP_200_OK)

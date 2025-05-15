@@ -22,7 +22,7 @@ function Medicines() {
     pack: '',
     c_gst: '',
     s_gst: '',
-    gst:'',
+    gst: '',
     // amt_aftr_gst:'',
     batch_no: '',
     exp_date: '',
@@ -90,7 +90,7 @@ function Medicines() {
       pack: '',
       c_gst: '',
       s_gst: '',
-      gst:'',
+      gst: '',
       // amt_aftr_gst:'',
       batch_no: '',
       exp_date: '',
@@ -123,7 +123,7 @@ function Medicines() {
       .then((res) => (res.data))
       .then((data) => {
         Setmedicines(data.data)
-        // console.log(data.data)
+        console.log(data.data)
       })
       .catch((err) => {
         console.error("Error fetching medicines:", err);
@@ -247,12 +247,12 @@ function Medicines() {
 
         />
         <input
-         type="Number"
-        name='gst'
-        placeholder='Enter GST '
-        value={formData.gst}
-        onChange={handleChange}
-        className='border border-gray-400 rounded px-3 py-2 w-full'
+          type="Number"
+          name='gst'
+          placeholder='Enter GST '
+          value={formData.gst}
+          onChange={handleChange}
+          className='border border-gray-400 rounded px-3 py-2 w-full'
         />
         {/* <input
          type="Number"
@@ -289,7 +289,7 @@ function Medicines() {
           className="border border-gray-400 rounded px-3 py-2 w-full"
           required
         />
-       {/* <select
+        {/* <select
           name="company"
           value={formData.company}
           onChange={handleChange}
@@ -304,18 +304,18 @@ function Medicines() {
           ))}
         </select>*/}
         <Select
-  options={options.map((opt) => ({ value: opt.id, label: opt.name }))}
-  value={options
-    .map((opt) => ({ value: opt.id, label: opt.name }))
-    .find((option) => option.value === formData.company) || null}
-  onChange={(selectedOption) =>
-    setFormData((prev) => ({ ...prev, company: selectedOption?.value || '' }))
-  }
-  isClearable
-  isSearchable
-  placeholder="-- Select or Search Agency Source --"
-  className="w-full"
-/>
+          options={options.map((opt) => ({ value: opt.id, label: opt.name }))}
+          value={options
+            .map((opt) => ({ value: opt.id, label: opt.name }))
+            .find((option) => option.value === formData.company) || null}
+          onChange={(selectedOption) =>
+            setFormData((prev) => ({ ...prev, company: selectedOption?.value || '' }))
+          }
+          isClearable
+          isSearchable
+          placeholder="-- Select or Search Agency Source --"
+          className="w-full"
+        />
 
         <input
           type='Number'
@@ -367,7 +367,7 @@ function Medicines() {
             </tr>
           </thead>
           <tbody>
-            {medicines.map((med, idx) => (
+            {medicines.filter(Boolean).map((med, idx) => (
               <tr key={idx} className="border-t hover:bg-gray-50">
                 <td className="p-3">{med.name}</td>
                 <td className="p-3">{med.mfg_date}</td>
@@ -413,7 +413,7 @@ function Medicines() {
         </table>
       </div>
 
-<ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} pauseOnHover theme="colored" />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} pauseOnHover theme="colored" />
 
     </div >
   )

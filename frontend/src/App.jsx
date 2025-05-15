@@ -102,7 +102,7 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <Design /> {/* sidebar layout */}
+              <Design /> 
             </ProtectedRoute>
           }
         >
