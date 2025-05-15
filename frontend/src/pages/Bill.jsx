@@ -4,13 +4,40 @@ import 'react-toastify/dist/ReactToastify.css';
 import api from '../api';
 // import './Billprint.css'
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux'
+import { setPatient, addMedicine,setMedicines } from '../store/billSlice'
 
 const Bill = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [customer, setCustomer] = useState({ name: "", address: "", phone: "", billId: "" });
   const [medicineRows, setMedicineRows] = useState([createNewRow(1)]);
   const billRef = useRef();
   const [medicinesDB, setMedicinesDB] = useState([]);
+
+  const dispatch = useDispatch();
+  // const patient = useSelector((state) => state.bill.patient);
+  // const medicines = useSelector((state) => state.bill.medicines);
+
+  const handlePatientSubmit = (customer) => {
+    dispatch(setPatient(customer))
+  };
+
+  const handleAddMedicne = (medicineRows) => {
+    dispatch(setMedicines(medicineRows))
+  };
+
+   const patient = useSelector((state) => state.bill.patient);
+  const medicines = useSelector((state) => state.bill.medicines);
+
+  useEffect(() => {
+    if(patient) {
+      setCustomer(patient);
+    }
+
+    if(medicines.length > 0) {
+      setMedicineRows(medicines);
+    }
+  },[])
 
   useEffect(() => {
     api.get('/api/medical/medicine/')
@@ -23,13 +50,15 @@ const Bill = () => {
       });
   }, []);
 
-  useEffect(()=>{
-    api.post('Api/generatebill/')
-    .then((res)=>res.data)
-    .then((data)=>{
-      console.log(data)
-    })
-  },[])
+  // useEffect(()=>{
+  //   api.post('Api/generatebill/')
+  //   .then((res)=>res.data)
+  //   .then((data)=>{
+  //     console.log(data)
+  //   })
+  // },[])
+
+
 
   function createNewRow(srNo) {
     return {
@@ -167,7 +196,7 @@ const Bill = () => {
   };
 
   const validateCustomerDetails = () => {
-    for (const field of ['name', 'address', 'phone', 'billId']) {
+    for (const field of ['name', 'address', 'phone', 'Doctor']) {
       if (!customer[field]) {
         toast.error(`Customer ${field} cannot be empty`);
         return false;
@@ -178,16 +207,28 @@ const Bill = () => {
 
   const generatePDF = () => {
     if (!validateCustomerDetails()) return;
-    window.print();
+
+    handlePatientSubmit(customer);      // Save patient info to Redux
+    handleAddMedicne(medicineRows);     // Save medicine details to Redux
+
+    navigate('/Preview');
+    // window.print();  // If needed in PreviewBill component instead
   };
 
+  // const generatePDF = () => {
+  //   navigate('/PreviewBill')
+  //   // if (!validateCustomerDetails()) return;
+  //   window.print();
+
+  // };
+  //  { state: { customer, medicines: medicineRows } }
   return (
     <div className="p-6 max-w-7xl mx-auto" ref={billRef}>
       <h1 className="text-2xl font-semibold mb-6">Generate Bill for Customers</h1>
 
       {/* Customer Info */}
       <div className="grid grid-cols-2 gap-6 mb-8">
-        {['name', 'address', 'phone', 'billId'].map(field => (
+        {['name', 'address', 'phone', 'Doctor'].map(field => (
           <div key={field}>
             <label className="text-gray-700 text-sm font-medium">{field.charAt(0).toUpperCase() + field.slice(1)} :</label>
             <input
@@ -232,9 +273,8 @@ const Bill = () => {
                     <li
                       key={i}
                       onMouseDown={() => handleSelectMedicine(index, option)}
-                      className={`px-2 py-1 cursor-pointer hover:bg-blue-100 ${
-                        row.highlightedIndex === i ? "bg-blue-200" : ""
-                      }`}
+                      className={`px-2 py-1 cursor-pointer hover:bg-blue-100 ${row.highlightedIndex === i ? "bg-blue-200" : ""
+                        }`}
                     >
                       {option.name}
                     </li>
@@ -285,9 +325,9 @@ const Bill = () => {
       </button>
 
       <ToastContainer position="top-right" autoClose={1000} hideProgressBar={false} pauseOnHover theme="colored" />
-    
+
     </div>
-    
+
 
   );
 };

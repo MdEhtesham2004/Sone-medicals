@@ -10,7 +10,8 @@ function Home(){
     //   }, []);
     return (
         <>   
-        <Design />
+        {/* <Design /> */}
+        <h1>This is Home</h1>
         </>
     )
 
