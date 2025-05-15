@@ -1,0 +1,59 @@
+CustomerCredit:
+To post Credit and Delivery Details : 
+http://127.0.0.1:8000/api/medical/ManageCustomerCredit/
+Schema Type:
+{
+  "customer_credit": {
+    "name": "John lee",
+    "address": "123 Main St, Springfield",
+    "contact": "1234567890",
+    "description": "Regular customer",
+    "payment_status": "Pending",
+    "payment_type": "Credit"
+  },
+  "customer_credit_details": [
+    {
+      "medicine": 12,
+      "quantity": 2
+    },
+    {
+      "medicine": 13,
+      "quantity": 1
+    }
+  ]
+}
+
+
+
+To Get all CreditDetails and Delivery Details : http://127.0.0.1:8000/api/medical/CustomerCreditDetails/
+To Get all CreditDetails and Delivery Details : http://127.0.0.1:8000/api/medical/CustomerCreditSummary/(Recommended)
+Get all company details (CRUD) : http://127.0.0.1:8000/api/medical/company/ 
+Get all medicine details (CRUD) : http://127.0.0.1:8000/api/medical/medicine/ 
+
+To generate bill (Post) : http://127.0.0.1:8000/api/medical/generatebill/
+Schema: 
+{
+  "name": "John Doe",
+  "address": "Hyderabad",
+  "contact": "9876543210",
+  "medicine_details": [
+    {
+      "id": 12,
+      "qty": 2
+    },
+    {
+      "id": 13,
+      "qty": 1
+    }
+  ]
+}
+
+To Get BillSummary with specific id or all deatails: http://127.0.0.1:8000/api/customer-summary/2/
+
+
+
+
+
+
+
+	

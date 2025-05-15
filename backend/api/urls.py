@@ -19,13 +19,13 @@ router.register('bills', BillViewSet)
 
 
 router.register('employees', EmployeeViewSet)
-
 router.register('employee-banks',EmployeeBankViewSet)
 router.register('MedicineStockDetails', MedicineStockViewSet, basename='medicinestock')
 router.register('MedicineStockHistory', MedicineStockHistoryViewSet, basename='MedicineStockHistory')
 router.register('ManageCustomerCredit', ManageCustomerCreditViewSet, basename='ManageCustomerCredit')
 router.register('CustomerCredit', CustomerCreditViewSet, basename='CustomerCredit')
 router.register('CustomerCreditDetails', CustomerCreditDetailsViewSet, basename='CustomerCreditDetails')
+router.register('CustomerCreditSummary', ShowAllCustomerCreditViewSet, basename='CustomerCreditSummary')
 
 
 
@@ -44,8 +44,11 @@ urlpatterns = [
     path(
         'makemedicinedetailsviacompany/',
         CreateMedicineWithCompanyViewSet.as_view({'post': 'create_with_company'})
-    )
-]
+    ),
+    path('customer-summary/<int:customer_id>/', CustomerBillSummary.as_view(), name='customer-summary'),
+    path('customer-summary/', CustomerBillSummary.as_view(), name='all-customer-summary'),
 
+
+]
 
 

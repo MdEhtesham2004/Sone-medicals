@@ -106,26 +106,33 @@ class BillDetails(models.Model):
 
 
 
-# class CustomerRequest(models.Model):
-#     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,null=True, blank=True)
-#     phone = models.CharField(max_length=15)
-#     Address = models.TextField(null=True, blank=True)
-#     medicine_details = models.ForeignKey(Medicine, on_delete=models.CASCADE)
-#     quantity = models.IntegerField()
-#     prescription = models.ImageField(upload_to='prescriptions/', null=True, blank=True)
-#     request_status = models.CharField(max_length=20, choices=[
-#         ('Pending', 'Pending'),
-#         ('Approved', 'Approved'),
-#         ('Rejected', 'Rejected')
-#     ], default='Pending')
-#     requested_on = models.DateTimeField(auto_now_add=True)
+class CustomerRequest(models.Model):
+    """ this model is used to manage the customer request for medicine """
+    customer_name = models.CharField(max_length=100)
+    customer_address = models.TextField()
+    customer_contact = models.CharField(max_length=15)
+    # using image for prescription instead of using medicine as foreign key
+    # optional field if anyone want to write the medicine name
+    medicine_name = models.CharField(max_length=100, null=True, blank=True)
+    # if one customer demands for more than one medicine then we can use this field
+    medicine_list = models.TextField(null=True, blank=True) # list of medicine names
+    prescription = models.ImageField(upload_to='prescriptions/', null=True, blank=True)
+    request_status = models.CharField(max_length=20, choices=[
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected')
+    ], default='Pending')
+    requested_on = models.DateTimeField(auto_now_add=True)
 
-#     def __str__(self):
-#         return f"{self.customer.name} - {self.medicine_name}"
+    def __str__(self):
+        return f"{self.customer.name} - {self.medicine_name}"
+  
+
 
 
 
 class MedicineStock(models.Model):
+    """ this model is used to manage the medicine stock details """
     name = models.CharField(max_length=100, unique=True)
     schedule_type = models.CharField(max_length=50)
     in_stock_total = models.IntegerField(default=0)
@@ -137,6 +144,7 @@ class MedicineStock(models.Model):
 
 
 class MedicineStockHistory(models.Model):
+    """ this model is used to manage the medicine stock history IN?OUT"""
     medicine = models.ForeignKey(MedicineStock, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     transaction_type = models.CharField(max_length=10, choices=[('IN', 'In'), ('OUT', 'Out')])
@@ -146,22 +154,48 @@ class MedicineStockHistory(models.Model):
 
 
 class CustomerCredit(models.Model):
+    """
+    This model is used to manage customer credit details.
+    such as customer name ,adress , contact , discription , payment status , amount , payment type , payment status will be common for every customer
+    """
+    # customer name ,adress , contact , discription , payment status , amount , payment type , payment status will be common for every customer 
     name = models.CharField(max_length=100)
     address = models.TextField()
     contact = models.CharField(max_length=15)
     description = models.TextField()
-    payment_status = models.CharField(max_length=100, choices=[('Paid', 'Paid'), ('Pending', 'Pending')])
+    record_type = models.CharField(max_length=100, choices=[('Delivery', 'Delivery'), ('Credit', 'Credit')]) #tells whether the record is for delivery or credit
+    
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    payment_status = models.CharField(max_length=100, choices=[('Paid', 'Paid'), ('Pending', 'Pending')])
     payment_type = models.CharField(max_length=100, choices=[('Cash', 'Cash'), ('Credit', 'Credit')])
+
+
+    # adding a field to seperate the customer credit from the  delivery logic 
+    # if the record is for delivery : 
+    delivered_by = models.CharField(max_length=100, null=True, blank=True) # person who delivered the medicine
+    # and medicine details will be in the customer credit details 
     added_on = models.DateTimeField(auto_now_add=True)
+    # how to render in frontend 
+    """ first check for the record type if it is delivery then show the delivered by field and take medicine  medicine details
+    else if it is credit then show the customer details and take medicine details not need to render delivered by field 
+    """
+
 
 
 class CustomerCreditConnect(models.Model):
+    """
+    This model is used to connect customer credit with the customer credit details.
+    """
     customer_credit = models.ForeignKey(CustomerCredit, on_delete=models.CASCADE)
     added_on = models.DateTimeField(auto_now_add=True)
 
 
 class CustomerCreditDetails(models.Model):
+    """ this model stores the customer credit deatails as well as the medicine details what he/she has taken 
+    this 3 models works together
+    CustomerCredit -> CustomerCreditConnect -> CustomerCreditDetails for managing CustomerCredit and Delivery Details 
+    """
     customer_credit = models.ForeignKey(CustomerCreditConnect, on_delete=models.CASCADE)
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
     quantity = models.IntegerField()
