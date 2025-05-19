@@ -404,7 +404,7 @@ class CreateMedicineWithCompanyViewSet(viewsets.ModelViewSet):
             data = request.data.copy()
 
             data['company'] = company.id
-            data['amt_after_gst'] = int(data['mrp']) + (int(data['mrp']) * int(data['gst']) / 100)
+            data['amt_after_gst'] = float(data['mrp']) + (float(data['mrp']) * float(data['gst']) / 100)
 
             serializer = self.get_serializer(data=data)
             if serializer.is_valid():

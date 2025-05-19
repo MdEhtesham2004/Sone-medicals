@@ -51,6 +51,21 @@ Schema:
 To Get BillSummary with specific id or all deatails: http://127.0.0.1:8000/api/customer-summary/2/
 
 
+Medicine Schema: 
+{ "name": "Okacet",
+            "schedule_type": "no",
+            "mrp": "21.00",
+            "rate": "19.00",
+            "pack": 15,
+            "batch_no": "02nk8",
+            "exp_date": "2023-02-01",
+            "mfg_date": "2025-02-01",
+            "company": 1,
+            "qty_in_strip": 30,
+            "gst": 18
+}
+For managing medicine schema (Crud)  http://127.0.0.1:8000/api/medical/medicine/
+
 
 
 
