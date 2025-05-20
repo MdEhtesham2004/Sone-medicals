@@ -179,3 +179,18 @@ class CustomerCreditDetailsSerializer(serializers.ModelSerializer):
         
 
 
+class CustomerCreditDetailsSuperatedSerializer(serializers.ModelSerializer):
+    # medicine = MedicineStockSerializer()
+    # medicine_id = serializers.PrimaryKeyRelatedField(
+    #     queryset=MedicineStock.objects.all(), write_only=True, source='medicine'
+    # )
+
+    class Meta:
+        model = CustomerCreditDetailsSuperate
+        # fields = ['medicine', 'quantity', 'added_on']  # Include 'added_on' field 
+        fields = '__all__'  # Include all fields
+
+    # def to_representation(self, instance):
+    #     response = super().to_representation(instance)
+    #     response['medicine'] = MedicineSerializer(instance.medicine).data
+    #     return response
