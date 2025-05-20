@@ -12,7 +12,8 @@ Schema Type:
     "payment_type": "Credit"
   },
   "customer_credit_details": [
-    {
+    
+{
       "medicine": 12,
       "quantity": 2
     },
@@ -66,6 +67,36 @@ Medicine Schema:
 }
 For managing medicine schema (Crud)  http://127.0.0.1:8000/api/medical/medicine/
 
+to add customercredit customers: 
+http://127.0.0.1:8000/api/medical/CustomerCredit/
+Schema: 
+{
+ 
+    "name": "John lee",
+    "contact": "1234567890",
+    "pending_amount":2000,
+    "last_payment_date": "2025-05-04",
+    "last_payment_amount": 1000
+  }
+
+	
+
+to add customer credit medicine details (post and get) with specific customer id :
+  http://127.0.0.1:8000/api/medical/CustomerCreditDetailsSuperate/
+Schema: 
+{
+    "customer_credit": 5,
+    "medicines": [
+        {
+            "medicine": 4,
+            "quantity": 2
+        },
+        {
+            "medicine": 6,
+            "quantity": 2
+        }
+    ]
+}
 
 
 
