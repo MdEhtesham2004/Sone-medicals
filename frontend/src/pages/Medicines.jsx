@@ -20,15 +20,15 @@ function Medicines() {
     mrp: '',
     rate: '',
     pack: '',
-    c_gst: '',
-    s_gst: '',
+    // c_gst: '',
+    // s_gst: '',
     gst: '',
     // amt_aftr_gst:'',
     batch_no: '',
     exp_date: '',
     mfg_date: '',
     company: '',
-    in_stock_total: '',
+    // in_stock_total: '',
     qty_in_strip: '',
     added_on: '',
   })
@@ -50,6 +50,7 @@ function Medicines() {
 
         const res = await api.post(`/api/makemedicinedetailsviacompany/${companyId}/`, formData)
         Setmedicines(prev => [...prev, res.data]);
+        // console.log(formData)
         toast.success("Medicine added successfully!");
       }
       resetForm();
@@ -67,17 +68,19 @@ function Medicines() {
       mrp: med.mrp || '',
       rate: med.rate || '',
       pack: med.pack || '',
-      c_gst: med.c_gst || '',
-      s_gst: med.s_gst || '',
+      // c_gst: med.c_gst || '',
+      // s_gst: med.s_gst || '',
+      gst: med.gst || '',
       batch_no: med.batch_no || '',
       exp_date: med.exp_date || '',
       mfg_date: med.mfg_date || '',
-      company: med.company || '',
+      company: med.company_details?.id || 'N/A',
       in_stock_total: med.in_stock_total || '',
       qty_in_strip: med.qty_in_strip || '',
       added_on: med.added_on || '',
     });
     setEditId(med.id);
+    // fetchMedicines()
   };
 
 
@@ -88,15 +91,15 @@ function Medicines() {
       mrp: '',
       rate: '',
       pack: '',
-      c_gst: '',
-      s_gst: '',
+      // c_gst: '',
+      // s_gst: '',
       gst: '',
       // amt_aftr_gst:'',
       batch_no: '',
       exp_date: '',
       mfg_date: '',
       company: '',
-      in_stock_total: '',
+      // in_stock_total: '',
       qty_in_strip: '',
     });
   }
@@ -123,7 +126,7 @@ function Medicines() {
       .then((res) => (res.data))
       .then((data) => {
         Setmedicines(data.data)
-        console.log(data.data)
+        // console.log(data.data)
       })
       .catch((err) => {
         console.error("Error fetching medicines:", err);
@@ -220,7 +223,7 @@ function Medicines() {
 
         />
         <input
-          type='Number'
+          type='text'
           name='pack'
           placeholder='Enter Pack'
           value={formData.pack}
@@ -228,7 +231,7 @@ function Medicines() {
           className="border border-gray-400 rounded px-3 py-2 w-full"
           required
         />
-        <input
+        {/* <input
           type='Number'
           name='c_gst'
           placeholder='Enter C_GST'
@@ -245,7 +248,7 @@ function Medicines() {
           onChange={handleChange}
           className="border border-gray-400 rounded px-3 py-2 w-full"
 
-        />
+        /> */}
         <input
           type="Number"
           name='gst'
@@ -273,18 +276,18 @@ function Medicines() {
         />
         <input
           type='date'
-          name='exp_date'
-          placeholder='Enter Exp Date'
-          value={formData.exp_date}
+          name='mfg_date'
+          placeholder='Enter Mfg Date'
+          value={formData.mfg_date}
           onChange={handleChange}
           className="border border-gray-400 rounded px-3 py-2 w-full"
           required
         />
         <input
           type='date'
-          name='mfg_date'
-          placeholder='Enter Mfg Date'
-          value={formData.mfg_date}
+          name='exp_date'
+          placeholder='Enter Exp Date'
+          value={formData.exp_date}
           onChange={handleChange}
           className="border border-gray-400 rounded px-3 py-2 w-full"
           required
@@ -315,9 +318,10 @@ function Medicines() {
           isSearchable
           placeholder="-- Select or Search Agency Source --"
           className="w-full"
+        // type="text"
         />
 
-        <input
+        {/* <input
           type='Number'
           name='in_stock_total'
           placeholder='Enter In Stock Total'
@@ -325,11 +329,11 @@ function Medicines() {
           onChange={handleChange}
           className="border border-gray-400 rounded px-3 py-2 w-full"
           required
-        />
+        /> */}
         <input
           type='text'
           name='qty_in_strip'
-          placeholder='Enter Qty In Strip'
+          placeholder='Enter Qty '
           value={formData.qty_in_strip}
           onChange={handleChange}
           className="border border-gray-400 rounded px-3 py-2 w-full"
@@ -357,8 +361,8 @@ function Medicines() {
               <th className="p-3">MRP</th>
               <th className="p-3">Rate</th>
               <th className="p-3">Pack</th>
-              <th className="p-3">C_GST</th>
-              <th className="p-3">S_GST</th>
+              {/* <th className="p-3">C_GST</th> */}
+              {/* <th className="p-3">S_GST</th> */}
               <th className="p-3">Agency</th>
               {/* <th className="p-3">In Stock Total</th> */}
               <th className="p-3">Qty In Strip</th>
@@ -377,9 +381,9 @@ function Medicines() {
                 <td className="p-3">{med.mrp}</td>
                 <td className="p-3">{med.rate}</td>
                 <td className="p-3">{med.pack}</td>
-                <td className="p-3">{med.c_gst}</td>
-                <td className="p-3">{med.s_gst}</td>
-                <td className="p-3">{med.company_details.name}</td>
+                {/* <td className="p-3">{med.c_gst}</td> */}
+                {/* <td className="p-3">{med.s_gst}</td> */}
+                <td className="p-3">{med.company_details?.name || 'N/A'}</td>
                 {/* <td className="p-3">{med.in_stock_total}</td> */}
                 <td className="p-3">{med.qty_in_strip}</td>
                 {/* <td className="p-3">{med.added_on}</td> */}

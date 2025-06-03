@@ -40,17 +40,17 @@ const Company = () => {
         const res = await api.put(`/api/medical/company/${editId}/`, formData);
         setCompanies(prev => prev.map(company => company.id === editId ? res.data : company));
         setEditId(null);
-        toast.success("Company updated successfully!");
+        toast.success("Agency updated successfully!");
       } else {
         const res = await api.post('/api/medical/company/', formData);
         setCompanies(prev => [...prev, res.data]);
-        toast.success("Company added successfully!");
+        toast.success("Agency added successfully!");
       }
       resetForm();
       fetchCompanies();
     } catch (err) {
-      console.error('Error saving company:', err);
-      toast.error("Error saving company. Please try again.");
+      console.error('Error saving Agency:', err);
+      toast.error("Error saving Agency. Please try again.");
     }
   };
 
@@ -73,16 +73,17 @@ const Company = () => {
   };
 
   const handleDelete = (id) => {
+    const company = companies.find(m => m.id === id);
     confirmAlert({
       title: 'Confirm Delete',
-      message: 'Are you sure you want to delete this company?',
+      message: `Are you sure you want to delete this Agency ?${company.name}`,
       buttons: [
         {
           label: 'Yes',
           onClick: async () => {
             await api.delete(`/api/medical/company/${id}/`);
             setCompanies(prev => prev.filter(c => c.id !== id));
-            toast.success("Company deleted!");
+            toast.success(`Agency ${company.name} deleted!`);
           }
         },
         {

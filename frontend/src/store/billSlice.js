@@ -22,8 +22,8 @@ const billSlice = createSlice({
         clearMedicine: (state) => {
             state.medicines = [];
         },
-        resetBill: (state,) => {
-            state.patient = null,
+        resetBill: (state) => {
+            state.patient = null;
                 state.medicines = [];
         },
         setMedicines: (state, action) => {

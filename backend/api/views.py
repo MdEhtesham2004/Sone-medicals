@@ -404,7 +404,7 @@ class CreateMedicineWithCompanyViewSet(viewsets.ModelViewSet):
             data = request.data.copy()
 
             data['company'] = company.id
-            data['amt_after_gst'] = int(data['mrp']) + (int(data['mrp']) * int(data['gst']) / 100)
+            data['amt_after_gst'] = float(data['mrp']) + (float(data['mrp']) * float(data['gst']) / 100)
 
             serializer = self.get_serializer(data=data)
             if serializer.is_valid():
@@ -612,29 +612,31 @@ class ManageCustomerCreditViewSet(viewsets.ModelViewSet):
         customer_data = request.data.get('customer_credit')
         customer_credit_details = request.data.get('customer_credit_details', [])
 
-        if not customer_credit_details:
-            return Response({
-                'error': True,
-                'message': 'customer_credit_details is required.'
-            }, status=400)
-
-        # Step 2: Calculate the total amount
-        final_total_amount = 0
-        for item in customer_credit_details:
-            try:
-                medicine = Medicine.objects.get(id=item['medicine'])
-            except Medicine.DoesNotExist:
-                return Response({
-                    'error': True,
-                    'message': f"Medicine with ID {item['medicine']} does not exist."
-                }, status=400)
-            
-            medicine_price = medicine.mrp
-            quantity = item['quantity']
-            total = medicine_price * quantity
-            final_total_amount += total
+        # if no customer credit deatails are provided just skipping that part
+        # if not customer_credit_details:
+        #     return Response({
+        #         'error': True,
+        #         'message': 'customer_credit_details is required.'
+        #     }, status=400)
         
-        customer_data['amount'] = final_total_amount
+        if customer_credit_details is not None:
+        # Step 2: Calculate the total amount
+            final_total_amount = 0
+            for item in customer_credit_details:
+                try:
+                    medicine = Medicine.objects.get(id=item['medicine'])
+                except Medicine.DoesNotExist:
+                    return Response({
+                        'error': True,
+                        'message': f"Medicine with ID {item['medicine']} does not exist."
+                    }, status=400)
+                
+                medicine_price = medicine.mrp
+                quantity = item['quantity']
+                total = medicine_price * quantity
+                final_total_amount += total
+            
+            customer_data['amount'] = final_total_amount
 
         # Step 3: Create the CustomerCredit record
         serializer = CustomerCreditSerializer(data=customer_data, context={'request': request})
@@ -744,3 +746,49 @@ class CustomerBillSummary(APIView):
             all_data.append(customer_summary)
 
         return Response(all_data, status=status.HTTP_200_OK)
+
+class CustomerCreditDetailsSuperatedSerializerViewset(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = CustomerCreditDetailsSuperate.objects.all()
+    serializer_class = CustomerCreditDetailsSuperatedSerializer
+
+    def list(self, request):
+        queryset = CustomerCreditDetailsSuperate.objects.all()
+        serializer = CustomerCreditDetailsSuperatedSerializer(queryset, many=True, context={'request': request})
+        response_dict = {
+            'error': False,
+            'message': 'All Customer Credit Details List Data',
+            'data': serializer.data
+        }
+        return Response(response_dict)
+    
+    def create(self, request):
+        medicine_details = request.data.get('medicines', [])        
+        medicines_details = []
+
+        for medicine_item in medicine_details:
+            try:
+                medicine = MedicineStock.objects.get(id=medicine_item['medicine'])
+            except MedicineStock.DoesNotExist:
+                return Response({
+                    'error': True,
+                    'message': f"Medicine with ID {medicine_item['medicine']} does not exist."
+                }, status=400)
+
+            # Add customer_credit to each item
+            medicine_item['customer_credit'] = request.data['customer_credit']
+            medicines_details.append(medicine_item)  # ✅ Correct list used
+
+        serializer = CustomerCreditDetailsSuperatedSerializer(data=medicines_details, many=True, context={'request': request})
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            response_dict = {
+                'error': False,
+                'message': 'Customer Credit Details Saved Successfully'
+            }
+        else:
+            response_dict = {
+                'error': True,
+                'message': 'Error in Saving Customer Credit Details Data'
+            }
+        return Response(response_dict)

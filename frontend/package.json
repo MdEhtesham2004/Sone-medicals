@@ -20,6 +20,7 @@
     "fortawesome": "^0.0.1-security",
     "framer-motion": "^12.7.2",
     "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.511.0",
     "react": "^19.0.0",
     "react-confirm-alert": "^3.0.6",
     "react-dom": "^19.0.0",
@@ -28,6 +29,7 @@
     "react-router-dom": "^7.4.1",
     "react-select": "^5.10.1",
     "react-toastify": "^11.0.5",
+    "redux-persist": "^6.0.0",
     "swiper": "^11.2.6",
     "tailwindcss": "^4.1.4"
   },

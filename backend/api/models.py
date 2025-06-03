@@ -38,7 +38,7 @@ class Medicine(models.Model):
     schedule_type = models.CharField(max_length=50) #" pass yes or no "
     mrp = models.DecimalField(max_digits=10, decimal_places=2)
     rate = models.DecimalField(max_digits=10, decimal_places=2)
-    pack = models.IntegerField()    
+    pack = models.CharField(max_length=100)    
     c_gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
     s_gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
     gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
@@ -160,16 +160,15 @@ class CustomerCredit(models.Model):
     """
     # customer name ,adress , contact , discription , payment status , amount , payment type , payment status will be common for every customer 
     name = models.CharField(max_length=100)
-    address = models.TextField()
+    
     contact = models.CharField(max_length=15)
-    description = models.TextField()
-    record_type = models.CharField(max_length=100, choices=[('Delivery', 'Delivery'), ('Credit', 'Credit')]) #tells whether the record is for delivery or credit
-    
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    
-    payment_status = models.CharField(max_length=100, choices=[('Paid', 'Paid'), ('Pending', 'Pending')])
-    payment_type = models.CharField(max_length=100, choices=[('Cash', 'Cash'), ('Credit', 'Credit')])
 
+    record_type = models.CharField(max_length=100, choices=[('Delivery', 'Delivery'), ('Credit', 'Credit')] , default="Credit") #tells whether the record is for delivery or credit
+    
+    pending_amount = models.DecimalField(max_digits=10, decimal_places=2)
+        
+    last_payment_date = models.DateField(null=True, blank=True) # last payment date for the customer credit
+    last_payment_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True) # last payment date for the customer credit
 
     # adding a field to seperate the customer credit from the  delivery logic 
     # if the record is for delivery : 
@@ -201,3 +200,11 @@ class CustomerCreditDetails(models.Model):
     quantity = models.IntegerField()
     added_on = models.DateTimeField(auto_now_add=True)
 
+
+
+class CustomerCreditDetailsSuperate(models.Model):
+    """ this model is used to manage the customer credit details """
+    customer_credit = models.ForeignKey(CustomerCredit, on_delete=models.CASCADE)
+    medicine = models.ForeignKey(MedicineStock, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    added_on = models.DateTimeField(auto_now_add=True)

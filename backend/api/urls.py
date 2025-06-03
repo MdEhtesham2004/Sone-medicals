@@ -26,7 +26,7 @@ router.register('ManageCustomerCredit', ManageCustomerCreditViewSet, basename='M
 router.register('CustomerCredit', CustomerCreditViewSet, basename='CustomerCredit')
 router.register('CustomerCreditDetails', CustomerCreditDetailsViewSet, basename='CustomerCreditDetails')
 router.register('CustomerCreditSummary', ShowAllCustomerCreditViewSet, basename='CustomerCreditSummary')
-
+router.register('CustomerCreditDetailsSuperate', CustomerCreditDetailsSuperatedSerializerViewset, basename='CustomerCreditDetailsSuperate')
 
 
 

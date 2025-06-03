@@ -5,7 +5,7 @@ import api from '../api';
 // import './Billprint.css'
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
-import { setPatient, addMedicine,setMedicines } from '../store/billSlice'
+import { setPatient,setMedicines } from '../store/billSlice'
 
 const Bill = () => {
   const navigate = useNavigate();
@@ -13,6 +13,8 @@ const Bill = () => {
   const [medicineRows, setMedicineRows] = useState([createNewRow(1)]);
   const billRef = useRef();
   const [medicinesDB, setMedicinesDB] = useState([]);
+
+  
 
   const dispatch = useDispatch();
   // const patient = useSelector((state) => state.bill.patient);
@@ -321,7 +323,7 @@ const Bill = () => {
       </div>
 
       <button onClick={generatePDF} className="mt-8 w-full bg-blue-600 text-white font-semibold py-3 rounded shadow no-print">
-        Generate Bill
+        Preview Bill
       </button>
 
       <ToastContainer position="top-right" autoClose={1000} hideProgressBar={false} pauseOnHover theme="colored" />
