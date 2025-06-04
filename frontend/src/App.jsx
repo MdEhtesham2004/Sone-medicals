@@ -11,7 +11,8 @@ import Bill from './pages/Bill';
 import PreviewBill from './pages/PreviewBill';
 import Credit from './pages/Credit';
 import CustomerDetails from './pages/CustomerDetails';
-// import ExpandedCard from './pages/ExpandedCard';
+import Shortage from './pages/Shortage';
+
 
 function Logout() {
   localStorage.clear();
@@ -49,7 +50,7 @@ function App() {
           <Route path="preview" element={<PreviewBill />} />
           <Route path="credit" element={<Credit />} />
           <Route path="credit/:id" element={<CustomerDetails />} />
-          {/* <Route path="expanded-card" element={<ExpandedCard />} /> */}
+          <Route path='shortage' element={<Shortage/>} />
           <Route path="logout" element={<Logout />} />
         </Route>
 
