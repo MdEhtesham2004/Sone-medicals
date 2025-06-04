@@ -4,6 +4,7 @@ import { resetBill } from '../store/billSlice'
 import { useNavigate } from "react-router-dom";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import api from '../api'
 
 
 export default function PreviewBill() {
@@ -47,6 +48,31 @@ export default function PreviewBill() {
             const userConfirmed = true;
             if (userConfirmed) {
               setHideButtons(true);
+              api.post('/api/medical/generatebill/', {
+                "name": patient.name,
+                "address": patient.address,
+                "contact": patient.phone,
+                "medicine_details":
+                  // {
+                  //   "id": 12,
+                  //   "qty": 2
+                  // },
+                  // {
+                  //   "id": 13,
+                  //   "qty": 1
+                  // },
+
+                  medicines.map((med) => ({
+                    "id": med.id,
+                    "qty": med.qty
+                  }))
+              })
+              // console.log(medicines)
+              console.log("Patient Data:", patient);
+              console.log("Medicines Data:", medicines);
+              console.log("Medicine IDs being sent:", medicines.map(m => m.id));
+
+
               setTimeout(() => {
                 window.print();
                 dispatch(resetBill());
