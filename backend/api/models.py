@@ -181,6 +181,21 @@ class CustomerCredit(models.Model):
     """
 
 
+class CustomerCreditReact(models.Model):
+    """
+    This model is used to manage customer credit details in react.
+    such as customer name ,adress , contact , discription , payment status , amount , payment type , payment status will be common for every customer
+    """
+    customer = models.ForeignKey(CustomerCredit, on_delete=models.CASCADE)
+    medicine_date = models.DateField(null=True, blank=True) # date of the medicine taken by the customer
+    medicine_names = models.TextField() # list of medicine names
+    amount = models.DecimalField(max_digits=10, decimal_places=2) # amount for the customer credit # to store the total amount of the medicines of customer 
+    # now storing the payment status and payment type
+    payment_status = models.CharField(max_length=20, choices=[('Paid', 'Paid'), ('Pending', 'Pending')], default='Pending') # payment status for the customer credit
+    last_payment_date = models.DateField(null=True, blank=True) # last payment date for the customer credit
+    last_payment_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) # last payment date for the customer creditpayment_type = models.CharField(max_length=20, choices=[('Cash', 'Cash'), ('Card', 'Card'), ('UPI', 'UPI')], default='Cash') # payment type for the customer credit
+    added_on = models.DateTimeField(auto_now_add=True)
+
 
 class CustomerCreditConnect(models.Model):
     """
