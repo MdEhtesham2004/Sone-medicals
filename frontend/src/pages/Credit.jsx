@@ -163,14 +163,16 @@ const Credit = () => {
             <div className="absolute top-2 right-2 flex gap-2">
               <button
                 onClick={(e) => handleEditClick(customer, e)}
-                className="text-gray-600 text-sm hover:text-blue-700 transition-colors p-1 rounded hover:bg-white hover:bg-opacity-50"
+                className="text-gray-600 text-sm hover:text-blue-700 
+                transition-colors p-1 rounded hover:bg-white hover:bg-opacity-50"
                 title="Edit customer"
               >
                 <Edit size={14} />
               </button>
               <button
                 onClick={(e) => handleDeleteCustomer(customer.id, e)}
-                className="text-red-500 text-sm hover:text-red-700 transition-colors p-1 rounded hover:bg-white hover:bg-opacity-50"
+                className="text-red-500 text-sm hover:text-red-700 
+                transition-colors p-1 rounded hover:bg-white hover:bg-opacity-50"
                 title="Delete customer"
               >
                 <Trash2 size={14} />
