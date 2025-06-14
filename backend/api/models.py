@@ -35,7 +35,6 @@ class Company(models.Model):
 #done 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
-    schedule_type = models.CharField(max_length=50) #" pass yes or no "
     mrp = models.DecimalField(max_digits=10, decimal_places=2)
     rate = models.DecimalField(max_digits=10, decimal_places=2)
     pack = models.CharField(max_length=100)    
@@ -80,28 +79,28 @@ class Bill(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     added_on = models.DateTimeField(auto_now_add=True)
 
-    def update_total(self):
-        total = sum(detail.total_price for detail in self.billdetails_set.all())
-        self.total_amount = total
-        self.save()
+    # def update_total(self):
+    #     total = sum(detail.total_price for detail in self.billdetails_set.all())
+    #     self.total_amount = total
+    #     self.save()
 
 
 class BillDetails(models.Model):
     bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
     qty = models.IntegerField()
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    rate = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # rate of the medicine
     added_on = models.DateTimeField(auto_now_add=True)
 
 
-    def save(self, *args, **kwargs):
-        self.total_price = Decimal(self.qty) * self.medicine.rate
-        super().save(*args, **kwargs)
-        self.bill.update_total()
+    # def save(self, *args, **kwargs):
+    #     self.total_price = Decimal(self.qty) * self.medicine.rate
+    #     super().save(*args, **kwargs)
+    #     self.bill.update_total()
 
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        self.bill.update_total()
+    # def delete(self, *args, **kwargs):
+    #     super().delete(*args, **kwargs)
+    #     self.bill.update_total()
 
 
 
@@ -134,7 +133,6 @@ class CustomerRequest(models.Model):
 class MedicineStock(models.Model):
     """ this model is used to manage the medicine stock details """
     name = models.CharField(max_length=100, unique=True)
-    schedule_type = models.CharField(max_length=50)
     in_stock_total = models.IntegerField(default=0)
     mrp = models.DecimalField(max_digits=10, decimal_places=2)
     rate = models.DecimalField(max_digits=10, decimal_places=2)  
@@ -158,7 +156,7 @@ class CustomerCredit(models.Model):
     This model is used to manage customer credit details.
     such as customer name ,adress , contact , discription , payment status , amount , payment type , payment status will be common for every customer
     """
-    # customer name ,adress , contact , discription , payment status , amount , payment type , payment status will be common for every customer 
+     
     name = models.CharField(max_length=100)
     
     contact = models.CharField(max_length=15)
@@ -169,57 +167,53 @@ class CustomerCredit(models.Model):
         
     last_payment_date = models.DateField(null=True, blank=True) # last payment date for the customer credit
     last_payment_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True) # last payment date for the customer credit
-
-    # adding a field to seperate the customer credit from the  delivery logic 
-    # if the record is for delivery : 
     delivered_by = models.CharField(max_length=100, null=True, blank=True) # person who delivered the medicine
-    # and medicine details will be in the customer credit details 
     added_on = models.DateTimeField(auto_now_add=True)
-    # how to render in frontend 
     """ first check for the record type if it is delivery then show the delivered by field and take medicine  medicine details
     else if it is credit then show the customer details and take medicine details not need to render delivered by field 
     """
-
-
-class CustomerCreditReact(models.Model):
-    """
-    This model is used to manage customer credit details in react.
-    such as customer name ,adress , contact , discription , payment status , amount , payment type , payment status will be common for every customer
-    """
-    customer = models.ForeignKey(CustomerCredit, on_delete=models.CASCADE)
-    medicine_date = models.DateField(null=True, blank=True) # date of the medicine taken by the customer
-    medicine_names = models.TextField() # list of medicine names
-    amount = models.DecimalField(max_digits=10, decimal_places=2) # amount for the customer credit # to store the total amount of the medicines of customer 
-    # now storing the payment status and payment type
-    payment_status = models.CharField(max_length=20, choices=[('Paid', 'Paid'), ('Pending', 'Pending')], default='Pending') # payment status for the customer credit
-    last_payment_date = models.DateField(null=True, blank=True) # last payment date for the customer credit
-    last_payment_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) # last payment date for the customer creditpayment_type = models.CharField(max_length=20, choices=[('Cash', 'Cash'), ('Card', 'Card'), ('UPI', 'UPI')], default='Cash') # payment type for the customer credit
-    added_on = models.DateTimeField(auto_now_add=True)
-
-
-class CustomerCreditConnect(models.Model):
-    """
-    This model is used to connect customer credit with the customer credit details.
-    """
-    customer_credit = models.ForeignKey(CustomerCredit, on_delete=models.CASCADE)
-    added_on = models.DateTimeField(auto_now_add=True)
-
 
 class CustomerCreditDetails(models.Model):
     """ this model stores the customer credit deatails as well as the medicine details what he/she has taken 
     this 3 models works together
     CustomerCredit -> CustomerCreditConnect -> CustomerCreditDetails for managing CustomerCredit and Delivery Details 
     """
-    customer_credit = models.ForeignKey(CustomerCreditConnect, on_delete=models.CASCADE)
-    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    customer_credit = models.ForeignKey(CustomerCredit, on_delete=models.CASCADE)
+    date = models.DateField(null=True, blank=True) # date of the medicine taken by the customer
+    medicines = models.TextField()#list of medicine names
+    amount = models.DecimalField(max_digits=10, decimal_places=2)  # amount for the customer credit
+    added_on = models.DateTimeField(auto_now_add=True)
+
+class CustomerCreditPaymentDetails(models.Model):
+    """ this model is used to manage the customer credit payment details """
+    customer_credit = models.ForeignKey(CustomerCredit, on_delete=models.CASCADE)
+    payment_date = models.DateField(null=True, blank=True)  # date of the payment made by the customer
+    payment_amount = models.DecimalField(max_digits=10, decimal_places=2)  # amount paid by the customer
+    payment_mode = models.CharField(max_length=20, choices=[('Cash', 'Cash'), ('Card', 'Card'), ('UPI', 'UPI')], default='Cash')  # type of payment made by the customer
     added_on = models.DateTimeField(auto_now_add=True)
 
 
+class LowStockAlert(models.Model):
+    medicine_name = models.CharField(max_length=100)  # name of the medicine from the stock
+    current_quantity = models.IntegerField()
+    alert_date = models.DateField(auto_now_add=True)
+    ordered = models.BooleanField(default=False)
 
-class CustomerCreditDetailsSuperate(models.Model):
-    """ this model is used to manage the customer credit details """
-    customer_credit = models.ForeignKey(CustomerCredit, on_delete=models.CASCADE)
-    medicine = models.ForeignKey(MedicineStock, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+
+
+
+class ExpiryMedicine(models.Model):
+    name = models.CharField(max_length=100)
+    mrp = models.DecimalField(max_digits=10, decimal_places=2)
+    rate = models.DecimalField(max_digits=10, decimal_places=2)
+    pack = models.CharField(max_length=100)    
+    c_gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
+    s_gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
+    gst = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
+    amt_aftr_gst = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
+    batch_no = models.CharField(max_length=100)
+    exp_date = models.DateField()
+    mfg_date = models.DateField()
+    company = models.CharField(max_length=100, null=True, blank=True)  # company name
+    qty_in_strip = models.IntegerField()
     added_on = models.DateTimeField(auto_now_add=True)

@@ -125,6 +125,7 @@ const Bill = () => {
       const updated = [...prev];
       const row = updated[index];
       Object.assign(row, {
+        id:selectedMed.id,
         name: selectedMed.name,
         batchNo: selectedMed.batch_no,
         mfgDate: selectedMed.mfg_date,

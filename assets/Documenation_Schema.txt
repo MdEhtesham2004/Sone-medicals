@@ -98,8 +98,41 @@ Schema:
     ]
 }
 
+customer credit  
+http://127.0.0.1:8000/api/medical/CustomerCredit/
+http://127.0.0.1:8000/api/medical/CustomerCredit/id/ for respective user or customer
+schema : while creating the new customer credit that's the schema for creating new customer 
+
+CustomerCreditPayment Details 
+http://127.0.0.1:8000/api/medical/CustomerCreditPayment/
+{
+    "customer_credit": 2 (id),
+    "payment_date": "2025-06-12",
+    "payment_amount": 100,
+    "payment_mode": "UPI"
+}
+
+CustomerCreditDetails 
+http://127.0.0.1:8000/api/medical/CustomerCreditDetails/
+{
+    "customer_credit": 1,
+    "date": "2025-06-12",
+    "medicines": "Paracetamol, Vitamin C",
+    "quantity": 5,
+    "amount": 250.50
+}
+
+to check for the low stock :
+http://127.0.0.1:8000/api/medical/LowStockAlert/
 
 
 
+MarkAsOrderedAPIView for marking the shortage book 
+http://127.0.0.1:8000/api/MarkAsOrderedAPIView/5(provide the id of the medicine)/
+    
 
-	
+medicine expiry status : 
+http://127.0.0.1:8000/api/medical/ExpiredMedicineStockAlertViewSet
+
+
+

@@ -29,3 +29,4 @@ def create_or_update_unique_medicine(sender, instance, created, **kwargs):
     
     print(f"[Signal Triggered] Created: {created}, Medicine: {instance.name}")
     
+

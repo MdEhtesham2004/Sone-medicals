@@ -37,7 +37,7 @@ class MedicineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medicine
         fields = [
-            'id', 'name', 'schedule_type', 'mrp', 'rate', 'pack', 
+            'id', 'name', 'mrp', 'rate', 'pack', 
             'c_gst', 's_gst', 'batch_no', 'exp_date', 'mfg_date', 
             'company',  'qty_in_strip', 'gst',"amt_aftr_gst", 'added_on','company_details'
         ]
@@ -131,6 +131,11 @@ class MedicineStockSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'schedule_type', 'in_stock_total', 'mrp', 'rate']
 
 
+    @property 
+    def low_stock(self):
+        pass 
+
+
 class MedicineStockHistorySerializer(serializers.ModelSerializer):
     # Using the MedicineStockSerializer to represent the 'medicine' field
     medicine = MedicineStockSerializer(read_only=True)
@@ -147,50 +152,49 @@ class MedicineStockHistorySerializer(serializers.ModelSerializer):
 
 
 class CustomerCreditSerializer(serializers.ModelSerializer):
-    credit_details = serializers.SerializerMethodField()
-
     class Meta:
         model = CustomerCredit
         fields = '__all__'
 
-    def get_credit_details(self, obj):
-        # Get the related CustomerCreditConnect
-        connect = CustomerCreditConnect.objects.filter(customer_credit=obj).first()
-        if connect:
-            # Get related CustomerCreditDetails
-            details = CustomerCreditDetails.objects.filter(customer_credit=connect)
-            return CustomerCreditDetailsSerializer(details, many=True).data
-        return []
-
-
-class CustomerConnectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomerCreditConnect
-        fields = '__all__'  
 
 
 class CustomerCreditDetailsSerializer(serializers.ModelSerializer):
-    medicine = MedicineSerializer(read_only=True)
-
     class Meta:
         model = CustomerCreditDetails
-        fields = ['medicine', 'quantity']
+        fields = '__all__'
 
         
+class CustomerCreditPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerCreditPaymentDetails
+        fields = '__all__'
 
 
-class CustomerCreditDetailsSuperatedSerializer(serializers.ModelSerializer):
-    # medicine = MedicineStockSerializer()
-    # medicine_id = serializers.PrimaryKeyRelatedField(
-    #     queryset=MedicineStock.objects.all(), write_only=True, source='medicine'
-    # )
+class LowStockAlertSerializer(serializers.ModelSerializer):    
+    class Meta:
+        model = LowStockAlert
+        fields = '__all__'
+
+from datetime import date
+
+class ExpiryMedicineSerializer(serializers.ModelSerializer):
+    expiry_status = serializers.SerializerMethodField()
 
     class Meta:
-        model = CustomerCreditDetailsSuperate
-        # fields = ['medicine', 'quantity', 'added_on']  # Include 'added_on' field 
-        fields = '__all__'  # Include all fields
+        model = ExpiryMedicine
+        fields = '__all__'
+        extra_fields = ['expiry_status']  # optional
 
-    # def to_representation(self, instance):
-    #     response = super().to_representation(instance)
-    #     response['medicine'] = MedicineSerializer(instance.medicine).data
-    #     return response
+    def get_expiry_status(self, obj):
+        today = date.today()
+        remaining_days = (obj.exp_date - today).days
+
+        if remaining_days > 90:
+            return f"Expires in more than 3 months"
+        elif 0 < remaining_days <= 90:
+            return f"Expires in {remaining_days} days"
+        elif remaining_days == 0:
+            return "Expires today"
+        else:
+            return "Expired"
+

@@ -1,0 +1,7 @@
+TODO 1 : stock history alert system (for less medicine) #done
+TODO 2 : Expiry Date of medicine alert system            
+
+Storing both the medicines in a superate table to be noticable 
+
+
+

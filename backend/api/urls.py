@@ -18,16 +18,16 @@ router.register('customers', CustomerViewSet)
 router.register('bills', BillViewSet)
 
 
-router.register('employees', EmployeeViewSet)
+router.register(',employees', EmployeeViewSet)
 router.register('employee-banks',EmployeeBankViewSet)
 router.register('MedicineStockDetails', MedicineStockViewSet, basename='medicinestock')
 router.register('MedicineStockHistory', MedicineStockHistoryViewSet, basename='MedicineStockHistory')
-router.register('ManageCustomerCredit', ManageCustomerCreditViewSet, basename='ManageCustomerCredit')
 router.register('CustomerCredit', CustomerCreditViewSet, basename='CustomerCredit')
+router.register('CustomerCredit/<int:pk>/', CustomerCreditViewSet, basename='CustomerCreditUnique')
 router.register('CustomerCreditDetails', CustomerCreditDetailsViewSet, basename='CustomerCreditDetails')
-router.register('CustomerCreditSummary', ShowAllCustomerCreditViewSet, basename='CustomerCreditSummary')
-router.register('CustomerCreditDetailsSuperate', CustomerCreditDetailsSuperatedSerializerViewset, basename='CustomerCreditDetailsSuperate')
-
+router.register('CustomerCreditPayment',CustomerCreditPaymentViewSet, basename='CustomerCreditPayment')
+router.register('LowStockAlert',LowStockAlertViewSet,basename='LowStockAlert')
+router.register('ExpiredMedicineStockAlertViewSet',ExpiredMedicineStockAlertViewSet, basename='ExpiredMedicineStockAlertViewSet'),
 
 
 
@@ -47,8 +47,12 @@ urlpatterns = [
     ),
     path('customer-summary/<int:customer_id>/', CustomerBillSummary.as_view(), name='customer-summary'),
     path('customer-summary/', CustomerBillSummary.as_view(), name='all-customer-summary'),
-
+    path('MarkAsOrderedAPIView/<int:pk>/',MarkAsOrderedAPIView.as_view(), name='MarkAsOrderedAPIView'),
+    path('CheckLowStock/',CheckLowStockApiView.as_view(), name='CheckLowStockApiView'),
+    path('BackupToExcelAPIView',BackupToExcelAPIView.as_view(), name='BackupToExcelAPIView'),
 
 ]
+
+
 
 
