@@ -6,9 +6,11 @@ const PasswordModal = ({ isOpen, onClose, onSuccess, action }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
+  const password2 = import.meta.env.VITE_EDIT_DELETE_PASSWORD;
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === '8866') {
+    if (password === password2) {
       onSuccess();
       setPassword('');
       setError('');

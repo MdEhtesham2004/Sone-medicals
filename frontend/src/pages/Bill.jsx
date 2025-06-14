@@ -9,7 +9,7 @@ import { setPatient,setMedicines } from '../store/billSlice'
 
 const Bill = () => {
   const navigate = useNavigate();
-  const [customer, setCustomer] = useState({ name: "", address: "", phone: "", billId: "" });
+  const [customer, setCustomer] = useState({ name: "", address: "", phone: "", billId: "" ,Doctor:""});
   const [medicineRows, setMedicineRows] = useState([createNewRow(1)]);
   const billRef = useRef();
   const [medicinesDB, setMedicinesDB] = useState([]);

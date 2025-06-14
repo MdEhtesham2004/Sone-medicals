@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { FaBriefcaseMedical, FaPills, FaHome, FaUserTie, FaCreditCard, FaBookMedical } from 'react-icons/fa';
+import { FaBriefcaseMedical, FaPills, FaHome, FaUserTie, FaCreditCard, FaBookMedical, FaBiking } from 'react-icons/fa';
 import { MdReceiptLong } from 'react-icons/md';
 
 const Design = () => {
@@ -39,6 +39,9 @@ const Design = () => {
             </Link>
             <Link to="/shortage" className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2">
               <FaBookMedical /> {sidebarOpen && 'Shortage'}
+            </Link>
+            <Link to="/delivery" className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2">
+              <FaBiking /> {sidebarOpen && 'Delivery'}
             </Link>
             <Link to="/logout" className="hover:bg-white/10 py-2 px-4 rounded flex items-center gap-2">
               <FaCreditCard /> {sidebarOpen && 'Logout'}

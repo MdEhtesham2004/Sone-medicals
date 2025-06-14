@@ -12,6 +12,7 @@ import PreviewBill from './pages/PreviewBill';
 import Credit from './pages/Credit';
 import CustomerDetails from './pages/CustomerDetails';
 import Shortage from './pages/Shortage';
+import Delivery from './pages/Delivery';
 
 
 function Logout() {
@@ -51,6 +52,7 @@ function App() {
           <Route path="credit" element={<Credit />} />
           <Route path="credit/:id" element={<CustomerDetails />} />
           <Route path='shortage' element={<Shortage/>} />
+          <Route path='delivery' element={<Delivery/>} />
           <Route path="logout" element={<Logout />} />
         </Route>
 
