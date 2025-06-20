@@ -156,15 +156,10 @@ class CustomerCredit(models.Model):
     This model is used to manage customer credit details.
     such as customer name ,adress , contact , discription , payment status , amount , payment type , payment status will be common for every customer
     """
-     
     name = models.CharField(max_length=100)
-    
     contact = models.CharField(max_length=15)
-
     record_type = models.CharField(max_length=100, choices=[('Delivery', 'Delivery'), ('Credit', 'Credit')] , default="Credit") #tells whether the record is for delivery or credit
-    
     pending_amount = models.DecimalField(max_digits=10, decimal_places=2)
-        
     last_payment_date = models.DateField(null=True, blank=True) # last payment date for the customer credit
     last_payment_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True) # last payment date for the customer credit
     delivered_by = models.CharField(max_length=100, null=True, blank=True) # person who delivered the medicine
@@ -217,3 +212,19 @@ class ExpiryMedicine(models.Model):
     company = models.CharField(max_length=100, null=True, blank=True)  # company name
     qty_in_strip = models.IntegerField()
     added_on = models.DateTimeField(auto_now_add=True)
+
+
+
+class CustomerDeliveryDetails:
+    customer_name = models.CharField(max_length=100)
+    date = models.DateField(null=True, blank=True)  # date of the delivery
+    medicines = models.TextField()  # list of medicine names
+    delivered_by = models.CharField(max_length=100, null=True, blank=True)  # person who delivered the medicine
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    payment_status = models.CharField(max_length=20, choices=[('Paid', 'Paid'), ('Pending', 'Pending')], default='Pending')  # payment status for the delivery
+    added_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Delivery for {self.customer.name} on {self.added_on}"
+
+

@@ -841,7 +841,7 @@ class ExpiredMedicineStockAlertViewSet(viewsets.ModelViewSet):
     serializer_class = ExpiryMedicineSerializer
 
     def list(self, request, *args, **kwargs):
-        # First: Run your check logic before listing
+        # First: Run your check lo  gic before listing
         status = check_expired_medicines()
 
         # Now get the queryset after check is done
