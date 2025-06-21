@@ -81,23 +81,6 @@ Schema:
 
 	
 
-to add customer credit medicine details (post and get) with specific customer id :
-  http://127.0.0.1:8000/api/medical/CustomerCreditDetailsSuperate/
-Schema: 
-{
-    "customer_credit": 5,
-    "medicines": [
-        {
-            "medicine": 4,
-            "quantity": 2
-        },
-        {
-            "medicine": 6,
-            "quantity": 2
-        }
-    ]
-}
-
 customer credit  
 http://127.0.0.1:8000/api/medical/CustomerCredit/
 http://127.0.0.1:8000/api/medical/CustomerCredit/id/ for respective user or customer
@@ -118,7 +101,6 @@ http://127.0.0.1:8000/api/medical/CustomerCreditDetails/
     "customer_credit": 1,
     "date": "2025-06-12",
     "medicines": "Paracetamol, Vitamin C",
-    "quantity": 5,
     "amount": 250.50
 }
 
