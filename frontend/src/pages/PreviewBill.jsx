@@ -33,6 +33,12 @@ export default function PreviewBill() {
     return total + (itemDiscount || 0);
   }, 0)
 
+  const BillId = () => {
+    const billId = Math.floor(Math.random() * 1000) + 1; 
+    return billId.toString().padStart(6, '0');
+
+  }
+
 
   const [hideButtons, setHideButtons] = useState(false);
 
@@ -52,22 +58,12 @@ export default function PreviewBill() {
                 "name": patient.name,
                 "address": patient.address,
                 "contact": patient.phone,
-                "total_amount":totalAmount,
-                "medicine_details":
-                  // {
-                  //   "id": 12,
-                  //   "qty": 2
-                  // },
-                  // {
-                  //   "id": 13,
-                  //   "qty": 1
-                  // },
-
-                  medicines.map((med) => ({
-                    "id": med.id,
-                    "qty": med.qty,
-                    "rate": med.rate
-                  }))
+                "total_amount": totalAmount,
+                "medicine_details": medicines.map((med) => ({
+                  "id": med.id,
+                  "qty": med.qty,
+                  "rate": med.rate
+                }))
               })
               // console.log(medicines)
               console.log("Patient Data:", patient);
@@ -137,7 +133,7 @@ export default function PreviewBill() {
           <div><strong>Time:</strong> {time}</div>
           <div className="text-right">
             <strong>Date:</strong> {date}<br />
-            <strong>Invoice No:</strong> {patient.billId}
+            <strong>Invoice No:</strong> {BillId()}
           </div>
         </div>
       </section>

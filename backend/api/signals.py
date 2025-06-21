@@ -8,7 +8,7 @@ def create_or_update_unique_medicine(sender, instance, created, **kwargs):
     unique_medicine, is_created = MedicineStock.objects.get_or_create(
         name=instance.name,
         defaults={
-            'schedule_type': instance.schedule_type,
+            # 'schedule_type': instance.schedule_type,
             'in_stock_total': instance.qty_in_strip,
             'mrp': instance.mrp,
             'rate': instance.rate
