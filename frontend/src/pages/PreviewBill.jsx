@@ -7,6 +7,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import api from '../api'
 
 
+
 export default function PreviewBill() {
 
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ export default function PreviewBill() {
 
   const patient = useSelector((state) => state.bill.patient);
   const medicines = useSelector((state) => state.bill.medicines);
+
+  const [hideButtons, setHideButtons] = useState(false);
+  const [generateBillId, setGenerateBillId] = useState(null)
 
 
   const totalAmount = medicines?.reduce((total, med) => {
@@ -33,17 +37,7 @@ export default function PreviewBill() {
     return total + (itemDiscount || 0);
   }, 0)
 
-  const BillId = () => {
-    const billId = Math.floor(Math.random() * 1000) + 1; 
-    return billId.toString().padStart(6, '0');
-
-  }
-
-
-  const [hideButtons, setHideButtons] = useState(false);
-
   const generateBill = () => {
-    // const userConfirmed = window.confirm("Are you sure you want to generate and print the bill?");
     confirmAlert({
       title: 'Confirm to Print',
       message: 'Are you sure you want to generate the bill?',
@@ -55,9 +49,9 @@ export default function PreviewBill() {
             if (userConfirmed) {
               setHideButtons(true);
               api.post('/api/medical/generatebill/', {
-                "name": patient.name,
-                "address": patient.address,
-                "contact": patient.phone,
+                "name": patient?.name,
+                "address": patient?.address,
+                "contact": patient?.phone,
                 "total_amount": totalAmount,
                 "medicine_details": medicines.map((med) => ({
                   "id": med.id,
@@ -65,18 +59,20 @@ export default function PreviewBill() {
                   "rate": med.rate
                 }))
               })
-              // console.log(medicines)
-              console.log("Patient Data:", patient);
-              console.log("Medicines Data:", medicines);
-              console.log("Medicine IDs being sent:", medicines.map(m => m.id));
-
-
-              setTimeout(() => {
-                window.print();
-                dispatch(resetBill());
-                navigate("/bill");
-                setHideButtons(false);
-              }, 100);
+                .then((response) => {
+                  // console.log("Bill generated successfully:", response.data);
+                  setGenerateBillId(response.data.bill_id);
+                  setTimeout(() => {
+                    window.print();
+                    dispatch(resetBill());
+                    navigate("/bill");
+                    setHideButtons(false);
+                  }, 500);
+                })
+                .catch((error) => {
+                  console.error("Error generating bill:", error);
+                  alert("Error generating bill. Please try again.");
+                });
             }
           }
         },
@@ -88,16 +84,6 @@ export default function PreviewBill() {
         }
       ]
     })
-
-    if (!userConfirmed) return;
-
-    setHideButtons(true);
-    setTimeout(() => {
-      window.print();
-      dispatch(resetBill());
-      navigate("/bill");
-      setHideButtons(false);
-    }, 100);
   };
 
 
@@ -109,14 +95,14 @@ export default function PreviewBill() {
 
         <div className="text-left">
           <h2 className="text-xl font-bold">SONEE MEDICAL & GENERAL STORE</h2>
-          <p>H.No.10-3-280/C, Osman Plaza Humayun Nagar, Mehdipatnam Road, Hyderabad - 500028</p>
-          <p>Phone: 040-23531807, 9849246524, 9030440079</p>
+          <p>H.No.#10-3-280/C, Beside Cresent Hospital , Osman Plaza Humayun Nagar, <br />Mehdipatnam Road, Hyderabad - 500028</p>
+          <p>Phone: 040-66732390 , 9700160870 ,8374493352</p>
         </div>
 
 
         <div className="text-right text-sm">
           <p><strong>DL.No:</strong> TG/16/05/2015-8978</p>
-          <p><strong>GST No:</strong> 36ABBEM2813R1ZY</p>
+          <p><strong>GST No:</strong> 36ADGPV6783N1ZI</p>
         </div>
       </header>
 
@@ -124,16 +110,17 @@ export default function PreviewBill() {
       <section className="my-4 border-b border-black pb-2">
         <div className="flex justify-between text-sm">
           <div>
-            <strong>Patient:</strong> {patient.name}<br />
-            <strong>Doctor:</strong> {patient.Doctor}
+            <strong>Patient:</strong> {patient?.name || 'N/A'}<br />
+            <strong>Doctor:</strong> {patient?.Doctor || 'N/A'}
           </div>
           <div>
             <strong>Ph No : </strong>
-            {patient.phone || ""}</div>
+            {patient?.phone || ""}</div>
           <div><strong>Time:</strong> {time}</div>
           <div className="text-right">
             <strong>Date:</strong> {date}<br />
-            <strong>Invoice No:</strong> {BillId()}
+            <strong>Invoice No:</strong> {generateBillId ? `INV-00${generateBillId}` : "Generating..."}
+
           </div>
         </div>
       </section>
@@ -151,7 +138,6 @@ export default function PreviewBill() {
             <th>Qty</th>
             <th>MRP</th>
             <th>Rate</th>
-            {/* <th>Discount in %</th> */}
             <th>Amount</th>
           </tr>
         </thead>
@@ -176,10 +162,8 @@ export default function PreviewBill() {
 
 
       <div className="flex justify-end gap-8 mt-4 text-sm">
-        {/* <p><strong>Gross:</strong> ₹{medicines.amount.toFixed(2)}</p> */}
         <p><strong>MRP :- </strong>₹{totalMRP.toFixed(2)}</p>
         <p><strong>Discount:</strong> ₹{totalDiscount.toFixed(2)}</p>
-        {/* <p><strong>Net Amount:</strong> ₹ {medicines.amount}</p> */}
         <p><strong>Net Amount:</strong> ₹{totalAmount.toFixed(2)}</p>
 
       </div>
@@ -197,7 +181,8 @@ export default function PreviewBill() {
       {!hideButtons && (
         <>
           <div className="flex justify-center no-print">
-            <button onClick={generateBill} className="no-print mt-4 cursor-pointer w-[25%] bg-blue-500 text-white px-4 py-2 rounded">
+            <button onClick={generateBill}
+              className="no-print mt-4 cursor-pointer w-[25%] bg-blue-500 text-white px-4 py-2 rounded">
               Generate Bill</button>
           </div>
 
@@ -208,7 +193,6 @@ export default function PreviewBill() {
           </button>
         </>
       )}
-
 
     </div>
   );
