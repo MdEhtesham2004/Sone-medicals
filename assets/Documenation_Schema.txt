@@ -135,4 +135,6 @@ medicine expiry status :
 http://127.0.0.1:8000/api/medical/ExpiredMedicineStockAlertViewSet
 
 
+BackupToExcelAPIView 
+http://127.0.0.1:8000/api/medical/BackupToExcelAPIView
 
