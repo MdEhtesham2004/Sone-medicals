@@ -1,192 +1,12 @@
-// import React, { useState, useEffect } from 'react';
-// import { Trash2, Edit } from 'lucide-react';
-// import api from '../api'; 
-
-// const Delivery = () => {
-//   const [deliveries, setDeliveries] = useState([]);
-//   const [formData, setFormData] = useState({
-//     date: '',
-//     person: '',
-//     medicines: '',
-//     totalAmount: '',
-//     paymentStatus: 'Pending'
-//   });
-
-//   const [editIndex, setEditIndex] = useState(null);
-
-//   // Fetch existing deliveries
-//   useEffect(() => {
-//     fetchDeliveries();
-//   }, []);
-
-//   const fetchDeliveries = async () => {
-//     try {
-//       const res = await api.get('/deliveries/');
-//       setDeliveries(res.data);
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   const handleChange = (e) => {
-//     setFormData(prev => ({
-//       ...prev,
-//       [e.target.name]: e.target.value
-//     }));
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       if (editIndex !== null) {
-//         const updated = await api.put(`/deliveries/${deliveries[editIndex].id}/`, formData);
-//         const updatedList = [...deliveries];
-//         updatedList[editIndex] = updated.data;
-//         setDeliveries(updatedList);
-//         setEditIndex(null);
-//       } else {
-//         const res = await api.post('/deliveries/', formData);
-//         setDeliveries(prev => [...prev, res.data]);
-//       }
-//       setFormData({ date: '', person: '', medicines: '', totalAmount: '', paymentStatus: 'Pending' });
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   const handleEdit = (index) => {
-//     setFormData(deliveries[index]);
-//     setEditIndex(index);
-//   };
-
-//   const handleDelete = async (index) => {
-//     const id = deliveries[index].id;
-//     try {
-//       await api.delete(`/deliveries/${id}/`);
-//       setDeliveries(prev => prev.filter((_, i) => i !== index));
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   return (
-//     <div className="p-4 max-w-4xl mx-auto">
-//       <h2 className="text-xl font-bold mb-4">Delivery Management</h2>
-
-//       <form onSubmit={handleSubmit} className="bg-white rounded-lg p-4 shadow-md space-y-4">
-//         <input
-//           type="date"
-//           name="date"
-//           value={formData.date}
-//           onChange={handleChange}
-//           className="w-full border p-2 rounded"
-//           required
-//         />
-//         <input
-//           type="text"
-//           name="person"
-//           placeholder="Delivery Person"
-//           value={formData.person}
-//           onChange={handleChange}
-//           className="w-full border p-2 rounded"
-//           required
-//         />
-//         <textarea
-//           name="medicines"
-//           placeholder="Medicines (comma separated)"
-//           value={formData.medicines}
-//           onChange={handleChange}
-//           className="w-full border p-2 rounded"
-//         />
-//         <input
-//           type="number"
-//           name="totalAmount"
-//           placeholder="Total Amount"
-//           value={formData.totalAmount}
-//           onChange={handleChange}
-//           className="w-full border p-2 rounded"
-//           required
-//         />
-//         <select
-//           name="paymentStatus"
-//           value={formData.paymentStatus}
-//           onChange={handleChange}
-//           className="w-full border p-2 rounded"
-//         >
-//           <option value="Pending">Pending</option>
-//           <option value="Paid">Paid</option>
-//           <option value="UPI">UPI</option>
-//           <option value="Cash">Cash</option>
-//           <option value="Card">Card</option>
-//         </select>
-//         <button
-//           type="submit"
-//           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-//         >
-//           {editIndex !== null ? 'Update Delivery' : 'Add Delivery'}
-//         </button>
-//       </form>
-
-//       <div className="mt-6">
-//         <h3 className="text-lg font-semibold mb-2">Deliveries</h3>
-//         <div className="overflow-x-auto">
-//           <table className="min-w-full bg-white border rounded-lg">
-//             <thead>
-//               <tr className="bg-gray-200">
-//                 <th className="py-2 px-3 border">Date</th>
-//                 <th className="py-2 px-3 border">Person</th>
-//                 <th className="py-2 px-3 border">Medicines</th>
-//                 <th className="py-2 px-3 border">Amount</th>
-//                 <th className="py-2 px-3 border">Status</th>
-//                 <th className="py-2 px-3 border">Actions</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {deliveries.map((entry, index) => (
-//                 <tr key={entry.id}>
-//                   <td className="py-2 px-3 border">{entry.date}</td>
-//                   <td className="py-2 px-3 border">{entry.person}</td>
-//                   <td className="py-2 px-3 border">{entry.medicines}</td>
-//                   <td className="py-2 px-3 border">₹{entry.totalAmount}</td>
-//                   <td className="py-2 px-3 border">{entry.paymentStatus}</td>
-//                   <td className="py-2 px-3 border space-x-2">
-//                     <button onClick={() => handleEdit(index)}>
-//                       <Edit size={18} />
-//                     </button>
-//                     <button onClick={() => handleDelete(index)}>
-//                       <Trash2 size={18} className="text-red-600" />
-//                     </button>
-//                   </td>
-//                 </tr>
-//               ))}
-//               {deliveries.length === 0 && (
-//                 <tr>
-//                   <td colSpan={6} className="text-center py-4 text-gray-500">
-//                     No deliveries yet.
-//                   </td>
-//                 </tr>
-//               )}
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Delivery;
-
-
-
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Trash2, Edit, Plus, Search } from 'lucide-react';
-import api from '../api'; 
+import api from '../api';
 
 // Enhanced Medicine Input Component
-const SmartMedicineInput = ({ 
-  value, 
-  onChange, 
-  medicinesDB, 
+const SmartMedicineInput = ({
+  value,
+  onChange,
+  medicinesDB,
   placeholder = "Start typing medicine names... (separate with commas)"
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -194,7 +14,7 @@ const SmartMedicineInput = ({
   const [cursorPosition, setCursorPosition] = useState(0);
   const [currentWord, setCurrentWord] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const textareaRef = useRef(null);
   const dropdownRef = useRef(null);
 
@@ -209,9 +29,9 @@ const SmartMedicineInput = ({
   // Memoized filtered options
   const filteredOptions = useMemo(() => {
     if (searchTerm.length < 2) return [];
-    
+
     return medicinesDB
-      .filter(med => 
+      .filter(med =>
         med.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         med.batch_no?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         med.generic_name?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -334,7 +154,7 @@ const SmartMedicineInput = ({
       />
 
       {showDropdown && filteredOptions.length > 0 && (
-        <div 
+        <div
           ref={dropdownRef}
           className="absolute z-20 bg-white border border-gray-300 rounded-md shadow-lg mt-1 w-full max-h-48 overflow-auto"
         >
@@ -342,17 +162,16 @@ const SmartMedicineInput = ({
             <Search size={12} />
             {filteredOptions.length} matches for "{searchTerm}"
           </div>
-          
+
           {filteredOptions.map((option, i) => (
             <div
               key={`${option.id}-${i}`}
               onMouseDown={() => selectMedicine(option)}
               onMouseEnter={() => setHighlightedIndex(i)}
-              className={`px-3 py-2 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors ${
-                highlightedIndex === i 
-                  ? "bg-blue-100 border-blue-200" 
+              className={`px-3 py-2 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors ${highlightedIndex === i
+                  ? "bg-blue-100 border-blue-200"
                   : "hover:bg-gray-50"
-              }`}
+                }`}
             >
               <div className="font-medium text-gray-900">{option.name}</div>
               <div className="text-xs text-gray-500 mt-1 flex justify-between">
@@ -437,9 +256,9 @@ const Delivery = () => {
     if (value) {
       const medicineNames = value.split(',').map(name => name.trim()).filter(Boolean);
       let estimatedTotal = 0;
-      
+
       medicineNames.forEach(name => {
-        const medicine = medicinesDB.find(med => 
+        const medicine = medicinesDB.find(med =>
           med.name.toLowerCase() === name.toLowerCase()
         );
         if (medicine && medicine.mrp) {
@@ -501,15 +320,15 @@ const Delivery = () => {
     setEditIndex(null);
   };
 
-  const addFrequentMedicines = () => {
-    const frequentMeds = medicinesDB
-      .filter(med => med.frequently_used || med.popular)
-      .slice(0, 5)
-      .map(med => med.name)
-      .join(', ');
-    
-    handleMedicineChange(formData.medicines ? formData.medicines + ', ' + frequentMeds : frequentMeds);
-  };
+  // const addFrequentMedicines = () => {
+  //   const frequentMeds = medicinesDB
+  //     .filter(med => med.frequently_used || med.popular)
+  //     .slice(0, 5)
+  //     .map(med => med.name)
+  //     .join(', ');
+
+  //   handleMedicineChange(formData.medicines ? formData.medicines + ', ' + frequentMeds : frequentMeds);
+  // };
 
   // Calculate summary stats
   const totalDeliveries = deliveries.length;
@@ -546,7 +365,7 @@ const Delivery = () => {
               required
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Delivery Person</label>
             <input
@@ -571,8 +390,8 @@ const Delivery = () => {
             medicinesDB={medicinesDB}
             placeholder="Start typing medicine names... (separate multiple medicines with commas)"
           />
-          
-          {medicinesDB.length > 0 && (
+
+          {/* {medicinesDB.length > 0 && (
             <div className="mt-2">
               <button
                 type="button"
@@ -583,7 +402,7 @@ const Delivery = () => {
                 Add Frequent Medicines
               </button>
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -600,7 +419,7 @@ const Delivery = () => {
               required
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Payment Status</label>
             <select
@@ -626,7 +445,7 @@ const Delivery = () => {
           >
             {loading ? 'Processing...' : (editIndex !== null ? 'Update Delivery' : 'Add Delivery')}
           </button>
-          
+
           {editIndex !== null && (
             <button
               type="button"
@@ -643,7 +462,7 @@ const Delivery = () => {
         <div className="p-4 border-b">
           <h3 className="text-lg font-semibold text-gray-800">Delivery Records</h3>
         </div>
-        
+
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead className="bg-gray-50">
@@ -666,23 +485,22 @@ const Delivery = () => {
                   </td>
                   <td className="py-3 px-4 text-sm font-medium text-gray-900">₹{entry.totalAmount}</td>
                   <td className="py-3 px-4 text-sm">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      entry.paymentStatus === 'Paid' ? 'bg-green-100 text-green-800' :
-                      entry.paymentStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-blue-100 text-blue-800'
-                    }`}>
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${entry.paymentStatus === 'Paid' ? 'bg-green-100 text-green-800' :
+                        entry.paymentStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-blue-100 text-blue-800'
+                      }`}>
                       {entry.paymentStatus}
                     </span>
                   </td>
                   <td className="py-3 px-4 text-sm space-x-2">
-                    <button 
+                    <button
                       onClick={() => handleEdit(index)}
                       className="text-blue-600 hover:text-blue-800 transition-colors"
                       title="Edit delivery"
                     >
                       <Edit size={16} />
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleDelete(index)}
                       className="text-red-600 hover:text-red-800 transition-colors"
                       title="Delete delivery"

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import api from '../api.js';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import PasswordModal from './PasswordModal.jsx';
 

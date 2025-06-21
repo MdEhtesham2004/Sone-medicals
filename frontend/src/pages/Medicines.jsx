@@ -16,7 +16,7 @@ function Medicines() {
 
   const [formData, setFormData] = useState({
     name: '',
-    schedule_type: '',
+    // schedule_type: '',
     mrp: '',
     rate: '',
     pack: '',
@@ -64,7 +64,7 @@ function Medicines() {
   const handleEdit = (med) => {
     setFormData({
       name: med.name || '',
-      schedule_type: med.schedule_type || '',
+      // schedule_type: med.schedule_type || '',
       mrp: med.mrp || '',
       rate: med.rate || '',
       pack: med.pack || '',
@@ -87,7 +87,7 @@ function Medicines() {
   const resetForm = () => {
     setFormData({
       name: '',
-      schedule_type: '',
+      // schedule_type: '',
       mrp: '',
       rate: '',
       pack: '',
@@ -192,7 +192,7 @@ function Medicines() {
           className="border border-gray-400 rounded px-3 py-2 w-full"
           required
         />
-        <select
+        {/* <select
           name='schedule_type'
           value={formData.schedule_type}
           onChange={handleChange}
@@ -202,7 +202,7 @@ function Medicines() {
           <option value="yes">YES</option>
           <option value="no">NO</option>
 
-        </select>
+        </select> */}
         <input
           type='Number'
           name='mrp'
@@ -357,7 +357,7 @@ function Medicines() {
               <th className="p-3">MFG Date</th>
               <th className="p-3">EXP Date</th>
               <th className="p-3">Batch No</th>
-              <th className="p-3">SCH</th>
+              {/* <th className="p-3">SCH</th> */}
               <th className="p-3">MRP</th>
               <th className="p-3">Rate</th>
               <th className="p-3">Pack</th>
@@ -377,7 +377,7 @@ function Medicines() {
                 <td className="p-3">{med.mfg_date}</td>
                 <td className="p-3">{med.exp_date}</td>
                 <td className="p-3">{med.batch_no}</td>
-                <td className="p-3">{med.schedule_type}</td>
+                {/* <td className="p-3">{med.schedule_type}</td> */}
                 <td className="p-3">{med.mrp}</td>
                 <td className="p-3">{med.rate}</td>
                 <td className="p-3">{med.pack}</td>
