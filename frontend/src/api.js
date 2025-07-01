@@ -100,9 +100,9 @@ api.interceptors.response.use(
       try {
         // 🔁 Make refresh token call
         const res = await axios.post(
-          import.meta.env.VITE_API_URL + '/auth/refresh-token', // Update if your route is different
+          import.meta.env.VITE_API_URL + '/auth/refresh-token', 
           {},
-          { withCredentials: true } // send cookie refresh token
+          { withCredentials: true } 
         );
 
         const newToken = res.data.accessToken;
