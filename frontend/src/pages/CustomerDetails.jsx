@@ -1,78 +1,61 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import api from "../api";
-import { useParams } from 'react-router-dom';
-import { useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 
 export default function CreditDetailPage() {
-  const [medicines, setMedicines] = useState([]);
-  const [payments, setPayments] = useState([]);
+  const [creditCustomer, setCreditCustomer] = useState([]);
   const [medicineInput, setMedicineInput] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
-  // const [editIndex, setEditIndex] = useState(null);
   const [editingMedicine, setEditingMedicine] = useState(null);
-  const [creditCustomer, setcreditCustomer] = useState([])
 
   const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentDate, setPaymentDate] = useState("");
   const [paymentMode, setPaymentMode] = useState("Cash");
   const [editPaymentIndex, setEditPaymentIndex] = useState(null);
 
-  const [allMedicineNames, setAllMedicineNames] = useState('');
   const [medicinesDB, setMedicinesDB] = useState([]);
-
-
-  // Auto-suggestion states
   const [showDropdown, setShowDropdown] = useState(false);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [cursorPosition, setCursorPosition] = useState(0);
-  const [currentWord, setCurrentWord] = useState('');
+  const [currentWord, setCurrentWord] = useState("");
+
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedMedicineIds, setSelectedMedicineIds] = useState([]);
+  const [selectedPaymentIds, setSelectedPaymentIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false)
+
+
+
   const textareaRef = useRef(null);
-
-
-  const { id } = useParams()
-
-  const todayDate = new Date().toISOString().split('T')[0];
+  const { id } = useParams();
+  const todayDate = new Date().toISOString().split("T")[0];
 
   const fetchData = () => {
     api.get(`/api/medical/CustomerCredit/${id}/`)
-      .then((res) => {
-        setcreditCustomer(res.data)
-        console.log(res.data.data)
-      })
+      .then((res) => setCreditCustomer(res.data))
       .catch((err) => console.error("Failed to fetch customer", err));
-  }
-
+  };
 
   useEffect(() => {
     fetchData();
   }, [id]);
 
   useEffect(() => {
-    api.get('/api/medical/medicine/')
-      .then((res) => res.data)
-      .then((data) => {
-        setMedicinesDB(data.data);
-        const names = data.data.map(med => med.name).join(', ');
-        setAllMedicineNames(names);
-      })
-      .catch((err) => {
-        console.error("Error fetching medicines:", err);
-      });
+    api.get("/api/medical/medicine/")
+      .then((res) => setMedicinesDB(res.data.data))
+      .catch((err) => console.error("Error fetching medicines:", err));
   }, []);
 
   const customer = creditCustomer?.data?.customer || {};
   const medicinesData = creditCustomer?.data?.customer_details || [];
   const paymentData = creditCustomer?.data?.customer_payment_details || [];
-
-  // const totalAmount = medicinesData.reduce((acc, item) => acc + Number(item.amount), 0);
-  // const totalPaid = paymentData.reduce((acc, item) => acc + Number(item.payment_amount), 0);
-  // const pending = totalAmount - totalPaid;
-
-
-
 
   const totalAmount = useMemo(() => {
     return medicinesData.reduce((acc, item) => acc + Number(item.amount), 0);
@@ -84,26 +67,19 @@ export default function CreditDetailPage() {
 
   const pending = useMemo(() => totalAmount - totalPaid, [totalAmount, totalPaid]);
 
-
-  // Function to get current word being typed
   const getCurrentWord = (text, position) => {
     const beforeCursor = text.substring(0, position);
     const afterCursor = text.substring(position);
-
-    const lastComma = beforeCursor.lastIndexOf(',');
-    const nextComma = afterCursor.indexOf(',');
-
+    const lastComma = beforeCursor.lastIndexOf(",");
+    const nextComma = afterCursor.indexOf(",");
     const start = lastComma === -1 ? 0 : lastComma + 1;
     const end = nextComma === -1 ? text.length : position + nextComma;
-
-    const word = text.substring(start, end).trim();
-    return { word, start, end };
+    return { word: text.substring(start, end).trim(), start, end };
   };
 
   const handleMedicineInputChange = (e) => {
     const value = e.target.value;
     const position = e.target.selectionStart;
-
     setMedicineInput(value);
     setCursorPosition(position);
 
@@ -111,7 +87,7 @@ export default function CreditDetailPage() {
     setCurrentWord(word);
 
     if (word.length > 0) {
-      const matches = medicinesDB.filter(med =>
+      const matches = medicinesDB.filter((med) =>
         med.name.toLowerCase().includes(word.toLowerCase())
       );
       setFilteredOptions(matches);
@@ -127,12 +103,11 @@ export default function CreditDetailPage() {
     if (!showDropdown) return;
 
     const maxIndex = filteredOptions.length - 1;
-
     if (e.key === "ArrowDown") {
-      setHighlightedIndex(prev => prev < maxIndex ? prev + 1 : 0);
+      setHighlightedIndex((prev) => (prev < maxIndex ? prev + 1 : 0));
       e.preventDefault();
     } else if (e.key === "ArrowUp") {
-      setHighlightedIndex(prev => prev > 0 ? prev - 1 : maxIndex);
+      setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : maxIndex));
       e.preventDefault();
     } else if (e.key === "Enter" && highlightedIndex >= 0) {
       selectMedicine(filteredOptions[highlightedIndex]);
@@ -144,17 +119,13 @@ export default function CreditDetailPage() {
 
   const selectMedicine = (selectedMed) => {
     const { word, start, end } = getCurrentWord(medicineInput, cursorPosition);
-
     const beforeWord = medicineInput.substring(0, start);
     const afterWord = medicineInput.substring(end);
-
     const newText = beforeWord + selectedMed.name + afterWord;
     setMedicineInput(newText);
-
     setShowDropdown(false);
     setFilteredOptions([]);
 
-    // Focus back to textarea
     setTimeout(() => {
       if (textareaRef.current) {
         const newPosition = start + selectedMed.name.length;
@@ -165,7 +136,6 @@ export default function CreditDetailPage() {
   };
 
   const handleBlur = () => {
-    // Delay hiding dropdown to allow clicks
     setTimeout(() => {
       setShowDropdown(false);
     }, 150);
@@ -177,108 +147,192 @@ export default function CreditDetailPage() {
     }
   };
 
-
-
-  // Function to add selected medicines from suggestions
-  const addSelectedMedicines = () => {
-    const selectedMeds = filteredOptions.slice(0, 5).map(med => med.name).join(', ');
-    if (medicineInput) {
-      setMedicineInput(medicineInput + ', ' + selectedMeds);
-    } else {
-      setMedicineInput(selectedMeds);
-    }
-  };
-
   const addOrUpdateMedicine = () => {
+    if (!medicineInput.trim()) {
+      toast.error("Please enter medicine names.");
+      return;
+    }
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      toast.error("Please enter a valid amount.");
+      return;
+    }
     const newEntry = {
       customer_credit: customer.id,
       date: todayDate,
       medicines: medicineInput,
       amount,
     };
-     if (editingMedicine) {
+
+    if (editingMedicine) {
       api.put(`/api/medical/CustomerCreditDetails/${editingMedicine.id}/`, newEntry)
-      // console.log(editingMedicine)
         .then(() => {
           fetchData();
-          setMedicineInput("");
-          setAmount("");
-          setDate("");
           setEditingMedicine(null);
+          toast.success("Medicine updated successfully.");
         })
-        .catch(err => console.error("Error updating medicine:", err));
+        .catch((err) => {
+          console.error("Error updating medicine:", err)
+          toast.error("Unable to update medicine.");
+        })
     } else {
       api.post("api/medical/CustomerCreditDetails/", newEntry)
-      // console.log("added")
-      fetchData();
-      setMedicines([...medicines, newEntry]);
-      // console.log(setMedicines.length, medicines.length);
+        .then(() => {
+          fetchData();
+          toast.success("Medicine added successfully.");
+
+        })
+        .catch((err) => {
+          console.error("Error adding medicine in credit section account:", err);
+          toast.error("Unable to add medicine.");
+        })
+
     }
+
     setMedicineInput("");
     setAmount("");
     setDate("");
   };
 
-  const deleteMedicine = (index) => {
-    const updated = [...medicines];
-    updated.splice(index, 1);
-    setMedicines(updated);
+
+  const deleteMedicine = (item) => {
+    confirmAlert({
+      title: 'Confirm Delete',
+      message: `Are you sure you want to delete medicine entry on ${item.date}?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await api.delete(`/api/medical/CustomerCreditDetails/${item.id}/`);
+              toast.success("Medicine deleted successfully.");
+              fetchData();
+            } catch (error) {
+              toast.error("Failed to delete medicine.");
+            }
+          }
+        },
+        { label: 'No' }
+      ]
+    });
   };
 
-  // const editMedicine = (index) => {
-  //   const item = medicines[index];
-  //   setMedicineInput(item.medicines);
-  //   setAmount(item.amount);
-  //   setDate(item.date);
-  //   setEditIndex(index);
-  // };
+
   const editMedicine = (item) => {
     setMedicineInput(item.medicines);
     setAmount(item.amount);
-    setDate(item.date || todayDate); // fallback to today's date
+    setDate(item.date || todayDate);
     setEditingMedicine(item);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const addOrUpdatePayment = () => {
-    const newEntry2 = {
+    if (!paymentAmount || isNaN(paymentAmount) || Number(paymentAmount) <= 0) {
+      toast.error("Please enter a valid payment amount.");
+      return;
+    }
+
+    const newEntry = {
       customer_credit: customer.id,
       payment_date: todayDate,
       payment_amount: Number(paymentAmount),
       payment_mode: paymentMode,
     };
+
     if (editPaymentIndex !== null) {
-    const updated = [...payments];
-    updated[editPaymentIndex] = newEntry2;
-    setPayments(updated);
-    setEditPaymentIndex(null);
+      api.put(`/api/medical/CustomerCreditPayment/${editPaymentIndex}/`, newEntry)
+        .then(() => {
+          fetchData();
+          setEditPaymentIndex(null);
+          toast.success("Payment updated successfully.");
+        })
+        .catch((err) => {
+          console.error("Error updating payment:", err)
+          toast.error("Unable to update payment.");
+        })
     } else {
-      api.post("/api/medical/CustomerCreditPayment/", newEntry2)
-      // console.log("added payment")
-      console.log(newEntry2)
-      fetchData();
-      setPayments([...payments, newEntry2]);
-      
+      api.post("/api/medical/CustomerCreditPayment/", newEntry)
+        .then(() => {
+          fetchData();
+          toast.success("Payment added successfully.")
+        })
+        .catch((err) => {
+          console.error("Error adding payment:", err)
+          toast.error("Unable to add payment.");
+        })
     }
+
     setPaymentAmount("");
     setPaymentDate("");
     setPaymentMode("Cash");
   };
 
-  const deletePayment = (index) => {
-    const updated = [...payments];
-    updated.splice(index, 1);
-    setPayments(updated);
+  const deletePayment = (item) => {
+    confirmAlert({
+      title: 'Confirm Delete',
+      message: `Are you sure you want to delete the payment of ₹${item.payment_amount} made on ${item.payment_date}?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await api.delete(`/api/medical/CustomerCreditPayment/${item.id}/`);
+              toast.success("Payment deleted successfully.");
+              fetchData();
+            } catch (error) {
+              console.error("Error deleting payment:", error.response?.data);
+              toast.error("Failed to delete payment.");
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => toast.info('Deletion cancelled.')
+        }
+      ]
+    });
   };
 
-  const editPayment = (index) => {
-    const item = payments[index];
-    setPaymentAmount(item.amount);
-    setPaymentDate(item.date);
-    setPaymentMode(item.mode);
-    setEditPaymentIndex(index);
+  const editPayment = (item) => {
+    setPaymentAmount(item.payment_amount);
+    setPaymentDate(item.payment_date || todayDate);
+    setPaymentMode(item.payment_mode);
+    setEditPaymentIndex(item.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // destructuring objects 
+  const handleDeleteSelectedMedicines = async () => {
+    try {
+      await Promise.all(
+        selectedMedicineIds.map((id) =>
+          api.delete(`/api/medical/CustomerCreditDetails/${id}/`)
+        )
+      );
+      toast.success("Selected medicines deleted successfully.");
+      setSelectedMedicineIds([]);
+      setSelectMode(!selectMode);
+      fetchData();
+    } catch (err) {
+      console.error("Failed to delete selected medicines:", err);
+      toast.error("Failed to delete selected medicines.");
+    }
+  };
+
+  const handleDeleteSelectedPayments = async () => {
+    try {
+      await Promise.all(
+        selectedPaymentIds.map((id) =>
+          api.delete(`/api/medical/CustomerCreditPayment/${id}/`)
+        )
+      );
+      toast.success("Selected payments deleted successfully.");
+      setSelectedPaymentIds([]);
+      setSelectMode(!selectMode);
+      fetchData();
+    } catch (err) {
+      console.error("Failed to delete selected payments:", err);
+      toast.error("Failed to delete selected payments.");
+    }
+  };
 
 
   return (
@@ -411,15 +465,108 @@ export default function CreditDetailPage() {
             >
               {editPaymentIndex !== null ? "Update Payment" : "Add Payment"}
             </button>
+            {editPaymentIndex !== null && (
+              <button
+                onClick={() => {
+                  setPaymentAmount("");
+                  setPaymentDate("");
+                  setPaymentMode("Cash");
+                  setEditPaymentIndex(null);
+                }}
+                className="ml-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+            )}
+
           </div>
         </div>
 
         <div className="space-y-6">
           <div>
+            <button
+              onClick={() => {
+                setSelectMode(!selectMode);
+                setSelectedMedicineIds([]);
+                setSelectedPaymentIds([]);
+              }}
+              className="mb-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
+            >
+              {selectMode ? "Cancel Selection" : "Select Entries"}
+            </button>
+            {selectMode && (
+              <button
+                onClick={() => {
+                  if (selectMode) {
+                    setSelectAll(!selectAll);
+                    if (!selectAll) {
+                      setSelectedMedicineIds(medicinesData.map((item) => item.id));
+                      setSelectedPaymentIds(paymentData.map((item) => item.id));
+                    } else {
+                      setSelectedMedicineIds([]);
+                      setSelectedPaymentIds([]);
+                    }
+                  } else {
+                    toast.info("Please enable selection mode to select all.");
+                  }
+
+                }}
+                className="mb-2 ml-4 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
+
+              >
+                Select All
+              </button>
+            )}
+            {selectMode && (
+              <button
+                onClick={() => {
+                  if (selectMode) {
+                    confirmAlert({
+                      title: 'Confirm Deletion',
+                      message: 'Are you sure you want to delete all selected entries?',
+                      buttons: [
+                        {
+                          label: 'Yes',
+                          onClick: () => {
+                            if (selectedMedicineIds.length > 0) {
+                              handleDeleteSelectedMedicines();
+                            }
+                            if (selectedPaymentIds.length > 0) {
+                              handleDeleteSelectedPayments();
+                            }
+                            if (
+                              selectedMedicineIds.length === 0 &&
+                              selectedPaymentIds.length === 0
+                            ) {
+                              toast.info("No items selected to delete.");
+                            }
+                          }
+                        },
+                        {
+                          label: 'No',
+                          onClick: () => toast.info('Deletion cancelled.')
+                        }
+                      ]
+                    });
+                  } else {
+                    toast.info("Enable selection mode first.");
+                  }
+                }}
+                className="mb-2 ml-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              >
+                {`Delete All (${selectedMedicineIds.length + selectedPaymentIds.length})`}
+
+              </button>
+            )}
+
+
+
             <h3 className="text-lg font-bold mb-2">Medicine Entries</h3>
             <table className="w-full table-auto border border-gray-400">
               <thead>
+
                 <tr className="bg-gray-200">
+                  {selectMode && <th className="border border-gray-400 px-2 py-1">Select</th>}
                   <th className="border border-gray-400 px-2 py-1">Date</th>
                   <th className="border border-gray-400 px-2 py-1">Medicines</th>
                   <th className="border border-gray-400 px-2 py-1">Amount</th>
@@ -428,7 +575,20 @@ export default function CreditDetailPage() {
               </thead>
               <tbody>
                 {medicinesData.map((item, index) => (
-                  <tr key={index}>
+                  <tr key={index} className="group">
+                    {selectMode && (
+                      <td className="border border-gray-300 px-2 py-1">
+                        <input
+                          type="checkbox"
+                          checked={selectedMedicineIds.includes(item.id)}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setSelectedMedicineIds((prev) =>
+                              checked ? [...prev, item.id] : prev.filter((id) => id !== item.id)
+                            );
+                          }}
+                        />
+                      </td>)}
                     <td className="border border-gray-300 px-2 py-1">{item.date}</td>
                     <td className="border border-gray-300 px-2 py-1">{item.medicines}</td>
                     <td className="border border-gray-300 px-2 py-1">₹{item.amount}</td>
@@ -440,16 +600,29 @@ export default function CreditDetailPage() {
                         Edit
                       </button>
                       <button
-                        onClick={() => deleteMedicine(index)}
+                        onClick={() => deleteMedicine(item)}
                         className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                       >
                         Delete
                       </button>
                     </td>
+
+
                   </tr>
+
                 ))}
+
               </tbody>
+
             </table>
+            {selectMode && selectedMedicineIds.length > 0 && (
+              <button
+                onClick={handleDeleteSelectedMedicines}
+                className="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              >
+                Delete Selected Medicines ({selectedMedicineIds.length})
+              </button>
+            )}
           </div>
 
           <div>
@@ -457,6 +630,7 @@ export default function CreditDetailPage() {
             <table className="w-full table-auto border border-gray-400">
               <thead>
                 <tr className="bg-gray-200">
+                  {selectMode && <th className="border border-gray-400 px-2 py-1">Select</th>}
                   <th className="border border-gray-400 px-2 py-1">Date</th>
                   <th className="border border-gray-400 px-2 py-1">Amount</th>
                   <th className="border border-gray-400 px-2 py-1">Mode</th>
@@ -464,20 +638,37 @@ export default function CreditDetailPage() {
                 </tr>
               </thead>
               <tbody>
+
                 {paymentData.map((item, index) => (
                   <tr key={index}>
+                    {selectMode && (
+                      <td className="border border-gray-300 px-2 py-1">
+                        <input type="checkbox"
+                          checked={selectedPaymentIds.includes(item.id)}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setSelectedPaymentIds((prev) =>
+                              checked ? [...prev, item.id] :
+                                prev.filter((id) => id !== item.id)
+                            );
+                          }}
+                        />
+                      </td >
+                    )}
                     <td className="border border-gray-300 px-2 py-1">{item.payment_date}</td>
                     <td className="border border-gray-300 px-2 py-1">₹{item.payment_amount}</td>
                     <td className="border border-gray-300 px-2 py-1">{item.payment_mode}</td>
                     <td className="border border-gray-300 px-2 py-1 space-x-2">
                       <button
-                        onClick={() => editPayment(index)}
+                        onClick={() => editPayment(item)}
                         className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
                       >
                         Edit
+
                       </button>
+
                       <button
-                        onClick={() => deletePayment(index)}
+                        onClick={() => deletePayment(item)}
                         className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                       >
                         Delete
@@ -487,9 +678,20 @@ export default function CreditDetailPage() {
                 ))}
               </tbody>
             </table>
+            {selectMode && selectedPaymentIds.length > 0 && (
+              <button
+                onClick={handleDeleteSelectedPayments}
+                className="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              >
+                Delete Selected Payments ({selectedPaymentIds.length})
+              </button>
+            )}
+
           </div>
 
           <div className="bg-gray-100 p-4 rounded-lg">
+            {/* <div className="bg-gray-100 p-4 rounded-lg sticky bottom-0 shadow-md z-10"> */}
+
             <h3 className="text-lg font-bold mb-2">Summary</h3>
             <p>Total Amount: ₹{totalAmount}</p>
             <p>Total Paid: ₹{totalPaid}</p>
@@ -497,6 +699,11 @@ export default function CreditDetailPage() {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-right" autoClose={2000}
+        hideProgressBar={false} closeOnClick pauseOnFocusLoss draggable
+        theme="colored" pauseOnHover />
+
     </>
+
   );
 }

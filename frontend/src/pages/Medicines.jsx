@@ -417,7 +417,8 @@ function Medicines() {
         </table>
       </div>
 
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} pauseOnHover theme="colored" />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false}
+       pauseOnHover theme="colored" />
 
     </div >
   )
