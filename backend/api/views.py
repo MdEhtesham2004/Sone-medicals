@@ -659,6 +659,8 @@ class CustomerCreditPaymentViewSet(viewsets.ModelViewSet):
                     
                     customer_credit_medicine_instance.save()
                     customer_credit_instance.save()
+
+
                 except CustomerCredit.DoesNotExist:
                     return Response({
                         'error': True,

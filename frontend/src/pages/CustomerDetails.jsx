@@ -40,7 +40,7 @@ export default function CreditDetailPage() {
     api.get(`/api/medical/CustomerCredit/${id}/`)
       .then((res) => {
         setcreditCustomer(res.data)
-        // console.log(res.data.data)
+        console.log(res.data.data)
       })
       .catch((err) => console.error("Failed to fetch customer", err));
   }
@@ -210,8 +210,8 @@ export default function CreditDetailPage() {
     } else {
       api.post("api/medical/CustomerCreditDetails/", newEntry)
       // console.log("added")
-      setMedicines([...medicines, newEntry]);
       fetchData();
+      setMedicines([...medicines, newEntry]);
       // console.log(setMedicines.length, medicines.length);
     }
     setMedicineInput("");
@@ -255,10 +255,10 @@ export default function CreditDetailPage() {
       api.post("/api/medical/CustomerCreditPayment/", newEntry2)
       // console.log("added payment")
       console.log(newEntry2)
+      fetchData();
       setPayments([...payments, newEntry2]);
       
     }
-    fetchData();
     setPaymentAmount("");
     setPaymentDate("");
     setPaymentMode("Cash");
