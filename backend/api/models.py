@@ -178,6 +178,7 @@ class CustomerCreditDetails(models.Model):
     medicines = models.TextField()#list of medicine names
     amount = models.DecimalField(max_digits=10, decimal_places=2)  # amount for the customer credit
     added_on = models.DateTimeField(auto_now_add=True)
+    
 
 class CustomerCreditPaymentDetails(models.Model):
     """ this model is used to manage the customer credit payment details """
