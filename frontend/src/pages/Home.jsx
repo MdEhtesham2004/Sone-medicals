@@ -25,14 +25,14 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-        api.get('/api/medical/company/')
-          .then(res => setCompanies(res.data.data))
-          .catch(err => {
-            console.error("Error fetching companies:", err);
-            toast.error("Failed to fetch companies.");
-          });
-      },[])
-      
+    api.get('/api/medical/company/')
+      .then(res => setCompanies(res.data.data))
+      .catch(err => {
+        console.error("Error fetching companies:", err);
+        toast.error("Failed to fetch companies.");
+      });
+  }, [])
+
   const performLocalSearch = (term) => {
     if (!term.trim()) {
       setSearchResult(null);
@@ -144,9 +144,8 @@ export default function Home() {
                   <div
                     key={i}
                     onMouseDown={() => selectMedicine(option)}
-                    className={`px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm border-b border-gray-100 ${
-                      highlightedIndex === i ? "bg-blue-100" : ""
-                    }`}
+                    className={`px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm border-b border-gray-100 ${highlightedIndex === i ? "bg-blue-100" : ""
+                      }`}
                   >
                     <div className="font-medium text-gray-800">{option.name}</div>
                     <div className="text-xs text-gray-500 mt-1">
@@ -177,10 +176,9 @@ export default function Home() {
               </div>
               <div>
                 <p className="text-sm text-gray-600">Available Quantity:</p>
-                <p className={`font-semibold text-lg ${
-                  searchResult.quantity > 10 ? 'text-green-600' :
+                <p className={`font-semibold text-lg ${searchResult.quantity > 10 ? 'text-green-600' :
                   searchResult.quantity > 0 ? 'text-orange-600' : 'text-red-600'
-                }`}>
+                  }`}>
                   {searchResult.quantity} units
                 </p>
               </div>
