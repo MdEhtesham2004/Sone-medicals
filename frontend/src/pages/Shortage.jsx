@@ -9,10 +9,10 @@ function Shortage() {
   useEffect(() => {
     async function fetchLowStock() {
       try {
-        const res = await api.get("/api/medical/medicine/");
-        const allMeds = res.data?.data || [];
+        const res = await api.get("/api/medical/LowStockAlert/");
+        // const allMeds = res.data?.data || [];
         console.log(res.data.data);
-        const lowStockMeds = allMeds.filter((med) => med.qty_in_strip <= 10);
+        // const lowStockMeds = allMeds.filter((med) => med.qty_in_strip <= 10);
         setMedicines(lowStockMeds);
       } catch (error) {
         console.error("Failed to fetch medicines:", error);
