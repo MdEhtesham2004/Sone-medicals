@@ -118,23 +118,34 @@ http://127.0.0.1:8000/api/medical/CustomerCreditDetails/
     "customer_credit": 1,
     "date": "2025-06-12",
     "medicines": "Paracetamol, Vitamin C",
-    "quantity": 5,
     "amount": 250.50
 }
 
+
+(GET)
 to check for the low stock :
 http://127.0.0.1:8000/api/medical/LowStockAlert/
 
 
 
+(POST)
 MarkAsOrderedAPIView for marking the shortage book 
 http://127.0.0.1:8000/api/MarkAsOrderedAPIView/5(provide the id of the medicine)/
     
 
+(GET)
 medicine expiry status : 
 http://127.0.0.1:8000/api/medical/ExpiredMedicineStockAlertViewSet
 
 
+(GET)
 BackupToExcelAPIView 
 http://127.0.0.1:8000/api/medical/BackupToExcelAPIView
+
+
+
+to download the backup file for the data backup
+(GET)
+http://localhost:8000/api/backup_download/
+
 

@@ -13,6 +13,12 @@ from rest_framework import status
 from datetime import date 
 from rest_framework.decorators import action
 from . backup import backup_to_excel
+from django.http import FileResponse,HttpResponseNotFound
+import os
+from django.conf import settings
+
+
+
 def create_stock_history_for_medicine(medicine, transaction_type='IN'):
     try:
         medicine_stock = MedicineStock.objects.get(name=medicine.name)
@@ -894,3 +900,14 @@ class BackupToExcelAPIView(APIView):
     def get(self, request):
         backup_file = backup_to_excel()
         return Response({"message": f"Backup completed successfully at {backup_file}"})
+
+
+
+
+class DownloadFileView(APIView):
+    def get(self, request):
+        file_path = os.path.join('../backend/backups', 'mysql_full_backup.xlsx')
+        if os.path.exists(file_path):
+            return FileResponse(open(file_path, 'rb'), as_attachment=True, filename='mysql_full_backup.xlsx')
+        else:
+            return HttpResponseNotFound("File not found")

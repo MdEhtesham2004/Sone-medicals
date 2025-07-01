@@ -50,7 +50,7 @@ urlpatterns = [
     path('MarkAsOrderedAPIView/<int:pk>/',MarkAsOrderedAPIView.as_view(), name='MarkAsOrderedAPIView'),
     path('CheckLowStock/',CheckLowStockApiView.as_view(), name='CheckLowStockApiView'),
     path('BackupToExcelAPIView',BackupToExcelAPIView.as_view(), name='BackupToExcelAPIView'),
-
+     path('backup_download/', DownloadFileView.as_view(), name='backup_download'),
 ]
 
 
