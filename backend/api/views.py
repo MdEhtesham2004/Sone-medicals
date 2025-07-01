@@ -16,6 +16,7 @@ from . backup import backup_to_excel
 from django.http import FileResponse,HttpResponseNotFound
 import os
 from django.conf import settings
+from django.db.models import Sum
 
 
 
@@ -650,14 +651,16 @@ class CustomerCreditPaymentViewSet(viewsets.ModelViewSet):
                     customer_credit_instance.last_payment_amount = amount
                     customer_credit_instance.last_payment_date = payment_date
 
-                    customer_credit_medicine_instance = CustomerCreditDetails.objects.get(customer_credit=customer_credit_instance)
-                    customer_medicine_amount = customer_credit_medicine_instance.amount 
+                    customer_credit_medicine_instance = CustomerCreditDetails.objects.filter(customer_credit=customer_credit_instance)
+
+                    customer_medicine_amount = customer_credit_medicine_instance.aggregate(total_amount=Sum('amount'))['total_amount'] or 0
+
 
                     customer_credit_instance.pending_amount = customer_medicine_amount - amount
                     if customer_credit_instance.pending_amount < 0:
                         customer_credit_instance.pending_amount = 0
                     
-                    customer_credit_medicine_instance.save()
+                    
                     customer_credit_instance.save()
 
 
