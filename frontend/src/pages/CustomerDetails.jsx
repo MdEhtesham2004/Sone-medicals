@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import api from "../api";
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
+import { useMemo } from "react";
 
 
 export default function CreditDetailPage() {
@@ -9,7 +10,8 @@ export default function CreditDetailPage() {
   const [medicineInput, setMedicineInput] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
-  const [editIndex, setEditIndex] = useState(null);
+  // const [editIndex, setEditIndex] = useState(null);
+  const [editingMedicine, setEditingMedicine] = useState(null);
   const [creditCustomer, setcreditCustomer] = useState([])
 
   const [paymentAmount, setPaymentAmount] = useState("");
@@ -19,6 +21,7 @@ export default function CreditDetailPage() {
 
   const [allMedicineNames, setAllMedicineNames] = useState('');
   const [medicinesDB, setMedicinesDB] = useState([]);
+
 
   // Auto-suggestion states
   const [showDropdown, setShowDropdown] = useState(false);
@@ -31,10 +34,20 @@ export default function CreditDetailPage() {
 
   const { id } = useParams()
 
-  useEffect(() => {
+  const todayDate = new Date().toISOString().split('T')[0];
+
+  const fetchData = () => {
     api.get(`/api/medical/CustomerCredit/${id}/`)
-      .then((res) => setcreditCustomer(res.data))
+      .then((res) => {
+        setcreditCustomer(res.data)
+        // console.log(res.data.data)
+      })
       .catch((err) => console.error("Failed to fetch customer", err));
+  }
+
+
+  useEffect(() => {
+    fetchData();
   }, [id]);
 
   useEffect(() => {
@@ -50,9 +63,27 @@ export default function CreditDetailPage() {
       });
   }, []);
 
-  const totalAmount = medicines.reduce((acc, item) => acc + Number(item.amount), 0);
-  const totalPaid = payments.reduce((acc, item) => acc + Number(item.amount), 0);
-  const pending = totalAmount - totalPaid;
+  const customer = creditCustomer?.data?.customer || {};
+  const medicinesData = creditCustomer?.data?.customer_details || [];
+  const paymentData = creditCustomer?.data?.customer_payment_details || [];
+
+  // const totalAmount = medicinesData.reduce((acc, item) => acc + Number(item.amount), 0);
+  // const totalPaid = paymentData.reduce((acc, item) => acc + Number(item.payment_amount), 0);
+  // const pending = totalAmount - totalPaid;
+
+
+
+
+  const totalAmount = useMemo(() => {
+    return medicinesData.reduce((acc, item) => acc + Number(item.amount), 0);
+  }, [medicinesData]);
+
+  const totalPaid = useMemo(() => {
+    return paymentData.reduce((acc, item) => acc + Number(item.payment_amount), 0);
+  }, [paymentData]);
+
+  const pending = useMemo(() => totalAmount - totalPaid, [totalAmount, totalPaid]);
+
 
   // Function to get current word being typed
   const getCurrentWord = (text, position) => {
@@ -146,10 +177,7 @@ export default function CreditDetailPage() {
     }
   };
 
-  // Quick add all medicines function
-  const addAllMedicines = () => {
-    setMedicineInput(allMedicineNames);
-  };
+
 
   // Function to add selected medicines from suggestions
   const addSelectedMedicines = () => {
@@ -163,17 +191,27 @@ export default function CreditDetailPage() {
 
   const addOrUpdateMedicine = () => {
     const newEntry = {
-      date,
+      customer_credit: customer.id,
+      date: todayDate,
       medicines: medicineInput,
       amount,
     };
-    if (editIndex !== null) {
-      const updated = [...medicines];
-      updated[editIndex] = newEntry;
-      setMedicines(updated);
-      setEditIndex(null);
+     if (editingMedicine) {
+      api.put(`/api/medical/CustomerCreditDetails/${editingMedicine.id}/`, newEntry)
+      // console.log(editingMedicine)
+        .then(() => {
+          fetchData();
+          setMedicineInput("");
+          setAmount("");
+          setDate("");
+          setEditingMedicine(null);
+        })
+        .catch(err => console.error("Error updating medicine:", err));
     } else {
+      api.post("api/medical/CustomerCreditDetails/", newEntry)
+      // console.log("added")
       setMedicines([...medicines, newEntry]);
+      fetchData();
       // console.log(setMedicines.length, medicines.length);
     }
     setMedicineInput("");
@@ -187,28 +225,40 @@ export default function CreditDetailPage() {
     setMedicines(updated);
   };
 
-  const editMedicine = (index) => {
-    const item = medicines[index];
+  // const editMedicine = (index) => {
+  //   const item = medicines[index];
+  //   setMedicineInput(item.medicines);
+  //   setAmount(item.amount);
+  //   setDate(item.date);
+  //   setEditIndex(index);
+  // };
+  const editMedicine = (item) => {
     setMedicineInput(item.medicines);
     setAmount(item.amount);
-    setDate(item.date);
-    setEditIndex(index);
+    setDate(item.date || todayDate); // fallback to today's date
+    setEditingMedicine(item);
   };
 
   const addOrUpdatePayment = () => {
-    const newEntry = {
-      date: paymentDate,
-      amount: paymentAmount,
-      mode: paymentMode,
+    const newEntry2 = {
+      customer_credit: customer.id,
+      payment_date: todayDate,
+      payment_amount: Number(paymentAmount),
+      payment_mode: paymentMode,
     };
     if (editPaymentIndex !== null) {
-      const updated = [...payments];
-      updated[editPaymentIndex] = newEntry;
-      setPayments(updated);
-      setEditPaymentIndex(null);
+    const updated = [...payments];
+    updated[editPaymentIndex] = newEntry2;
+    setPayments(updated);
+    setEditPaymentIndex(null);
     } else {
-      setPayments([...payments, newEntry]);
+      api.post("/api/medical/CustomerCreditPayment/", newEntry2)
+      // console.log("added payment")
+      console.log(newEntry2)
+      setPayments([...payments, newEntry2]);
+      
     }
+    fetchData();
     setPaymentAmount("");
     setPaymentDate("");
     setPaymentMode("Cash");
@@ -228,16 +278,20 @@ export default function CreditDetailPage() {
     setEditPaymentIndex(index);
   };
 
+  // destructuring objects 
+
+
   return (
     <>
       <div className="p-4 bg-grey-600 rounded-xl shadow-md">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Customer Details</h2>
         <div className="text-sm text-gray-700 space-y-1 leading-relaxed">
-          <p><span className="font-medium text-gray-600">Account ID:</span> {creditCustomer?.id}</p>
-          <p><span className="font-medium text-gray-600">Name:</span> {creditCustomer?.name}</p>
-          <p><span className="font-medium text-gray-600">Phone:</span> {creditCustomer?.contact}</p>
-          <p><span className="font-medium text-gray-600">Last Payment:</span> ₹{creditCustomer?.last_payment_amount}</p>
-          <p><span className="font-medium text-gray-600">Last Payment Date:</span> {creditCustomer?.last_payment_date}</p>
+          <p><span className="font-medium text-gray-600">Account ID:</span> {customer.id}</p>
+          {/* {console.log("Account id clg",creditCustomer)} */}
+          <p><span className="font-medium text-gray-600">Name:</span> {customer.name}</p>
+          <p><span className="font-medium text-gray-600">Phone:</span> {customer.contact}</p>
+          <p><span className="font-medium text-gray-600">Last Payment:</span> ₹{customer.last_payment_amount}</p>
+          <p><span className="font-medium text-gray-600">Last Payment Date:</span> {customer.last_payment_date}</p>
         </div>
       </div>
 
@@ -248,7 +302,7 @@ export default function CreditDetailPage() {
             <h2 className="text-lg font-semibold mb-2">Add Medicines</h2>
             <input
               type="date"
-              value={date}
+              value={todayDate}
               onChange={(e) => setDate(e.target.value)}
               className="border p-2 mb-2 w-full"
             />
@@ -298,42 +352,6 @@ export default function CreditDetailPage() {
               )}
             </div>
 
-            {/* Quick Action Buttons
-          <div className="flex gap-2 mb-2">
-            <button
-              type="button"
-              onClick={addAllMedicines}
-              className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
-            >
-              Add All Medicines
-            </button>
-            {filteredOptions.length > 0 && (
-              <button
-                type="button"
-                onClick={addSelectedMedicines}
-                className="text-xs bg-blue-200 hover:bg-blue-300 px-2 py-1 rounded"
-              >
-                Add Top 5 Matches
-              </button>
-            )}
-          </div> */}
-
-            {/* All Medicines Reference */}
-            {/* <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              All Available Medicines:
-            </label>
-            <textarea
-              value={allMedicineNames}
-              readOnly
-              rows={3}
-              className="w-full border border-gray-300 p-2 rounded text-sm bg-gray-100"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Use this to quickly reference available medicines.
-            </p>
-          </div> */}
-
             <input
               type="number"
               value={amount}
@@ -345,15 +363,29 @@ export default function CreditDetailPage() {
               onClick={addOrUpdateMedicine}
               className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             >
-              {editIndex !== null ? "Update Medicine" : "Add Medicine"}
+              {editingMedicine !== null ? "Update Medicine" : "Add Medicine"}
             </button>
+            {editingMedicine && (
+              <button
+                onClick={() => {
+                  setEditingMedicine(null);
+                  setMedicineInput("");
+                  setAmount("");
+                  setDate("");
+                }}
+                className="ml-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+            )}
+
           </div>
 
           <div className="p-4 border rounded-xl">
             <h2 className="text-lg font-semibold mb-2">Add Payment</h2>
             <input
               type="date"
-              value={paymentDate}
+              value={todayDate}
               onChange={(e) => setPaymentDate(e.target.value)}
               className="border p-2 mb-2 w-full"
             />
@@ -395,14 +427,14 @@ export default function CreditDetailPage() {
                 </tr>
               </thead>
               <tbody>
-                {medicines.map((item, index) => (
+                {medicinesData.map((item, index) => (
                   <tr key={index}>
                     <td className="border border-gray-300 px-2 py-1">{item.date}</td>
                     <td className="border border-gray-300 px-2 py-1">{item.medicines}</td>
                     <td className="border border-gray-300 px-2 py-1">₹{item.amount}</td>
                     <td className="border border-gray-300 px-2 py-1 space-x-2">
                       <button
-                        onClick={() => editMedicine(index)}
+                        onClick={() => editMedicine(item)}
                         className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
                       >
                         Edit
@@ -432,11 +464,11 @@ export default function CreditDetailPage() {
                 </tr>
               </thead>
               <tbody>
-                {payments.map((item, index) => (
+                {paymentData.map((item, index) => (
                   <tr key={index}>
-                    <td className="border border-gray-300 px-2 py-1">{item.date}</td>
-                    <td className="border border-gray-300 px-2 py-1">₹{item.amount}</td>
-                    <td className="border border-gray-300 px-2 py-1">{item.mode}</td>
+                    <td className="border border-gray-300 px-2 py-1">{item.payment_date}</td>
+                    <td className="border border-gray-300 px-2 py-1">₹{item.payment_amount}</td>
+                    <td className="border border-gray-300 px-2 py-1">{item.payment_mode}</td>
                     <td className="border border-gray-300 px-2 py-1 space-x-2">
                       <button
                         onClick={() => editPayment(index)}
@@ -468,4 +500,3 @@ export default function CreditDetailPage() {
     </>
   );
 }
-
