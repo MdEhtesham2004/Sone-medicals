@@ -1,0 +1,2117 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$WCqFY3q7wUlwyf1QROOa6h$iXk1Tu4Hu+TMfJ5gLYQasFqKpFI6JxhtvUG+qRt/dSA=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "test",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-04-04T17:10:23.045Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$wnLpzvAxKeA6OiNBAk2wGs$QztFUL+85832gOsSMEpfJo5AXIDd3gTwHcyIvCAvgRE=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "newuser",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-04-05T09:33:21.583Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$L2BM0sibiJlcpwRtyuVaQD$Bgvp/sdQhLujIbkCyXOi3t0u0k3GUFplhq0vjNabET0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "pragnya",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-04-05T10:27:43.765Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$jCNIhf34gWZ9AFQYytNSvy$laM/TVaHxEBW1NnW7e+0JK7r1RGBUAQje1ciO2hS1dQ=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Kabir",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-04-05T19:53:57.084Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$o3Dx0pJrTdbSImR5fMShOA$P2UuIXGdsebhYQ2p3QVnD/RW6DDfyXh8CNDZd/s9Bao=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "testuser5",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-04-17T07:58:37.592Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$bVxnzgPNJU8ssSbCHKqmwP$RaSJENpwFKNYuXX9ES+zLpH2tghu5n+8IJp/9Ddf96M=",
+    "last_login": "2025-06-13T07:04:43.517Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-06-10T15:56:39.242Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "0qeftp4xk5rssx8tvlgohxit84a8nwmh",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAUBf-FtSEVysul-34DuQ-QqoGktCvjv2uTLnR7Zua8RIRtLXHraYkzi4uw4vS7IdAj1R3wHeqtSWp1XWaUuyIP2uXUOD2vh_t3UKCXbx1GUprJExImIJ0VI5yDMy5lmwf2xrB3gBmArRt0CjQabUE5Nh5wFO8PIqQ5LA:1uPySx:OTXpxKS5jzyaSSxzoesD2gf3iFMltloZ7_jyFayzCOo",
+    "expire_date": "2025-06-27T07:04:43.622Z"
+  }
+},
+{
+  "model": "api.company",
+  "pk": 1,
+  "fields": {
+    "name": "Krishna pharma",
+    "license_no": "1234",
+    "address": "Koti",
+    "contact_no": "9987766555",
+    "added_on": "2025-04-20T12:24:33.009Z",
+    "gst_no": "321",
+    "bill_photo": ""
+  }
+},
+{
+  "model": "api.company",
+  "pk": 2,
+  "fields": {
+    "name": "Prakash Pharma",
+    "license_no": "12345",
+    "address": "inderbagh",
+    "contact_no": "9987766555",
+    "added_on": "2025-04-20T12:27:36.283Z",
+    "gst_no": "3210",
+    "bill_photo": ""
+  }
+},
+{
+  "model": "api.company",
+  "pk": 3,
+  "fields": {
+    "name": "Vishnu Agencies",
+    "license_no": "456",
+    "address": "sultan bazar",
+    "contact_no": "9980134567",
+    "added_on": "2025-04-20T14:12:44.473Z",
+    "gst_no": "789",
+    "bill_photo": ""
+  }
+},
+{
+  "model": "api.company",
+  "pk": 4,
+  "fields": {
+    "name": "Ganesh Agencies",
+    "license_no": "111",
+    "address": "Koti road",
+    "contact_no": "9087654321",
+    "added_on": "2025-04-20T14:23:23.618Z",
+    "gst_no": "223",
+    "bill_photo": ""
+  }
+},
+{
+  "model": "api.company",
+  "pk": 5,
+  "fields": {
+    "name": "V Kan pharma",
+    "license_no": "444",
+    "address": "Tolichowki",
+    "contact_no": "9012345678",
+    "added_on": "2025-04-20T14:29:04.131Z",
+    "gst_no": "554",
+    "bill_photo": ""
+  }
+},
+{
+  "model": "api.company",
+  "pk": 8,
+  "fields": {
+    "name": "Mawa",
+    "license_no": "1234",
+    "address": "shaikpet",
+    "contact_no": "9087654321",
+    "added_on": "2025-04-20T14:43:55.106Z",
+    "gst_no": "789",
+    "bill_photo": ""
+  }
+},
+{
+  "model": "api.company",
+  "pk": 10,
+  "fields": {
+    "name": "Allied",
+    "license_no": "3243",
+    "address": "masab tank",
+    "contact_no": "879396438764",
+    "added_on": "2025-04-21T12:09:04.368Z",
+    "gst_no": "2132",
+    "bill_photo": ""
+  }
+},
+{
+  "model": "api.company",
+  "pk": 22,
+  "fields": {
+    "name": "Sonee Medical",
+    "license_no": "123",
+    "address": "Humayun Nagar",
+    "contact_no": "9700404029",
+    "added_on": "2025-04-24T10:08:01.351Z",
+    "gst_no": "321",
+    "bill_photo": ""
+  }
+},
+{
+  "model": "api.company",
+  "pk": 27,
+  "fields": {
+    "name": "Pashupati Medical Distributors",
+    "license_no": "20B&21B:TS/HYD/2023-10745",
+    "address": "GaganMahal road Domalguda Khairtabad Mandal, Hyd",
+    "contact_no": "8977458929",
+    "added_on": "2025-06-03T07:54:22.986Z",
+    "gst_no": "36CGBPA3297A1ZW",
+    "bill_photo": ""
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 12,
+  "fields": {
+    "name": "Okacet",
+    "mrp": "21.00",
+    "rate": "19.00",
+    "pack": "15",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": null,
+    "batch_no": "02nk8",
+    "exp_date": "2025-02-01",
+    "mfg_date": "2023-02-01",
+    "company": 22,
+    "qty_in_strip": 30,
+    "added_on": "2025-04-24T10:49:58.707Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 13,
+  "fields": {
+    "name": "Augmentin 625",
+    "mrp": "204.00",
+    "rate": "180.00",
+    "pack": "10",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": null,
+    "batch_no": "02nk8",
+    "exp_date": "2026-03-02",
+    "mfg_date": "2024-03-02",
+    "company": 22,
+    "qty_in_strip": 10,
+    "added_on": "2025-04-25T10:28:37.197Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 15,
+  "fields": {
+    "name": "Allegra 120",
+    "mrp": "240.00",
+    "rate": "216.00",
+    "pack": "10",
+    "c_gst": "9.00",
+    "s_gst": "9.00",
+    "gst": "18.00",
+    "amt_aftr_gst": "254.88",
+    "batch_no": "KJHN87M",
+    "exp_date": "2026-03-02",
+    "mfg_date": "2023-03-02",
+    "company": 22,
+    "qty_in_strip": 10,
+    "added_on": "2025-04-29T20:21:25.823Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 16,
+  "fields": {
+    "name": "Dolo",
+    "mrp": "33.00",
+    "rate": "30.00",
+    "pack": "15",
+    "c_gst": "8.00",
+    "s_gst": "8.00",
+    "gst": "16.00",
+    "amt_aftr_gst": "34.80",
+    "batch_no": "HJn87M",
+    "exp_date": "2026-02-01",
+    "mfg_date": "2022-03-01",
+    "company": 8,
+    "qty_in_strip": 30,
+    "added_on": "2025-04-29T20:32:44.264Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 17,
+  "fields": {
+    "name": "one Touch 25",
+    "mrp": "675.00",
+    "rate": "640.00",
+    "pack": "25",
+    "c_gst": "5.00",
+    "s_gst": "5.00",
+    "gst": "10.00",
+    "amt_aftr_gst": "704.00",
+    "batch_no": "KNJ78M",
+    "exp_date": "2025-02-01",
+    "mfg_date": "2024-03-02",
+    "company": 10,
+    "qty_in_strip": 25,
+    "added_on": "2025-04-29T21:07:43.933Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 18,
+  "fields": {
+    "name": "Acemiz Plus",
+    "mrp": "120.00",
+    "rate": "98.00",
+    "pack": "10",
+    "c_gst": "9.00",
+    "s_gst": "9.00",
+    "gst": "18.00",
+    "amt_aftr_gst": "115.64",
+    "batch_no": "HJU7F65",
+    "exp_date": "2026-02-01",
+    "mfg_date": "2023-10-02",
+    "company": 5,
+    "qty_in_strip": 10,
+    "added_on": "2025-04-30T09:12:46.681Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 19,
+  "fields": {
+    "name": "Eldopar",
+    "mrp": "63.00",
+    "rate": "47.00",
+    "pack": "15",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": "52.64",
+    "batch_no": "HNU67F",
+    "exp_date": "2026-03-02",
+    "mfg_date": "2024-04-02",
+    "company": 8,
+    "qty_in_strip": 10,
+    "added_on": "2025-05-14T22:42:21.951Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 21,
+  "fields": {
+    "name": "calpol",
+    "mrp": "14.95",
+    "rate": "11.12",
+    "pack": "15",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": "11.20",
+    "batch_no": "GNH765M",
+    "exp_date": "2025-01-01",
+    "mfg_date": "2024-02-02",
+    "company": 1,
+    "qty_in_strip": 20,
+    "added_on": "2025-05-15T10:21:21.519Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 22,
+  "fields": {
+    "name": "paracip 500",
+    "mrp": "10.00",
+    "rate": "8.00",
+    "pack": "10",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": "8.96",
+    "batch_no": "HGN45G",
+    "exp_date": "2024-02-01",
+    "mfg_date": "2020-02-10",
+    "company": 2,
+    "qty_in_strip": 10,
+    "added_on": "2025-05-15T10:29:48.074Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 23,
+  "fields": {
+    "name": "okacet cold",
+    "mrp": "21.25",
+    "rate": "18.50",
+    "pack": "15",
+    "c_gst": "9.00",
+    "s_gst": "9.00",
+    "gst": "18.00",
+    "amt_aftr_gst": "22.42",
+    "batch_no": "02nk8",
+    "exp_date": "2025-02-01",
+    "mfg_date": "2023-02-20",
+    "company": 3,
+    "qty_in_strip": 30,
+    "added_on": "2025-05-15T10:34:02.319Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 25,
+  "fields": {
+    "name": "Ultracet",
+    "mrp": "315.00",
+    "rate": "220.00",
+    "pack": "15",
+    "c_gst": "49.50",
+    "s_gst": "49.50",
+    "gst": "6.00",
+    "amt_aftr_gst": "197.01",
+    "batch_no": "KL89GN",
+    "exp_date": "2026-09-10",
+    "mfg_date": "2023-05-02",
+    "company": 2,
+    "qty_in_strip": 10,
+    "added_on": "2025-05-17T10:35:00.829Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 27,
+  "fields": {
+    "name": "zerodol p",
+    "mrp": "77.00",
+    "rate": "61.60",
+    "pack": "10",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": "78.40",
+    "batch_no": "DGT67Y",
+    "exp_date": "2027-01-01",
+    "mfg_date": "2025-01-01",
+    "company": 3,
+    "qty_in_strip": 10,
+    "added_on": "2025-05-19T07:57:49.105Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 28,
+  "fields": {
+    "name": "Zerodol SP",
+    "mrp": "139.00",
+    "rate": "111.20",
+    "pack": "10",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": "124.54",
+    "batch_no": "ATH34M",
+    "exp_date": "2026-02-02",
+    "mfg_date": "2024-02-01",
+    "company": 5,
+    "qty_in_strip": 10,
+    "added_on": "2025-05-19T08:02:17.114Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 29,
+  "fields": {
+    "name": "Restyl 0.5",
+    "mrp": "69.00",
+    "rate": "55.00",
+    "pack": "15",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": "61.60",
+    "batch_no": "STY10N",
+    "exp_date": "2027-06-05",
+    "mfg_date": "2025-05-01",
+    "company": 1,
+    "qty_in_strip": 10,
+    "added_on": "2025-05-19T08:03:51.609Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 30,
+  "fields": {
+    "name": "Restyl 0.25",
+    "mrp": "34.00",
+    "rate": "27.60",
+    "pack": "15",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": "30.91",
+    "batch_no": "TNI90V",
+    "exp_date": "2027-10-12",
+    "mfg_date": "2025-12-10",
+    "company": 2,
+    "qty_in_strip": 10,
+    "added_on": "2025-05-19T08:06:07.970Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 31,
+  "fields": {
+    "name": "Travisight eye Drop",
+    "mrp": "249.00",
+    "rate": "177.86",
+    "pack": "3ml",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": "199.20",
+    "batch_no": "GC5737004",
+    "exp_date": "2027-02-05",
+    "mfg_date": "2025-06-01",
+    "company": 27,
+    "qty_in_strip": 3,
+    "added_on": "2025-06-03T08:11:24.977Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 32,
+  "fields": {
+    "name": "abcatext expirey",
+    "mrp": "21.00",
+    "rate": "321.00",
+    "pack": "231",
+    "c_gst": "106.50",
+    "s_gst": "106.50",
+    "gst": "213.00",
+    "amt_aftr_gst": "1004.73",
+    "batch_no": "897654213",
+    "exp_date": "2025-06-20",
+    "mfg_date": "2025-06-20",
+    "company": 4,
+    "qty_in_strip": 1,
+    "added_on": "2025-06-13T09:15:33.822Z"
+  }
+},
+{
+  "model": "api.medicine",
+  "pk": 33,
+  "fields": {
+    "name": "abcatext expirey",
+    "mrp": "21.00",
+    "rate": "321.00",
+    "pack": "231",
+    "c_gst": "106.50",
+    "s_gst": "106.50",
+    "gst": "213.00",
+    "amt_aftr_gst": "1004.73",
+    "batch_no": "897654213",
+    "exp_date": "2025-06-20",
+    "mfg_date": "2025-06-20",
+    "company": 4,
+    "qty_in_strip": 1,
+    "added_on": "2025-06-13T09:15:41.577Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 1,
+  "fields": {
+    "name": "test",
+    "address": "test",
+    "contact": "01234567890",
+    "added_on": "2025-06-10T13:34:42.465Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 2,
+  "fields": {
+    "name": "test",
+    "address": "test",
+    "contact": "01234567890",
+    "added_on": "2025-06-10T13:36:14.232Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 3,
+  "fields": {
+    "name": "test",
+    "address": "test",
+    "contact": "01234567890",
+    "added_on": "2025-06-10T14:41:43.371Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 4,
+  "fields": {
+    "name": "test",
+    "address": "test",
+    "contact": "01234567890",
+    "added_on": "2025-06-10T14:49:29.201Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 5,
+  "fields": {
+    "name": "test",
+    "address": "test",
+    "contact": "01234567890",
+    "added_on": "2025-06-10T15:44:20.775Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 6,
+  "fields": {
+    "name": "John Doe",
+    "address": "Hyderabad",
+    "contact": "9876543210",
+    "added_on": "2025-06-10T16:07:57.801Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 7,
+  "fields": {
+    "name": "John Doe",
+    "address": "Hyderabad",
+    "contact": "9876543210",
+    "added_on": "2025-06-10T16:19:03.771Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 8,
+  "fields": {
+    "name": "John Doe",
+    "address": "Hyderabad",
+    "contact": "9876543210",
+    "added_on": "2025-06-10T16:20:45.891Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 9,
+  "fields": {
+    "name": "John Doe",
+    "address": "Hyderabad",
+    "contact": "9876543210",
+    "added_on": "2025-06-10T16:21:32.582Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 10,
+  "fields": {
+    "name": "John Doe",
+    "address": "Hyderabad",
+    "contact": "9876543210",
+    "added_on": "2025-06-10T16:22:58.581Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 11,
+  "fields": {
+    "name": "John Doe",
+    "address": "Hyderabad",
+    "contact": "9876543210",
+    "added_on": "2025-06-10T16:30:39.637Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 12,
+  "fields": {
+    "name": "John Doe",
+    "address": "Hyderabad",
+    "contact": "9876543210",
+    "added_on": "2025-06-10T16:33:27.284Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 13,
+  "fields": {
+    "name": "John Doe",
+    "address": "Hyderabad",
+    "contact": "9876543210",
+    "added_on": "2025-06-10T16:34:44.639Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 14,
+  "fields": {
+    "name": "John Doe",
+    "address": "Hyderabad",
+    "contact": "9876543210",
+    "added_on": "2025-06-10T16:38:32.812Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 15,
+  "fields": {
+    "name": "raju Doe",
+    "address": "Hyderabad",
+    "contact": "9876543210",
+    "added_on": "2025-06-10T16:38:48.971Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 16,
+  "fields": {
+    "name": "raghu",
+    "address": "test",
+    "contact": "01234567890",
+    "added_on": "2025-06-10T16:52:14.036Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 17,
+  "fields": {
+    "name": "raghu2",
+    "address": "test",
+    "contact": "01234567890",
+    "added_on": "2025-06-10T16:59:06.626Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 18,
+  "fields": {
+    "name": "raghu2",
+    "address": "test",
+    "contact": "01234567890",
+    "added_on": "2025-06-10T16:59:46.202Z"
+  }
+},
+{
+  "model": "api.customer",
+  "pk": 19,
+  "fields": {
+    "name": "Admin",
+    "address": "test",
+    "contact": "01234567890",
+    "added_on": "2025-06-14T16:38:18.431Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 1,
+  "fields": {
+    "customer": 1,
+    "total_amount": "180.00",
+    "added_on": "2025-06-10T13:34:42.835Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 2,
+  "fields": {
+    "customer": 2,
+    "total_amount": "38.00",
+    "added_on": "2025-06-10T13:36:14.573Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 3,
+  "fields": {
+    "customer": 3,
+    "total_amount": "19.00",
+    "added_on": "2025-06-10T14:41:43.514Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 4,
+  "fields": {
+    "customer": 4,
+    "total_amount": "177.86",
+    "added_on": "2025-06-10T14:49:29.565Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 5,
+  "fields": {
+    "customer": 5,
+    "total_amount": "180.00",
+    "added_on": "2025-06-10T15:44:20.876Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 6,
+  "fields": {
+    "customer": 6,
+    "total_amount": "218.00",
+    "added_on": "2025-06-10T16:07:58.148Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 7,
+  "fields": {
+    "customer": 7,
+    "total_amount": "0.00",
+    "added_on": "2025-06-10T16:19:03.874Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 8,
+  "fields": {
+    "customer": 8,
+    "total_amount": "0.00",
+    "added_on": "2025-06-10T16:20:45.980Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 9,
+  "fields": {
+    "customer": 9,
+    "total_amount": "0.00",
+    "added_on": "2025-06-10T16:21:32.688Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 10,
+  "fields": {
+    "customer": 10,
+    "total_amount": "0.00",
+    "added_on": "2025-06-10T16:22:58.680Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 11,
+  "fields": {
+    "customer": 11,
+    "total_amount": "0.00",
+    "added_on": "2025-06-10T16:30:39.736Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 12,
+  "fields": {
+    "customer": 12,
+    "total_amount": "0.00",
+    "added_on": "2025-06-10T16:33:27.385Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 13,
+  "fields": {
+    "customer": 14,
+    "total_amount": "60.00",
+    "added_on": "2025-06-10T16:38:32.918Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 14,
+  "fields": {
+    "customer": 15,
+    "total_amount": "60.00",
+    "added_on": "2025-06-10T16:38:49.070Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 15,
+  "fields": {
+    "customer": 16,
+    "total_amount": "193.80",
+    "added_on": "2025-06-10T16:52:14.135Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 16,
+  "fields": {
+    "customer": 17,
+    "total_amount": "228.00",
+    "added_on": "2025-06-10T16:59:06.750Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 17,
+  "fields": {
+    "customer": 18,
+    "total_amount": "193.80",
+    "added_on": "2025-06-10T16:59:46.328Z"
+  }
+},
+{
+  "model": "api.bill",
+  "pk": 18,
+  "fields": {
+    "customer": 19,
+    "total_amount": "648.00",
+    "added_on": "2025-06-14T16:38:18.779Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 1,
+  "fields": {
+    "bill": 1,
+    "medicine": 13,
+    "qty": 1,
+    "rate": "0.00",
+    "added_on": "2025-06-10T13:34:42.918Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 2,
+  "fields": {
+    "bill": 2,
+    "medicine": 12,
+    "qty": 2,
+    "rate": "0.00",
+    "added_on": "2025-06-10T13:36:14.695Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 3,
+  "fields": {
+    "bill": 3,
+    "medicine": 12,
+    "qty": 1,
+    "rate": "0.00",
+    "added_on": "2025-06-10T14:41:43.633Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 4,
+  "fields": {
+    "bill": 4,
+    "medicine": 31,
+    "qty": 1,
+    "rate": "0.00",
+    "added_on": "2025-06-10T14:49:29.659Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 5,
+  "fields": {
+    "bill": 5,
+    "medicine": 13,
+    "qty": 1,
+    "rate": "0.00",
+    "added_on": "2025-06-10T15:44:20.969Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 6,
+  "fields": {
+    "bill": 6,
+    "medicine": 12,
+    "qty": 2,
+    "rate": "0.00",
+    "added_on": "2025-06-10T16:07:58.265Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 7,
+  "fields": {
+    "bill": 6,
+    "medicine": 13,
+    "qty": 1,
+    "rate": "0.00",
+    "added_on": "2025-06-10T16:07:58.432Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 8,
+  "fields": {
+    "bill": 12,
+    "medicine": 12,
+    "qty": 2,
+    "rate": "30.00",
+    "added_on": "2025-06-10T16:33:27.508Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 9,
+  "fields": {
+    "bill": 12,
+    "medicine": 13,
+    "qty": 1,
+    "rate": "30.00",
+    "added_on": "2025-06-10T16:33:27.605Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 10,
+  "fields": {
+    "bill": 13,
+    "medicine": 12,
+    "qty": 2,
+    "rate": "30.00",
+    "added_on": "2025-06-10T16:38:33.023Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 11,
+  "fields": {
+    "bill": 13,
+    "medicine": 13,
+    "qty": 1,
+    "rate": "30.00",
+    "added_on": "2025-06-10T16:38:33.120Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 12,
+  "fields": {
+    "bill": 14,
+    "medicine": 12,
+    "qty": 2,
+    "rate": "30.00",
+    "added_on": "2025-06-10T16:38:49.179Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 13,
+  "fields": {
+    "bill": 14,
+    "medicine": 13,
+    "qty": 1,
+    "rate": "30.00",
+    "added_on": "2025-06-10T16:38:49.271Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 14,
+  "fields": {
+    "bill": 15,
+    "medicine": 13,
+    "qty": 1,
+    "rate": "193.80",
+    "added_on": "2025-06-10T16:52:14.245Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 15,
+  "fields": {
+    "bill": 17,
+    "medicine": 13,
+    "qty": 1,
+    "rate": "193.80",
+    "added_on": "2025-06-10T16:59:46.422Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 16,
+  "fields": {
+    "bill": 18,
+    "medicine": 13,
+    "qty": 2,
+    "rate": "204.00",
+    "added_on": "2025-06-14T16:38:18.851Z"
+  }
+},
+{
+  "model": "api.billdetails",
+  "pk": 17,
+  "fields": {
+    "bill": 18,
+    "medicine": 15,
+    "qty": 1,
+    "rate": "240.00",
+    "added_on": "2025-06-14T16:38:18.946Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 1,
+  "fields": {
+    "name": "Allegra 120",
+    "in_stock_total": 19,
+    "mrp": "480.00",
+    "rate": "432.00",
+    "added_on": "2025-04-29T20:21:25.831Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 2,
+  "fields": {
+    "name": "Dolo",
+    "in_stock_total": 60,
+    "mrp": "66.00",
+    "rate": "60.00",
+    "added_on": "2025-04-29T20:32:44.281Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 3,
+  "fields": {
+    "name": "one Touch 25",
+    "in_stock_total": 50,
+    "mrp": "1350.00",
+    "rate": "1280.00",
+    "added_on": "2025-04-29T21:07:43.942Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 4,
+  "fields": {
+    "name": "Acemiz Plus",
+    "in_stock_total": 20,
+    "mrp": "240.00",
+    "rate": "196.00",
+    "added_on": "2025-04-30T09:12:46.701Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 5,
+  "fields": {
+    "name": "Eldopar",
+    "in_stock_total": 20,
+    "mrp": "126.00",
+    "rate": "94.00",
+    "added_on": "2025-05-14T22:42:21.972Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 6,
+  "fields": {
+    "name": "wjdn",
+    "in_stock_total": 98,
+    "mrp": "99.00",
+    "rate": "99.00",
+    "added_on": "2025-05-14T23:13:43.045Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 7,
+  "fields": {
+    "name": "Okacet",
+    "in_stock_total": 139,
+    "mrp": "105.00",
+    "rate": "95.00",
+    "added_on": "2025-05-15T09:48:59.416Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 8,
+  "fields": {
+    "name": "Augmentin 625",
+    "in_stock_total": 20,
+    "mrp": "612.00",
+    "rate": "540.00",
+    "added_on": "2025-05-15T09:50:01.272Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 9,
+  "fields": {
+    "name": "calpol",
+    "in_stock_total": 60,
+    "mrp": "44.90",
+    "rate": "32.24",
+    "added_on": "2025-05-15T10:21:21.536Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 10,
+  "fields": {
+    "name": "paracip 500",
+    "in_stock_total": 20,
+    "mrp": "20.00",
+    "rate": "16.00",
+    "added_on": "2025-05-15T10:29:48.095Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 11,
+  "fields": {
+    "name": "okacet cold",
+    "in_stock_total": 90,
+    "mrp": "63.50",
+    "rate": "56.00",
+    "added_on": "2025-05-15T10:34:02.343Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 12,
+  "fields": {
+    "name": "edh`q",
+    "in_stock_total": 92,
+    "mrp": "90.00",
+    "rate": "80.00",
+    "added_on": "2025-05-17T10:21:59.330Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 13,
+  "fields": {
+    "name": "ALDEGESIC SP",
+    "in_stock_total": 92,
+    "mrp": "90.00",
+    "rate": "80.00",
+    "added_on": "2025-05-17T10:22:17.702Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 14,
+  "fields": {
+    "name": "Aldegesic SP",
+    "in_stock_total": 92,
+    "mrp": "90.00",
+    "rate": "80.00",
+    "added_on": "2025-05-17T10:24:34.473Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 15,
+  "fields": {
+    "name": "Aldegesic sp",
+    "in_stock_total": 193,
+    "mrp": "270.00",
+    "rate": "240.00",
+    "added_on": "2025-05-17T10:25:49.665Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 16,
+  "fields": {
+    "name": "jdjswekjhfhef",
+    "in_stock_total": 1287,
+    "mrp": "396.00",
+    "rate": "396.00",
+    "added_on": "2025-05-17T10:35:00.838Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 17,
+  "fields": {
+    "name": "dhjh",
+    "in_stock_total": 88,
+    "mrp": "89.00",
+    "rate": "99.00",
+    "added_on": "2025-05-17T10:35:38.277Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 18,
+  "fields": {
+    "name": "Aztor",
+    "in_stock_total": 99,
+    "mrp": "99.00",
+    "rate": "99.00",
+    "added_on": "2025-05-17T10:48:20.395Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 19,
+  "fields": {
+    "name": "Aztor 20mg",
+    "in_stock_total": 198,
+    "mrp": "198.00",
+    "rate": "198.00",
+    "added_on": "2025-05-17T10:48:44.502Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 20,
+  "fields": {
+    "name": "Aztor 10mg",
+    "in_stock_total": 99,
+    "mrp": "99.00",
+    "rate": "99.00",
+    "added_on": "2025-05-17T10:50:52.771Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 21,
+  "fields": {
+    "name": "Ultracet",
+    "in_stock_total": 30,
+    "mrp": "945.00",
+    "rate": "660.00",
+    "added_on": "2025-05-17T10:57:40.765Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 22,
+  "fields": {
+    "name": "zerodol p",
+    "in_stock_total": 40,
+    "mrp": "308.00",
+    "rate": "263.20",
+    "added_on": "2025-05-19T07:57:49.126Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 23,
+  "fields": {
+    "name": "Zerodol SP",
+    "in_stock_total": 10,
+    "mrp": "139.00",
+    "rate": "111.20",
+    "added_on": "2025-05-19T08:02:17.131Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 24,
+  "fields": {
+    "name": "Restyl 0.5",
+    "in_stock_total": 10,
+    "mrp": "69.00",
+    "rate": "55.00",
+    "added_on": "2025-05-19T08:03:51.626Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 25,
+  "fields": {
+    "name": "Restyl 0.25",
+    "in_stock_total": 10,
+    "mrp": "34.00",
+    "rate": "27.60",
+    "added_on": "2025-05-19T08:06:07.988Z"
+  }
+},
+{
+  "model": "api.medicinestock",
+  "pk": 26,
+  "fields": {
+    "name": "Travisight eye Drop",
+    "in_stock_total": 2,
+    "mrp": "249.00",
+    "rate": "177.86",
+    "added_on": "2025-06-03T08:11:24.991Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 1,
+  "fields": {
+    "medicine": 1,
+    "quantity": 10,
+    "transaction_type": "IN",
+    "transaction_date": "2025-04-29T20:21:25.839Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 2,
+  "fields": {
+    "medicine": 2,
+    "quantity": 30,
+    "transaction_type": "IN",
+    "transaction_date": "2025-04-29T20:32:44.298Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 3,
+  "fields": {
+    "medicine": 3,
+    "quantity": 25,
+    "transaction_type": "IN",
+    "transaction_date": "2025-04-29T21:07:43.951Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 4,
+  "fields": {
+    "medicine": 4,
+    "quantity": 10,
+    "transaction_type": "IN",
+    "transaction_date": "2025-04-30T09:12:46.734Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 5,
+  "fields": {
+    "medicine": 5,
+    "quantity": 10,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-14T22:42:21.988Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 6,
+  "fields": {
+    "medicine": 6,
+    "quantity": 98,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-14T23:13:43.064Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 7,
+  "fields": {
+    "medicine": 9,
+    "quantity": 20,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-15T10:21:21.553Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 8,
+  "fields": {
+    "medicine": 10,
+    "quantity": 10,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-15T10:29:48.108Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 9,
+  "fields": {
+    "medicine": 11,
+    "quantity": 30,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-15T10:34:02.376Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 10,
+  "fields": {
+    "medicine": 12,
+    "quantity": 92,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-17T10:21:59.339Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 11,
+  "fields": {
+    "medicine": 16,
+    "quantity": 990,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-17T10:35:00.847Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 12,
+  "fields": {
+    "medicine": 17,
+    "quantity": 88,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-17T10:35:38.288Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 13,
+  "fields": {
+    "medicine": 22,
+    "quantity": 10,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-19T07:57:49.142Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 14,
+  "fields": {
+    "medicine": 23,
+    "quantity": 10,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-19T08:02:17.147Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 15,
+  "fields": {
+    "medicine": 24,
+    "quantity": 10,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-19T08:03:51.635Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 16,
+  "fields": {
+    "medicine": 25,
+    "quantity": 10,
+    "transaction_type": "IN",
+    "transaction_date": "2025-05-19T08:06:08.003Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 17,
+  "fields": {
+    "medicine": 26,
+    "quantity": 3,
+    "transaction_type": "IN",
+    "transaction_date": "2025-06-03T08:11:25.088Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 18,
+  "fields": {
+    "medicine": 8,
+    "quantity": 1,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T13:34:43.155Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 19,
+  "fields": {
+    "medicine": 7,
+    "quantity": 2,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T13:36:14.957Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 20,
+  "fields": {
+    "medicine": 7,
+    "quantity": 1,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T14:41:43.873Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 21,
+  "fields": {
+    "medicine": 26,
+    "quantity": 1,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T14:49:29.886Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 22,
+  "fields": {
+    "medicine": 8,
+    "quantity": 1,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T15:44:21.212Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 23,
+  "fields": {
+    "medicine": 7,
+    "quantity": 2,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T16:07:58.694Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 24,
+  "fields": {
+    "medicine": 8,
+    "quantity": 1,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T16:07:58.858Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 25,
+  "fields": {
+    "medicine": 7,
+    "quantity": 2,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T16:33:27.770Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 26,
+  "fields": {
+    "medicine": 8,
+    "quantity": 1,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T16:33:27.917Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 27,
+  "fields": {
+    "medicine": 7,
+    "quantity": 2,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T16:38:33.302Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 28,
+  "fields": {
+    "medicine": 8,
+    "quantity": 1,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T16:38:33.466Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 29,
+  "fields": {
+    "medicine": 7,
+    "quantity": 2,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T16:38:49.445Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 30,
+  "fields": {
+    "medicine": 8,
+    "quantity": 1,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T16:38:49.625Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 31,
+  "fields": {
+    "medicine": 8,
+    "quantity": 1,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T16:52:14.428Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 32,
+  "fields": {
+    "medicine": 8,
+    "quantity": 1,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-10T16:59:46.617Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 33,
+  "fields": {
+    "medicine": 8,
+    "quantity": 2,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-14T16:38:19.091Z"
+  }
+},
+{
+  "model": "api.medicinestockhistory",
+  "pk": 34,
+  "fields": {
+    "medicine": 1,
+    "quantity": 1,
+    "transaction_type": "OUT",
+    "transaction_date": "2025-06-14T16:38:19.242Z"
+  }
+},
+{
+  "model": "api.customercredit",
+  "pk": 2,
+  "fields": {
+    "name": "Mohd Kabir",
+    "contact": "6302540625",
+    "record_type": "Credit",
+    "pending_amount": "400.50",
+    "last_payment_date": "2025-06-12",
+    "last_payment_amount": "100.00",
+    "delivered_by": null,
+    "added_on": "2025-05-28T09:25:21.294Z"
+  }
+},
+{
+  "model": "api.customercredit",
+  "pk": 4,
+  "fields": {
+    "name": "Mohd Sarwar",
+    "contact": "0",
+    "record_type": "Credit",
+    "pending_amount": "0.00",
+    "last_payment_date": "2025-05-29",
+    "last_payment_amount": "0.00",
+    "delivered_by": null,
+    "added_on": "2025-05-28T10:49:13.840Z"
+  }
+},
+{
+  "model": "api.customercredit",
+  "pk": 15,
+  "fields": {
+    "name": "Abdullah Basultan",
+    "contact": "9700169004",
+    "record_type": "Credit",
+    "pending_amount": "0.00",
+    "last_payment_date": "2025-06-03",
+    "last_payment_amount": "0.00",
+    "delivered_by": null,
+    "added_on": "2025-06-03T11:08:38.144Z"
+  }
+},
+{
+  "model": "api.customercredit",
+  "pk": 21,
+  "fields": {
+    "name": "Rizwan Khan",
+    "contact": "9700160870",
+    "record_type": "Credit",
+    "pending_amount": "0.00",
+    "last_payment_date": "2025-06-04",
+    "last_payment_amount": "0.00",
+    "delivered_by": null,
+    "added_on": "2025-06-03T20:08:41.585Z"
+  }
+},
+{
+  "model": "api.customercredit",
+  "pk": 22,
+  "fields": {
+    "name": "Mohammed Ehtesham",
+    "contact": "9700404029",
+    "record_type": "Credit",
+    "pending_amount": "0.00",
+    "last_payment_date": "2025-06-04",
+    "last_payment_amount": "0.00",
+    "delivered_by": null,
+    "added_on": "2025-06-04T05:40:14.571Z"
+  }
+},
+{
+  "model": "api.customercredit",
+  "pk": 23,
+  "fields": {
+    "name": "Sunil BhadWa",
+    "contact": "3216549870",
+    "record_type": "Credit",
+    "pending_amount": "50000.00",
+    "last_payment_date": "2025-06-04",
+    "last_payment_amount": "0.00",
+    "delivered_by": null,
+    "added_on": "2025-06-04T05:45:46.489Z"
+  }
+},
+{
+  "model": "api.customercredit",
+  "pk": 24,
+  "fields": {
+    "name": "raghu the programmer",
+    "contact": "123567980",
+    "record_type": "Credit",
+    "pending_amount": "0.00",
+    "last_payment_date": "2025-06-10",
+    "last_payment_amount": "0.00",
+    "delivered_by": null,
+    "added_on": "2025-06-10T17:15:04.496Z"
+  }
+},
+{
+  "model": "api.customercreditdetails",
+  "pk": 1,
+  "fields": {
+    "customer_credit": 24,
+    "date": "2025-06-12",
+    "medicines": "Paracetamol, Vitamin C",
+    "amount": "250.50",
+    "added_on": "2025-06-12T11:09:13.371Z"
+  }
+},
+{
+  "model": "api.customercreditdetails",
+  "pk": 2,
+  "fields": {
+    "customer_credit": 2,
+    "date": "2025-06-12",
+    "medicines": "Paracetamol, Vitamin C",
+    "amount": "500.50",
+    "added_on": "2025-06-12T11:22:06.984Z"
+  }
+},
+{
+  "model": "api.customercreditpaymentdetails",
+  "pk": 1,
+  "fields": {
+    "customer_credit": 24,
+    "payment_date": "2025-06-12",
+    "payment_amount": "100.00",
+    "payment_mode": "UPI",
+    "added_on": "2025-06-12T11:11:20.487Z"
+  }
+},
+{
+  "model": "api.customercreditpaymentdetails",
+  "pk": 2,
+  "fields": {
+    "customer_credit": 2,
+    "payment_date": "2025-06-12",
+    "payment_amount": "100.00",
+    "payment_mode": "UPI",
+    "added_on": "2025-06-12T11:23:38.023Z"
+  }
+},
+{
+  "model": "api.customercreditpaymentdetails",
+  "pk": 3,
+  "fields": {
+    "customer_credit": 2,
+    "payment_date": "2025-06-12",
+    "payment_amount": "100.00",
+    "payment_mode": "UPI",
+    "added_on": "2025-06-12T11:24:13.272Z"
+  }
+},
+{
+  "model": "api.customercreditpaymentdetails",
+  "pk": 4,
+  "fields": {
+    "customer_credit": 2,
+    "payment_date": "2025-06-12",
+    "payment_amount": "100.00",
+    "payment_mode": "UPI",
+    "added_on": "2025-06-12T11:24:56.901Z"
+  }
+},
+{
+  "model": "api.customercreditpaymentdetails",
+  "pk": 5,
+  "fields": {
+    "customer_credit": 2,
+    "payment_date": "2025-06-12",
+    "payment_amount": "100.00",
+    "payment_mode": "UPI",
+    "added_on": "2025-06-12T11:26:01.864Z"
+  }
+},
+{
+  "model": "api.customercreditpaymentdetails",
+  "pk": 6,
+  "fields": {
+    "customer_credit": 2,
+    "payment_date": "2025-06-12",
+    "payment_amount": "100.00",
+    "payment_mode": "UPI",
+    "added_on": "2025-06-12T11:28:20.712Z"
+  }
+},
+{
+  "model": "api.customercreditpaymentdetails",
+  "pk": 7,
+  "fields": {
+    "customer_credit": 2,
+    "payment_date": "2025-06-12",
+    "payment_amount": "100.00",
+    "payment_mode": "UPI",
+    "added_on": "2025-06-21T10:50:02.350Z"
+  }
+},
+{
+  "model": "api.lowstockalert",
+  "pk": 1,
+  "fields": {
+    "medicine_name": "2025-06-12 13:10:32.498682+00:00",
+    "current_quantity": 2,
+    "alert_date": "2025-06-12",
+    "ordered": false
+  }
+},
+{
+  "model": "api.lowstockalert",
+  "pk": 2,
+  "fields": {
+    "medicine_name": "2025-06-12 13:10:32.498682+00:00",
+    "current_quantity": 2,
+    "alert_date": "2025-06-12",
+    "ordered": false
+  }
+},
+{
+  "model": "api.lowstockalert",
+  "pk": 3,
+  "fields": {
+    "medicine_name": "2025-06-12 13:10:32.498682+00:00",
+    "current_quantity": 2,
+    "alert_date": "2025-06-12",
+    "ordered": false
+  }
+},
+{
+  "model": "api.lowstockalert",
+  "pk": 4,
+  "fields": {
+    "medicine_name": "2025-06-12 13:10:32.498682+00:00",
+    "current_quantity": 2,
+    "alert_date": "2025-06-12",
+    "ordered": true
+  }
+},
+{
+  "model": "api.lowstockalert",
+  "pk": 5,
+  "fields": {
+    "medicine_name": "Travisight eye Drop",
+    "current_quantity": 2,
+    "alert_date": "2025-06-12",
+    "ordered": true
+  }
+},
+{
+  "model": "api.lowstockalert",
+  "pk": 6,
+  "fields": {
+    "medicine_name": "Travisight eye Drop",
+    "current_quantity": 2,
+    "alert_date": "2025-06-13",
+    "ordered": false
+  }
+},
+{
+  "model": "api.expirymedicine",
+  "pk": 1,
+  "fields": {
+    "name": "Okacet",
+    "mrp": "21.00",
+    "rate": "19.00",
+    "pack": "15",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": null,
+    "batch_no": "02nk8",
+    "exp_date": "2025-02-01",
+    "mfg_date": "2023-02-01",
+    "company": "Sonee Medical",
+    "qty_in_strip": 30,
+    "added_on": "2025-06-13T08:38:40.043Z"
+  }
+},
+{
+  "model": "api.expirymedicine",
+  "pk": 2,
+  "fields": {
+    "name": "one Touch 25",
+    "mrp": "675.00",
+    "rate": "640.00",
+    "pack": "25",
+    "c_gst": "5.00",
+    "s_gst": "5.00",
+    "gst": "10.00",
+    "amt_aftr_gst": "704.00",
+    "batch_no": "KNJ78M",
+    "exp_date": "2025-02-01",
+    "mfg_date": "2024-03-02",
+    "company": "Allied",
+    "qty_in_strip": 25,
+    "added_on": "2025-06-13T08:38:40.189Z"
+  }
+},
+{
+  "model": "api.expirymedicine",
+  "pk": 3,
+  "fields": {
+    "name": "calpol",
+    "mrp": "14.95",
+    "rate": "11.12",
+    "pack": "15",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": "11.20",
+    "batch_no": "GNH765M",
+    "exp_date": "2025-01-01",
+    "mfg_date": "2024-02-02",
+    "company": "Krishna pharma",
+    "qty_in_strip": 20,
+    "added_on": "2025-06-13T08:38:40.313Z"
+  }
+},
+{
+  "model": "api.expirymedicine",
+  "pk": 4,
+  "fields": {
+    "name": "paracip 500",
+    "mrp": "10.00",
+    "rate": "8.00",
+    "pack": "10",
+    "c_gst": "6.00",
+    "s_gst": "6.00",
+    "gst": "12.00",
+    "amt_aftr_gst": "8.96",
+    "batch_no": "HGN45G",
+    "exp_date": "2024-02-01",
+    "mfg_date": "2020-02-10",
+    "company": "Prakash Pharma",
+    "qty_in_strip": 10,
+    "added_on": "2025-06-13T08:38:40.389Z"
+  }
+},
+{
+  "model": "api.expirymedicine",
+  "pk": 5,
+  "fields": {
+    "name": "okacet cold",
+    "mrp": "21.25",
+    "rate": "18.50",
+    "pack": "15",
+    "c_gst": "9.00",
+    "s_gst": "9.00",
+    "gst": "18.00",
+    "amt_aftr_gst": "22.42",
+    "batch_no": "02nk8",
+    "exp_date": "2025-02-01",
+    "mfg_date": "2023-02-20",
+    "company": "Vishnu Agencies",
+    "qty_in_strip": 30,
+    "added_on": "2025-06-13T08:38:40.471Z"
+  }
+}
+]

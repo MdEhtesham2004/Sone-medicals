@@ -63,6 +63,9 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = '__all__'
 
+
+
+
 #done 
 class BillSerializer(serializers.ModelSerializer):
     # customer = CustomerSerializer(read_only=True)
